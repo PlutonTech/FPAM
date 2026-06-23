@@ -32,6 +32,7 @@ if (users.length === 0) {
     { id:'USR-1001', name:'Emeka Obi',   role:'Field Agent',  email:'emeka@assetspatial.gov.ng', color:'#3b9eff' },
     { id:'USR-1002', name:'Aisha Bello', role:'Supervisor',   email:'aisha@assetspatial.gov.ng', color:'#f0b400' },
     { id:'USR-1003', name:'Chidi Eze',   role:'GIS Analyst',  email:'chidi@assetspatial.gov.ng', color:'#e05555' },
+    { id:'USR-1004', name:'Ngozi Adamu', role:'Sub-Head',     email:'ngozi@assetspatial.gov.ng', color:'#14b8a6' },
   ];
   LS.set('asdm_users', users);
 }
@@ -98,6 +99,7 @@ const PAGE_META = {
   map:       { title: 'Live Map',         bc: 'Spatial / Map View' },
   assets:    { title: 'Asset Registry',   bc: 'Registry' },
   capture:   { title: 'Field Capture',    bc: 'Field Capture' },
+  approvals: { title: 'Approvals',        bc: 'Management / Approvals' },
   analytics: { title: 'Analytics',        bc: 'Analytics & Reports' },
   viz:       { title: 'Data Visualisation', bc: 'Analytics / Viz' },
   users:     { title: 'User Management',  bc: 'Users & Roles' },
@@ -140,6 +142,7 @@ function renderPage(page) {
   if (page === 'users')     renderUsers();
   if (page === 'audit')     renderAudit();
   if (page === 'capture')   { if (typeof initCapturePage === 'function') initCapturePage(); }
+  if (page === 'approvals') { if (typeof loadApprovals === 'function') loadApprovals(); }
   // Re-apply role gates after every page render (new buttons may have appeared)
   setTimeout(applyRoleGates, 100);
 }
@@ -149,10 +152,13 @@ function renderPage(page) {
 // permissions come from u.permissions (per-user overrides) falling back to role defaults.
 
 const ROLE_DEFAULTS = {
-  'System Admin':  { canCreate:true,  canEdit:true,  canDelete:true,  canExport:true,  canViewAll:true,  canManageUsers:true,  canViewAudit:true,  canManageSettings:true  },
-  'Supervisor':    { canCreate:true,  canEdit:true,  canDelete:true,  canExport:true,  canViewAll:true,  canManageUsers:false, canViewAudit:true,  canManageSettings:false },
-  'GIS Analyst':   { canCreate:false, canEdit:false, canDelete:false, canExport:true,  canViewAll:true,  canManageUsers:false, canViewAudit:true,  canManageSettings:false },
-  'Field Agent':   { canCreate:false, canEdit:false, canDelete:false, canExport:false, canViewAll:false, canManageUsers:false, canViewAudit:false, canManageSettings:false },
+  'System Admin':  { canCreate:true,  canEdit:true,  canDelete:true,  canExport:true,  canViewAll:true,  canManageUsers:true,  canViewAudit:true,  canManageSettings:true,  canApprove:true  },
+  'Supervisor':    { canCreate:true,  canEdit:true,  canDelete:true,  canExport:true,  canViewAll:true,  canManageUsers:false, canViewAudit:true,  canManageSettings:false, canApprove:true  },
+  // Sub-Head — one rung above Field Agent. Reviews and approves/rejects
+  // captures submitted by Field Agents before they count as verified.
+  'Sub-Head':      { canCreate:true,  canEdit:false, canDelete:false, canExport:false, canViewAll:true,  canManageUsers:false, canViewAudit:false, canManageSettings:false, canApprove:true  },
+  'GIS Analyst':   { canCreate:false, canEdit:false, canDelete:false, canExport:true,  canViewAll:true,  canManageUsers:false, canViewAudit:true,  canManageSettings:false, canApprove:false },
+  'Field Agent':   { canCreate:false, canEdit:false, canDelete:false, canExport:false, canViewAll:false, canManageUsers:false, canViewAudit:false, canManageSettings:false, canApprove:false },
 };
 
 function getUserPerms() {
@@ -191,9 +197,10 @@ function applyRoleGates() {
 
   // ── Nav: hide pages the user can't access ─────────────────────────────────
   const navGates = {
-    'users.html':    'canManageUsers',
-    'settings.html': 'canManageSettings',
-    'audit.html':    'canViewAudit',
+    'users.html':     'canManageUsers',
+    'settings.html':  'canManageSettings',
+    'audit.html':     'canViewAudit',
+    'approvals.html': 'canApprove',
   };
   document.querySelectorAll('.nav-item').forEach(el => {
     const href = (el.getAttribute('href') || '').split('/').pop();

@@ -41,22 +41,24 @@ async function _fetchAudit() {
 
 const ACTION_COLORS = {
   ASSET_CREATED:'tag-green', ASSET_UPDATED:'tag-blue', ASSET_DELETED:'tag-red',
+  ASSET_SUBMITTED:'tag-warn', ASSET_APPROVED:'tag-green', ASSET_REJECTED:'tag-red',
   USER_CREATED:'tag-blue', USER_UPDATED:'tag-blue', USER_REMOVED:'tag-red',
   USER_LOGIN:'tag-gray', USER_LOGOUT:'tag-gray',
   EXPORT:'tag-gray', BULK_DELETE:'tag-red', BULK_EXPORT:'tag-gray',
-  OCR_SCAN:'tag-orange', EXCEL_IMPORT:'tag-orange',
+  OCR_SCAN:'tag-orange', EXCEL_IMPORT:'tag-orange', EXCEL_UPLOADED:'tag-orange',
   SETTINGS_CHANGED:'tag-warn', ROLE_CONFIG_CHANGED:'tag-warn',
   MAINTENANCE_LOGGED:'tag-blue', VALUATION_UPDATED:'tag-blue',
-  PHOTO_ATTACHED:'tag-teal', PHOTO_DELETED:'tag-red',
+  PHOTO_ATTACHED:'tag-teal', PHOTO_UPLOADED:'tag-teal', PHOTO_DELETED:'tag-red',
 };
 const ACTION_ICONS = {
   ASSET_CREATED:'fa-circle-plus', ASSET_UPDATED:'fa-pen', ASSET_DELETED:'fa-trash',
+  ASSET_SUBMITTED:'fa-clock', ASSET_APPROVED:'fa-stamp', ASSET_REJECTED:'fa-circle-xmark',
   USER_CREATED:'fa-user-plus', USER_REMOVED:'fa-user-minus',
   USER_LOGIN:'fa-arrow-right-to-bracket', USER_LOGOUT:'fa-arrow-right-from-bracket',
   EXPORT:'fa-download', BULK_DELETE:'fa-trash-can',
-  OCR_SCAN:'fa-magnifying-glass', EXCEL_IMPORT:'fa-file-excel',
+  OCR_SCAN:'fa-magnifying-glass', EXCEL_IMPORT:'fa-file-excel', EXCEL_UPLOADED:'fa-file-excel',
   SETTINGS_CHANGED:'fa-gear', ROLE_CONFIG_CHANGED:'fa-shield-halved',
-  MAINTENANCE_LOGGED:'fa-wrench', PHOTO_ATTACHED:'fa-camera',
+  MAINTENANCE_LOGGED:'fa-wrench', PHOTO_ATTACHED:'fa-camera', PHOTO_UPLOADED:'fa-camera',
 };
 
 function renderAuditTable(logs) {

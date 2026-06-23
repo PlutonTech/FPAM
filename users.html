@@ -6,6 +6,41 @@
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <link rel="stylesheet" href="css/main.css">
+<style>
+/* ── Tabs ──────────────────────────────────────────────────────────────────── */
+.tab-btn{background:none;border:none;border-bottom:2px solid transparent;padding:10px 16px;font-size:13px;color:var(--text2);cursor:pointer;font-family:'Space Grotesk',sans-serif;display:flex;align-items:center;gap:7px;transition:all .15s;white-space:nowrap;}
+.tab-btn.active{color:var(--accent);border-bottom-color:var(--accent);}
+.tab-btn:hover{color:var(--text);}
+
+/* ── Spinner ───────────────────────────────────────────────────────────────── */
+.spinner{width:24px;height:24px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;display:inline-block;}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── User cards grid ───────────────────────────────────────────────────────── */
+.users-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+
+/* ── Role permission cards grid ────────────────────────────────────────────── */
+.perms-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px;}
+
+/* ── Header actions wrap on small screens ──────────────────────────────────── */
+.header-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-left:auto;}
+
+/* ── Responsive ────────────────────────────────────────────────────────────── */
+@media(max-width:1024px){
+  .users-grid{grid-template-columns:repeat(2,1fr);}
+  .perms-grid{grid-template-columns:repeat(2,1fr);}
+}
+@media(max-width:640px){
+  .users-grid{grid-template-columns:1fr;}
+  .perms-grid{grid-template-columns:1fr;}
+  .tab-btn{padding:8px 12px;font-size:12px;}
+  .modal{width:calc(100vw - 24px) !important;max-width:100% !important;margin:12px;}
+  /* permission grid inside modal: single column on mobile */
+  #modal-body-inner .perm-grid{grid-template-columns:1fr !important;}
+  .page-title{font-size:11px !important;}
+  .header-actions .conn-status{display:none;}
+}
+</style>
 </head>
 <body>
 <div id="sidebar-overlay" class="sidebar-overlay"></div>
@@ -18,9 +53,8 @@
     <a class="nav-item" href="assets.html"><i class="fa-solid fa-database"></i>Asset Registry</a>
     <div class="nav-section">Management</div>
     <a class="nav-item" href="capture.html"><i class="fa-solid fa-location-crosshairs"></i>Field Capture</a>
-    <a class="nav-item" href="inspections.html">
-  <i class="fa-solid fa-clipboard-check"></i>Inspections
-</a>
+    <a class="nav-item" href="approvals.html" data-require-role="Sub-Head,Supervisor,System Admin"><i class="fa-solid fa-stamp"></i>Approvals</a>
+    <a class="nav-item" href="inspections.html"><i class="fa-solid fa-clipboard-check"></i>Inspections</a>
     <a class="nav-item" href="analytics.html"><i class="fa-solid fa-chart-bar"></i>Analytics</a>
     <a class="nav-item active" href="users.html"><i class="fa-solid fa-users"></i>Users</a>
     <div class="nav-section">Data Tools</div>
@@ -42,63 +76,69 @@
     </div>
   </div>
 </aside>
+
 <div id="main">
   <header id="header">
     <button id="menu-toggle" class="menu-toggle-btn"><i class="fa-solid fa-bars"></i></button>
     <div class="header-title"><div class="page-title">USER MANAGEMENT</div><div class="breadcrumb">AssetSpatial / Users</div></div>
-    <div class="header-actions" style="margin-left:auto">
+    <div class="header-actions">
       <div class="conn-status" id="conn-status"><span class="conn-dot" id="conn-dot"></span><span id="conn-label">Connecting…</span></div>
       <select class="filter-input" id="filter-role" onchange="loadUsers()" style="font-size:12px">
         <option value="">All Roles</option>
-        <option>Field Agent</option><option>Supervisor</option><option>GIS Analyst</option><option>System Admin</option>
+        <option>Field Agent</option><option>Sub-Head</option><option>Supervisor</option><option>GIS Analyst</option><option>System Admin</option>
       </select>
-      <button class="btn btn-primary btn-sm" onclick="openCreateUser()"><i class="fa-solid fa-user-plus"></i> Add User</button>
+      <button class="btn btn-primary btn-sm" onclick="openCreateUser()"><i class="fa-solid fa-user-plus"></i> <span class="hide-xs">Add User</span></button>
     </div>
   </header>
+
   <div id="content">
     <!-- TABS -->
-    <div style="display:flex;gap:4px;border-bottom:1px solid var(--border);margin-bottom:20px">
+    <div style="display:flex;gap:4px;border-bottom:1px solid var(--border);margin-bottom:20px;overflow-x:auto;">
       <button class="tab-btn active" id="tab-cards" onclick="switchTab('cards')"><i class="fa-solid fa-id-card"></i> User Cards</button>
-      <button class="tab-btn" id="tab-perms" onclick="switchTab('perms')"><i class="fa-solid fa-shield-halved"></i> Role Permissions</button>
+      <!-- <button class="tab-btn" id="tab-perms" onclick="switchTab('perms')"><i class="fa-solid fa-shield-halved"></i> Role Permissions</button> -->
     </div>
 
     <!-- CARDS VIEW -->
     <div id="view-cards">
-      <div id="users-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px">
+      <div id="users-grid" class="users-grid">
         <div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--text3)"><div class="spinner"></div></div>
       </div>
     </div>
 
     <!-- PERMISSIONS VIEW -->
     <div id="view-perms" style="display:none">
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px">
-        <!-- Field Agent -->
+      <div class="perms-grid">
         <div class="surface-card" id="perm-card-field">
           <div class="card-header">
             <div class="card-title"><i class="fa-solid fa-user-helmet-safety" style="color:var(--accent)"></i> Field Agent</div>
-            <button class="btn btn-ghost btn-xs" onclick="saveRoleConfig('Field Agent')"><i class="fa-solid fa-floppy-disk"></i> Save</button>
+            <button class="btn btn-ghost btn-xs" onclick="doSaveRoleConfig('Field Agent')"><i class="fa-solid fa-floppy-disk"></i> Save</button>
           </div>
           <div style="padding:14px" id="perm-body-field"></div>
         </div>
-        <!-- Supervisor -->
+        <div class="surface-card" id="perm-card-subhead">
+          <div class="card-header">
+            <div class="card-title"><i class="fa-solid fa-user-check" style="color:#14b8a6"></i> Sub-Head</div>
+            <button class="btn btn-ghost btn-xs" onclick="doSaveRoleConfig('Sub-Head')"><i class="fa-solid fa-floppy-disk"></i> Save</button>
+          </div>
+          <div style="padding:14px" id="perm-body-subhead"></div>
+        </div>
         <div class="surface-card" id="perm-card-super">
           <div class="card-header">
             <div class="card-title"><i class="fa-solid fa-user-tie" style="color:var(--info)"></i> Supervisor</div>
-            <button class="btn btn-ghost btn-xs" onclick="saveRoleConfig('Supervisor')"><i class="fa-solid fa-floppy-disk"></i> Save</button>
+            <button class="btn btn-ghost btn-xs" onclick="doSaveRoleConfig('Supervisor')"><i class="fa-solid fa-floppy-disk"></i> Save</button>
           </div>
           <div style="padding:14px" id="perm-body-super"></div>
         </div>
-        <!-- GIS Analyst -->
         <div class="surface-card" id="perm-card-gis">
           <div class="card-header">
             <div class="card-title"><i class="fa-solid fa-globe" style="color:var(--warn)"></i> GIS Analyst</div>
-            <button class="btn btn-ghost btn-xs" onclick="saveRoleConfig('GIS Analyst')"><i class="fa-solid fa-floppy-disk"></i> Save</button>
+            <button class="btn btn-ghost btn-xs" onclick="doSaveRoleConfig('GIS Analyst')"><i class="fa-solid fa-floppy-disk"></i> Save</button>
           </div>
           <div style="padding:14px" id="perm-body-gis"></div>
         </div>
       </div>
       <div style="text-align:right">
-        <button class="btn btn-danger btn-sm" onclick="resetRoleConfigs()"><i class="fa-solid fa-rotate-left"></i> Reset All to Defaults</button>
+        <button class="btn btn-danger btn-sm" onclick="doResetRoleConfigs()"><i class="fa-solid fa-rotate-left"></i> Reset All to Defaults</button>
       </div>
     </div>
   </div>
@@ -114,33 +154,83 @@
 </div>
 <div id="toast"><i class="fa-solid fa-circle-check"></i><span id="toast-msg">Done</span></div>
 
-<style>
-.tab-btn { background:none;border:none;border-bottom:2px solid transparent;padding:10px 16px;font-size:13px;color:var(--text2);cursor:pointer;font-family:'Space Grotesk',sans-serif;display:flex;align-items:center;gap:7px;transition:all .15s; }
-.tab-btn.active { color:var(--accent);border-bottom-color:var(--accent); }
-.tab-btn:hover { color:var(--text); }
-.spinner { width:24px;height:24px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;display:inline-block; }
-@keyframes spin{to{transform:rotate(360deg)}}
-</style>
-
-
 <script src="js/api.js"></script>
 <script src="js/app.js"></script>
 <script src="js/notifications.js"></script>
 <script src="js/users.js"></script>
 <script>
-function doLogout(){ apiLogout().finally(()=>{ localStorage.removeItem('as_token'); window.location.href='login.html'; }); }
-function switchTab(t) {
-  document.getElementById('view-cards').style.display = t==='cards'?'block':'none';
-  document.getElementById('view-perms').style.display = t==='perms'?'block':'none';
-  document.getElementById('tab-cards').classList.toggle('active', t==='cards');
-  document.getElementById('tab-perms').classList.toggle('active', t==='perms');
-  if (t==='perms') loadRoleConfigs();
+// ── Role permissions — fully self-contained, defined last ─────────────────────
+const ROLE_PERM_KEYS   = ['canCreate','canEdit','canDelete','canApprove','canExport','canViewAll','canManageUsers','canViewAudit','canManageSettings'];
+const ROLE_PERM_LABELS = { canCreate:'Create Assets', canEdit:'Edit Assets', canDelete:'Delete Assets', canApprove:'Approve Captures', canExport:'Export Data', canViewAll:'View All Assets', canManageUsers:'Manage Users', canViewAudit:'View Audit Log', canManageSettings:'Manage Settings' };
+const ROLE_CARD_MAP    = { 'Field Agent':'field', 'Sub-Head':'subhead', 'Supervisor':'super', 'GIS Analyst':'gis' };
+
+function renderRoleCards(configs) {
+  (configs || []).forEach(cfg => {
+    const el = document.getElementById('perm-body-' + ROLE_CARD_MAP[cfg.role]);
+    if (!el) return;
+    el.innerHTML = ROLE_PERM_KEYS.map(k => `
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border);font-size:12px">
+        <span style="color:var(--text2)">${ROLE_PERM_LABELS[k]}</span>
+        <input type="checkbox" data-perm-role="${cfg.role}" data-perm-key="${k}"
+          ${cfg.defaults[k] ? 'checked' : ''}
+          style="accent-color:var(--accent);width:16px;height:16px;cursor:pointer">
+      </div>`).join('');
+  });
 }
+
+async function fetchAndRenderRoleCards() {
+  try {
+    const data = await apiGetRoleConfigs();
+    renderRoleCards(data.configs || data || []);
+  } catch (err) {
+    console.warn('[roleCards] load failed:', err.message);
+  }
+}
+
+async function doSaveRoleConfig(role) {
+  const cfg = {};
+  ROLE_PERM_KEYS.forEach(k => {
+    const el = document.querySelector(`[data-perm-role="${role}"][data-perm-key="${k}"]`);
+    if (el) cfg[k] = el.checked;
+  });
+  try {
+    await apiUpdateRoleConfig(role, { defaults: cfg });
+    toast(`${role} permissions saved`);
+    await fetchAndRenderRoleCards();
+  } catch (err) {
+    console.error('[doSaveRoleConfig]', err);
+    toast('Save failed — check connection', 'fa-circle-xmark', true);
+  }
+}
+
+async function doResetRoleConfigs() {
+  if (!confirm('Reset ALL role permissions to factory defaults?')) return;
+  try {
+    await apiResetRoleConfigs();
+    toast('All permissions reset to defaults');
+    await fetchAndRenderRoleCards();
+  } catch { toast('Reset failed', 'fa-circle-xmark', true); }
+}
+
+// ── Page setup ────────────────────────────────────────────────────────────────
+function doLogout() {
+  apiLogout().finally(() => { localStorage.removeItem('as_token'); window.location.href = 'login.html'; });
+}
+
+function switchTab(t) {
+  document.getElementById('view-cards').style.display = t === 'cards' ? 'block' : 'none';
+  document.getElementById('view-perms').style.display = t === 'perms' ? 'block' : 'none';
+  document.getElementById('tab-cards').classList.toggle('active', t === 'cards');
+  document.getElementById('tab-perms').classList.toggle('active', t === 'perms');
+  if (t === 'perms') fetchAndRenderRoleCards();
+}
+
 document.addEventListener('DOMContentLoaded', () => {
-  if (!localStorage.getItem('as_token')) { window.location.href='login.html'; return; }
+  if (!localStorage.getItem('as_token')) { window.location.href = 'login.html'; return; }
   initTheme(); renderUserBadge(); checkApiHealth();
-  
-  document.getElementById('modal-overlay')?.addEventListener('click',e=>{ if(e.target===e.currentTarget) closeModal(); });
+  document.getElementById('modal-overlay')?.addEventListener('click', e => {
+    if (e.target === e.currentTarget) closeModal();
+  });
   loadUsers();
 });
 </script>

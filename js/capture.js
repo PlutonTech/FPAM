@@ -158,6 +158,8 @@ function captureGPS() {
 const simulateGPS = captureGPS;
 
 let _pendingPhotoFiles = [];
+let _pendingDocFiles   = [];
+let _pendingExcelFiles = [];
 
 function handlePhotoFiles(files) {
   _pendingPhotoFiles = [...files];
@@ -179,6 +181,47 @@ function handlePhotoFiles(files) {
     del.addEventListener('click',()=>{ wrap.remove(); });
     wrap.appendChild(img); wrap.appendChild(del);
     preview.appendChild(wrap);
+  });
+}
+
+// Renders a simple filename chip (used for both docs and excel — neither
+// previews visually the way a photo thumbnail does). Uses the .file-chip /
+// .file-chip-row classes defined in capture.html's <style> block.
+function _renderFileChip(file, container, list, onRemove) {
+  const isExcel = /\.(xlsx?|csv)$/i.test(file.name);
+  const chip = document.createElement('div');
+  chip.className = 'file-chip';
+  chip.innerHTML = `<i class="fa-solid ${isExcel ? 'fa-file-excel' : 'fa-file-pdf'}"></i>
+    <span>${escHtml(file.name)}</span>
+    <button type="button"><i class="fa-solid fa-xmark"></i></button>`;
+  chip.querySelector('button').addEventListener('click', () => {
+    chip.remove();
+    onRemove();
+  });
+  container.appendChild(chip);
+}
+
+// Supporting documents (PDF / Word) attached at capture time. Uploaded via
+// apiUploadDocument once the asset has been created (same pattern as photos).
+function handleDocFiles(files) {
+  _pendingDocFiles = [..._pendingDocFiles, ...files];
+  const preview = document.getElementById('doc-preview');
+  if (!preview) return;
+  preview.innerHTML = '';
+  _pendingDocFiles.forEach((file, i) => {
+    _renderFileChip(file, preview, _pendingDocFiles, () => { _pendingDocFiles.splice(i, 1); });
+  });
+}
+
+// Spreadsheets (Excel / CSV) attached at capture time. Uploaded via
+// apiUploadExcel once the asset has been created.
+function handleExcelFiles(files) {
+  _pendingExcelFiles = [..._pendingExcelFiles, ...files];
+  const preview = document.getElementById('excel-preview');
+  if (!preview) return;
+  preview.innerHTML = '';
+  _pendingExcelFiles.forEach((file, i) => {
+    _renderFileChip(file, preview, _pendingExcelFiles, () => { _pendingExcelFiles.splice(i, 1); });
   });
 }
 
@@ -219,13 +262,38 @@ async function submitCapture() {
     const saved = r.asset || {};
     savedId = saved.assetId;
     assets.unshift({ ...saved, id:saved.assetId, lat, lng, geom:geomType, ts:Date.now() });
-    addAudit('ASSET_CREATED', saved.assetId, null, name+' captured at '+lat.toFixed(5)+', '+lng.toFixed(5));
-    toast(`Asset ${saved.assetId} captured and saved`);
+
+    const pendingApproval = saved.approvalStatus === 'Pending';
+    addAudit(
+      pendingApproval ? 'ASSET_SUBMITTED' : 'ASSET_CREATED',
+      saved.assetId, null,
+      name + (pendingApproval ? ' submitted for approval' : ' captured') + ' at ' + lat.toFixed(5) + ', ' + lng.toFixed(5)
+    );
+    toast(
+      pendingApproval
+        ? `Asset ${saved.assetId} submitted — awaiting approval`
+        : `Asset ${saved.assetId} captured and saved`,
+      pendingApproval ? 'fa-clock' : 'fa-circle-check'
+    );
 
     // Upload pending photos
     if (_pendingPhotoFiles.length && savedId) {
       for (const f of _pendingPhotoFiles) {
         try { await apiUploadPhoto(savedId, f); } catch {}
+      }
+    }
+
+    // Upload pending supporting documents (PDF / Word)
+    if (_pendingDocFiles.length && savedId) {
+      for (const f of _pendingDocFiles) {
+        try { await apiUploadDocument(savedId, f); } catch {}
+      }
+    }
+
+    // Upload pending spreadsheets (Excel / CSV)
+    if (_pendingExcelFiles.length && savedId) {
+      for (const f of _pendingExcelFiles) {
+        try { await apiUploadExcel(savedId, f); } catch {}
       }
     }
 
@@ -267,7 +335,13 @@ function clearForm() {
   const wrap=document.getElementById('type-specific-wrap'); if(wrap) wrap.style.display='none';
   const btn=document.getElementById('gps-btn'); if(btn){btn.innerHTML='<i class="fa-solid fa-location-crosshairs"></i> Capture GPS';btn.disabled=false;btn.style.cssText='';}
   const preview=document.getElementById('photo-preview'); if(preview) preview.innerHTML='';
+  const docPreview=document.getElementById('doc-preview'); if(docPreview) docPreview.innerHTML='';
+  const xlPreview=document.getElementById('excel-preview'); if(xlPreview) xlPreview.innerHTML='';
+  const docInput=document.getElementById('cap-docs'); if(docInput) docInput.value='';
+  const xlInput=document.getElementById('cap-excel'); if(xlInput) xlInput.value='';
   _pendingPhotoFiles = [];
+  _pendingDocFiles   = [];
+  _pendingExcelFiles = [];
 }
 
 // alias

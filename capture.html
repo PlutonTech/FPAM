@@ -165,6 +165,25 @@ textarea.form-control { resize: vertical; }
                    font-size: 9px; opacity: 0; transition: opacity .15s; }
 .photo-thumb-wrap:hover .photo-thumb-del { opacity: 1; }
 
+/* ── DOCUMENT / EXCEL DROP ZONE ── */
+.file-drop {
+  border: 2px dashed var(--border); border-radius: 10px; padding: 16px;
+  text-align: center; cursor: pointer; transition: all .15s; background: var(--bg);
+}
+.file-drop:hover { border-color: var(--blue); background: var(--blue-bg); }
+.file-drop i { font-size: 18px; color: var(--text3); margin-bottom: 6px; display: block; }
+.file-drop p { font-size: 12px; color: var(--text2); font-weight: 500; }
+.file-chip-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+.file-chip {
+  display: flex; align-items: center; gap: 6px; background: var(--white);
+  border: 1px solid var(--border); border-radius: 6px; padding: 6px 10px;
+  font-size: 11px; color: var(--text2); max-width: 100%;
+}
+.file-chip span { max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.file-chip button { background: none; border: none; color: var(--text3); cursor: pointer;
+                     padding: 0; display: flex; align-items: center; font-size: 10px; }
+.file-chip button:hover { color: var(--danger); }
+
 /* ── BUTTONS ── */
 .btn { display: inline-flex; align-items: center; gap: 7px; padding: 9px 18px;
        border-radius: 8px; font-family: var(--font); font-size: 13px; font-weight: 600;
@@ -257,6 +276,7 @@ textarea.form-control { resize: vertical; }
     <a class="nav-item" href="assets.html"><i class="fa-solid fa-database"></i>Asset Registry</a>
     <div class="nav-section">Management</div>
     <a class="nav-item active" href="capture.html"><i class="fa-solid fa-location-crosshairs"></i>Field Capture</a>
+    <a class="nav-item" href="approvals.html" data-require-role="Sub-Head,Supervisor,System Admin"><i class="fa-solid fa-stamp"></i>Approvals</a>
     <a class="nav-item" href="analytics.html"><i class="fa-solid fa-chart-bar"></i>Analytics</a>
     <a class="nav-item" href="users.html"><i class="fa-solid fa-users"></i>Users</a>
     <div class="nav-section">Data Tools</div>
@@ -530,6 +550,33 @@ textarea.form-control { resize: vertical; }
                      onchange="handlePhotoFiles(this.files)">
             </div>
             <div id="photo-preview"></div>
+          </div>
+
+          <!-- ── SECTION: SUPPORTING FILES ── -->
+          <div class="form-section-divider">
+            <span class="form-section-label"><i class="fa-solid fa-paperclip" style="margin-right:4px"></i>Supporting Files</span>
+            <div style="flex:1;height:1px;background:var(--border)"></div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Documents (PDF / Word)</label>
+            <div class="file-drop" onclick="document.getElementById('cap-docs').click()">
+              <i class="fa-solid fa-file-pdf"></i>
+              <p>Click to attach documents</p>
+              <input type="file" id="cap-docs" accept=".pdf,.doc,.docx,.txt" multiple style="display:none"
+                     onchange="handleDocFiles(this.files)">
+            </div>
+            <div id="doc-preview" class="file-chip-row"></div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Spreadsheets (Excel / CSV)</label>
+            <div class="file-drop" onclick="document.getElementById('cap-excel').click()">
+              <i class="fa-solid fa-file-excel"></i>
+              <p>Click to attach spreadsheets</p>
+              <input type="file" id="cap-excel" accept=".xls,.xlsx,.csv" multiple style="display:none"
+                     onchange="handleExcelFiles(this.files)">
+            </div>
+            <div id="excel-preview" class="file-chip-row"></div>
           </div>
 
           <!-- ── SUBMIT ── -->

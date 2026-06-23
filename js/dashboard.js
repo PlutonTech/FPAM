@@ -89,6 +89,26 @@ async function renderDashboard() {
     if (ub) ub.textContent = ur.total || '';
   } catch {}
 
+  // ── Pending approvals — silently hides for roles without canApproveAssets,
+  // since the backend route itself 403s and the catch just leaves the panel
+  // hidden (its default display:none).
+  try {
+    const s = await apiApprovalsSummary();
+    const panel = document.getElementById('approval-alerts-panel');
+    const countEl = document.getElementById('approval-alert-count');
+    if (panel) {
+      if (s.pending > 0) {
+        panel.style.display = 'block';
+        if (countEl) countEl.textContent = s.pending;
+      } else {
+        panel.style.display = 'none';
+      }
+    }
+  } catch {
+    const panel = document.getElementById('approval-alerts-panel');
+    if (panel) panel.style.display = 'none';
+  }
+
   // ── Activity feed — fetch from audit API, fall back to local ───────────────
   try {
     const ar = await apiGetAudit({ limit: 6 });

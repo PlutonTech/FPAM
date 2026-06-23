@@ -4,7 +4,7 @@
  * Falls back gracefully to localStorage when backend is unreachable.
  */
 
-const API_BASE = window.API_BASE || 'https://fpambacend.onrender.com/api';
+const API_BASE = window.API_BASE || 'http://localhost:3001/api';
 
 let _token = localStorage.getItem('as_token') || null;
 let _apiOnline = false;
@@ -318,7 +318,7 @@ function updateConnIndicator(online) {
 // Check API health on load
 async function checkApiHealth() {
   try {
-    const r = await fetch(`${window.API_BASE || 'https://fpambacend.onrender.com'}/health`);
+    const r = await fetch(`${window.API_BASE || 'http://localhost:3001'}/health`);
     if (r.ok) { _apiOnline = true; updateConnIndicator(true); }
   } catch { _apiOnline = false; updateConnIndicator(false); }
 }
@@ -388,18 +388,19 @@ window.clearSelection = ()     => typeof clearBulkSelection !== 'undefined' ? cl
 // Users page
 window.loadUsers       = ()    => typeof renderUsers !== 'undefined' ? renderUsers() : null;
 window.openCreateUser  = ()    => typeof openAddUserModal !== 'undefined' ? openAddUserModal() : null;
-const loadRoleConfigs = ()    => { apiGetRoleConfigs().then(data=>{renderRoleConfigCards(data.configs||data)}).catch(()=>{}); };
-const saveRoleConfig  = (role)=> {
-  const cfg={};
-  document.querySelectorAll(`[data-perm-role="${role}"]`).forEach(cb=>{ cfg[cb.dataset.permKey]=cb.checked; });
-  apiUpdateRoleConfig(role,{defaults:cfg}).then(()=>toast(`${role} permissions saved`)).catch(()=>toast(`Saved locally`));
-};
-const resetRoleConfigs= ()    => { if(!confirm('Reset all role permissions to factory defaults?'))return; apiResetRoleConfigs().then(()=>{toast('All permissions reset to defaults');loadRoleConfigs();}).catch(()=>toast('Reset failed','fa-circle-xmark',true)); };
+// NOTE: loadRoleConfigs / saveRoleConfig / resetRoleConfigs are defined as
+// `async function` in users.js (which loads after api.js). Those declarations
+// become window properties and override these — that's intentional; users.js
+// has the fuller implementation. These stubs exist only as fallbacks if
+// users.js somehow doesn't load.
+window.loadRoleConfigs = window.loadRoleConfigs || (() => { apiGetRoleConfigs().then(data=>{renderRoleConfigCards(data.configs||data)}).catch(()=>{}); });
+window.saveRoleConfig  = window.saveRoleConfig  || ((role)=> { apiUpdateRoleConfig(role,{defaults:{}}).catch(()=>{}); });
+window.resetRoleConfigs= window.resetRoleConfigs|| (()    => { apiResetRoleConfigs().catch(()=>{}); });
 
-const PERM_LABELS = { canCreate:'Create Assets', canEdit:'Edit Assets', canDelete:'Delete Assets', canExport:'Export Data', canViewAll:'View All Assets', canManageUsers:'Manage Users', canViewAudit:'View Audit Log', canManageSettings:'Manage Settings' };
+const PERM_LABELS = { canCreate:'Create Assets', canEdit:'Edit Assets', canDelete:'Delete Assets', canApprove:'Approve Captures', canExport:'Export Data', canViewAll:'View All Assets', canManageUsers:'Manage Users', canViewAudit:'View Audit Log', canManageSettings:'Manage Settings' };
 
 function renderRoleConfigCards(configs) {
-  const roleMap = { 'Field Agent':'field', 'Supervisor':'super', 'GIS Analyst':'gis' };
+  const roleMap = { 'Field Agent':'field', 'Sub-Head':'subhead', 'Supervisor':'super', 'GIS Analyst':'gis' };
   (configs||[]).forEach(cfg => {
     const key = roleMap[cfg.role];
     if (!key) return;

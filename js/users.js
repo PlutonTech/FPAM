@@ -209,16 +209,15 @@ async function doEditUser(id) {
 const saveEditUser = doEditUser;
 
 function openPermissionsModal(u) {
-  const PERMS = ['canCreate','canEdit','canDelete','canExport','canViewAll','canManageUsers','canViewAudit','canManageSettings'];
-  const LABELS = { canCreate:'Create Assets', canEdit:'Edit Assets', canDelete:'Delete Assets', canExport:'Export Data', canViewAll:'View All Assets', canManageUsers:'Manage Users', canViewAudit:'View Audit Log', canManageSettings:'Manage Settings' };
+  const PERMS  = ['canCreate','canEdit','canDelete','canApprove','canExport','canViewAll','canManageUsers','canViewAudit','canManageSettings'];
+  const LABELS = { canCreate:'Create Assets', canEdit:'Edit Assets', canDelete:'Delete Assets', canApprove:'Approve Captures', canExport:'Export Data', canViewAll:'View All Assets', canManageUsers:'Manage Users', canViewAudit:'View Audit Log', canManageSettings:'Manage Settings' };
   const current = u.permissions || {};
-
   openModal(`Permissions — ${u.name}`,
-    `<div style="margin-bottom:10px;font-size:12px;color:var(--text2)">Override default role permissions for this user. Unchecked = denied regardless of role defaults.</div>
+    `<div style="margin-bottom:10px;font-size:12px;color:var(--text2)">Override default role permissions for this user. Checked = granted.</div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
       ${PERMS.map(p=>`<div style="display:flex;align-items:center;justify-content:space-between;background:var(--surface2);border-radius:6px;padding:8px 12px">
         <span style="font-size:12px;color:var(--text2)">${LABELS[p]||p}</span>
-        <input type="checkbox" id="perm-${p}" ${current[p]!==false?'checked':''} style="accent-color:var(--accent);width:16px;height:16px;cursor:pointer">
+        <input type="checkbox" id="perm-${p}" ${current[p]===true?'checked':''} style="accent-color:var(--accent);width:16px;height:16px;cursor:pointer">
       </div>`).join('')}
     </div>`,
     `<button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
@@ -227,19 +226,23 @@ function openPermissionsModal(u) {
 }
 
 async function doSavePermissions(id) {
-  const PERMS = ['canCreate','canEdit','canDelete','canExport','canViewAll','canManageUsers','canViewAudit','canManageSettings'];
+  const PERMS = ['canCreate','canEdit','canDelete','canApprove','canExport','canViewAll','canManageUsers','canViewAudit','canManageSettings'];
   const perms = {};
-  PERMS.forEach(p => { perms[p] = document.getElementById(`perm-${p}`)?.checked ?? true; });
+  PERMS.forEach(p => { perms[p] = document.getElementById(`perm-${p}`)?.checked ?? false; });
   try {
     await apiUpdatePermissions(id, perms);
+    // Update local array AND reload cards so the serialized onclick data is fresh
+    const u = users.find(x => (x._id||x.id) === id);
+    if (u) u.permissions = perms;
     toast('Permissions saved');
-  } catch {
-    const u = users.find(x=>(x._id||x.id)===id);
-    if (u) { u.permissions = perms; saveLocal(); }
-    toast('Saved locally');
+    closeModal();
+    await loadUsers();   // re-renders cards with updated user data
+  } catch (err) {
+    console.error('[doSavePermissions]', err);
+    toast('Save failed — check connection', 'fa-circle-xmark', true);
+    closeModal();
   }
   addAudit('USER_UPDATED', id, null, 'Permissions updated');
-  closeModal();
 }
 
 // alias
