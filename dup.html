@@ -1,0 +1,1029 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>FPAM — Federal Public Assets Maintenance</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#0B2545; --navy2:#0D2D57; --blue:#4A90D9; --blue-lt:#6AAEE8;
+  --terracotta:#B54A2F; --gold:#D4A017; --white:#fff; --bg:#F4F6F9;
+  --text:#0B1829; --text2:#2C3E50; --text3:#5A6A7A;
+  --border:#E8ECF0; --success:#2DB87B;
+  --ff-head:"Space Grotesk",sans-serif; --ff-body:"DM Sans",sans-serif; --ff-mono:"Space Mono",monospace;
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--ff-body);color:var(--text);background:var(--white);overflow-x:hidden}
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-thumb{background:#c0cad8;border-radius:10px}
+img{max-width:100%;display:block}
+a{text-decoration:none;color:inherit}
+
+/* ── UTILITY ── */
+.container{max-width:1200px;margin:0 auto;padding:0 24px}
+.tag{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase}
+.tag-blue{background:rgba(74,144,217,.12);color:var(--blue)}
+.tag-gold{background:rgba(212,160,23,.12);color:var(--gold)}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 24px;border-radius:8px;font-family:var(--ff-body);font-size:14px;font-weight:600;cursor:pointer;border:none;transition:all .2s;white-space:nowrap}
+.btn-primary{background:var(--blue);color:#fff}
+.btn-primary:hover{background:var(--blue-lt);box-shadow:0 6px 24px rgba(74,144,217,.4)}
+.btn-outline{background:transparent;color:#fff;border:2px solid rgba(255,255,255,.5)}
+.btn-outline:hover{background:rgba(255,255,255,.1);border-color:#fff}
+.btn-terracotta{background:var(--terracotta);color:#fff}
+.btn-terracotta:hover{background:#c55535;box-shadow:0 6px 24px rgba(181,74,47,.4)}
+.section-eyebrow{font-family:var(--ff-mono);font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:var(--blue);margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.section-eyebrow::after{content:"";flex:0 0 40px;height:2px;background:var(--blue);border-radius:2px}
+.section-title{font-family:var(--ff-head);font-size:38px;font-weight:800;color:var(--navy);line-height:1.1;margin-bottom:14px}
+.section-sub{font-size:15px;color:var(--text3);line-height:1.7;max-width:560px}
+
+/* ── NAV ── */
+#nav{position:fixed;top:0;left:0;right:0;z-index:200;transition:all .3s}
+#nav.scrolled{background:var(--navy);box-shadow:0 4px 24px rgba(0,0,0,.25)}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;padding:0 24px;height:70px;max-width:1400px;margin:0 auto}
+.nav-logo{display:flex;align-items:center;gap:12px}
+.nav-logo-icon{width:38px;height:38px;border-radius:8px;background:var(--blue);display:flex;align-items:center;justify-content:center}
+.nav-logo-icon i{color:#fff;font-size:17px}
+.nav-logo-text .mark{font-family:var(--ff-head);font-size:16px;font-weight:800;color:#fff;line-height:1}
+.nav-logo-text .sub{font-family:var(--ff-mono);font-size:8px;color:rgba(255,255,255,.5);letter-spacing:1.5px;text-transform:uppercase;margin-top:2px}
+.nav-links{display:flex;align-items:center;gap:28px}
+.nav-links a{font-size:13.5px;font-weight:500;color:rgba(255,255,255,.8);transition:color .15s;padding:4px 0;border-bottom:2px solid transparent}
+.nav-links a:hover{color:#fff;border-bottom-color:var(--blue)}
+.nav-cta{background:var(--terracotta);color:#fff;padding:9px 20px;border-radius:7px;font-size:13px;font-weight:600;transition:all .2s}
+.nav-cta:hover{background:#c55535}
+.nav-hamburger{display:none;background:none;border:none;color:#fff;font-size:22px;cursor:pointer;padding:4px}
+.nav-mobile{display:none;position:fixed;top:70px;left:0;right:0;background:var(--navy);padding:20px 24px;flex-direction:column;gap:16px;border-top:1px solid rgba(255,255,255,.08);z-index:199}
+.nav-mobile.open{display:flex}
+.nav-mobile a{color:rgba(255,255,255,.8);font-size:15px;font-weight:500;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.06)}
+
+/* ── HERO THREE.JS ── */
+.hero{position:relative;height:100vh;min-height:600px;overflow:hidden;background:var(--navy)}
+#three-canvas{position:absolute;inset:0;width:100%;height:100%;z-index:0}
+.hero-overlay{position:absolute;inset:0;background:linear-gradient(135deg,rgba(11,37,69,.9) 0%,rgba(11,37,69,.5) 60%,rgba(11,37,69,.2) 100%);z-index:1;pointer-events:none}
+.hero-content{position:relative;z-index:2;height:100%;display:flex;flex-direction:column;justify-content:center;padding:0 60px;max-width:720px}
+.hero-eyebrow{font-family:var(--ff-mono);font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:var(--blue-lt);margin-bottom:14px;display:flex;align-items:center;gap:8px;animation:fadeUp .8s ease both}
+.hero-eyebrow::before{content:"";width:24px;height:2px;background:var(--blue)}
+.hero-title{font-family:var(--ff-head);font-size:clamp(28px,3.5vw,52px);font-weight:700;color:#fff;line-height:1.12;margin-bottom:18px;letter-spacing:-0.5px;animation:fadeUp .9s .1s ease both}
+.hero-title span{color:var(--blue-lt)}
+.hero-sub{font-size:15px;color:rgba(255,255,255,.75);line-height:1.7;margin-bottom:30px;max-width:480px;animation:fadeUp .9s .2s ease both}
+.hero-actions{display:flex;gap:12px;flex-wrap:wrap;animation:fadeUp .9s .3s ease both}
+.hero-badge{position:absolute;right:60px;bottom:80px;z-index:2;background:rgba(255,255,255,.06);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:16px 20px;animation:fadeUp .9s .5s ease both}
+.hero-badge .badge-num{font-family:var(--ff-head);font-size:28px;font-weight:800;color:#fff;line-height:1}
+.hero-badge .badge-label{font-family:var(--ff-mono);font-size:9px;color:rgba(255,255,255,.5);letter-spacing:1.5px;text-transform:uppercase;margin-top:4px}
+.hero-scroll{position:absolute;bottom:32px;left:50%;transform:translateX(-50%);z-index:2;display:flex;flex-direction:column;align-items:center;gap:6px;color:rgba(255,255,255,.4);font-family:var(--ff-mono);font-size:9px;letter-spacing:2px;text-transform:uppercase}
+.scroll-line{width:1px;height:40px;background:linear-gradient(to bottom,rgba(255,255,255,.4),transparent);animation:scrollDrop 1.6s ease-in-out infinite}
+@keyframes scrollDrop{0%,100%{opacity:0;transform:scaleY(0);transform-origin:top}50%{opacity:1;transform:scaleY(1)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── TICKER ── */
+.ticker-strip{background:var(--navy);padding:10px 0;overflow:hidden;border-top:3px solid var(--blue)}
+.ticker-inner{display:flex;white-space:nowrap;animation:ticker 32s linear infinite}
+.ticker-item{display:inline-flex;align-items:center;gap:10px;padding:0 40px;font-family:var(--ff-mono);font-size:11px;color:rgba(255,255,255,.65);letter-spacing:.5px}
+.ticker-item i{color:var(--blue);font-size:7px}
+@keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* ── SERVICES ── */
+.services-strip{padding:80px 0;background:var(--bg)}
+.services-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:20px}
+.service-card{padding:36px 28px;background:#fff;border-right:1px solid var(--border);border-bottom:1px solid var(--border);transition:all .3s;position:relative;overflow:hidden}
+.service-card:first-child{border-left:1px solid var(--border)}
+.service-card::before{content:"";position:absolute;bottom:0;left:0;width:100%;height:3px;background:linear-gradient(90deg,var(--blue),var(--blue-lt));transform:scaleX(0);transition:transform .3s}
+.service-card:hover::before{transform:scaleX(1)}
+.service-card:hover{transform:translateY(-4px);box-shadow:0 12px 40px rgba(0,0,0,.08)}
+.sc-icon{width:48px;height:48px;border-radius:12px;background:rgba(74,144,217,.1);display:flex;align-items:center;justify-content:center;margin-bottom:16px;font-size:20px;color:var(--blue);transition:all .3s}
+.service-card:hover .sc-icon{background:var(--blue);color:#fff}
+.sc-title{font-family:var(--ff-head);font-size:16px;font-weight:700;color:var(--navy);margin-bottom:10px}
+.sc-text{font-size:13px;color:var(--text3);line-height:1.65}
+
+/* ── STATS ── */
+.stats-band{background:linear-gradient(135deg,var(--navy) 0%,var(--navy2) 100%);padding:60px 0;position:relative;overflow:hidden}
+.stats-band::before{content:"";position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%234A90D9' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:32px}
+.stat-item{text-align:center;padding:28px 20px}
+.stat-icon{font-size:28px;color:var(--blue);margin-bottom:12px;opacity:.8}
+.stat-num{font-family:var(--ff-head);font-size:42px;font-weight:800;color:#fff;line-height:1}
+.stat-num span{font-size:28px;color:var(--blue-lt)}
+.stat-label{font-family:var(--ff-mono);font-size:10px;color:rgba(255,255,255,.45);letter-spacing:1.5px;text-transform:uppercase;margin-top:8px}
+
+/* ── ABOUT ── */
+.about-section{padding:100px 0;background:#fff}
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
+.about-img-block{position:relative}
+.about-3d-display{width:100%;aspect-ratio:4/3;border-radius:16px;overflow:hidden;position:relative;background:var(--navy)}
+#about-canvas{width:100%;height:100%}
+.about-img-badge{position:absolute;bottom:-20px;right:-20px;background:var(--blue);color:#fff;padding:20px 24px;border-radius:12px;box-shadow:0 8px 32px rgba(74,144,217,.4)}
+.about-img-badge .big{font-family:var(--ff-head);font-size:32px;font-weight:800;line-height:1}
+.about-img-badge .small{font-size:11px;opacity:.75;margin-top:3px}
+.about-content .section-eyebrow{margin-bottom:8px}
+.about-pills{display:flex;flex-wrap:wrap;gap:8px;margin-top:28px}
+.pill{padding:6px 14px;border:1px solid var(--border);border-radius:20px;font-size:12px;font-weight:500;color:var(--text2);transition:all .2s}
+.pill:hover{background:var(--blue);color:#fff;border-color:var(--blue)}
+.about-director{margin-top:32px;display:flex;align-items:center;gap:14px;padding:16px 20px;background:var(--bg);border-radius:12px;border-left:3px solid var(--blue)}
+.director-info .name{font-family:var(--ff-head);font-size:14px;font-weight:700;color:var(--navy)}
+.director-info .title{font-size:12px;color:var(--text3);margin-top:2px}
+
+/* ── MANDATE ── */
+.mandate-section{padding:80px 0;background:var(--bg)}
+.mandate-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:48px}
+.mandate-card{background:#fff;border-radius:12px;padding:32px;border:1px solid var(--border);transition:all .3s;position:relative}
+.mandate-card:hover{box-shadow:0 8px 32px rgba(0,0,0,.08);transform:translateY(-4px)}
+.mc-num{font-family:var(--ff-mono);font-size:11px;color:var(--blue);letter-spacing:2px;margin-bottom:12px}
+.mc-title{font-family:var(--ff-head);font-size:17px;font-weight:700;color:var(--navy);margin-bottom:10px}
+.mc-text{font-size:13px;color:var(--text3);line-height:1.65}
+.mc-icon{position:absolute;top:24px;right:24px;font-size:20px;color:rgba(74,144,217,.15)}
+
+/* ── EXECUTIVE ORDER ── */
+.eo-section{padding:80px 0;background:linear-gradient(135deg,var(--navy),var(--navy2));position:relative;overflow:hidden}
+#eo-canvas{position:absolute;inset:0;width:100%;height:100%;opacity:.4}
+.eo-inner{position:relative;z-index:1;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
+.eo-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:20px;padding:6px 14px;font-family:var(--ff-mono);font-size:9px;color:var(--blue-lt);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:16px}
+.eo-title{font-family:var(--ff-head);font-size:34px;font-weight:800;color:#fff;line-height:1.15;margin-bottom:16px}
+.eo-text{font-size:14px;color:rgba(255,255,255,.65);line-height:1.7;margin-bottom:24px}
+.eo-pillars{display:flex;flex-direction:column;gap:12px}
+.eo-pillar{display:flex;align-items:flex-start;gap:12px;padding:16px;background:rgba(255,255,255,.05);border-radius:10px;border:1px solid rgba(255,255,255,.08);transition:all .2s}
+.eo-pillar:hover{background:rgba(255,255,255,.09)}
+.eo-pillar-icon{width:36px;height:36px;background:rgba(74,144,217,.2);border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--blue-lt);font-size:14px;flex-shrink:0}
+.eo-pillar-title{font-family:var(--ff-head);font-size:13px;font-weight:600;color:#fff}
+.eo-pillar-text{font-size:12px;color:rgba(255,255,255,.5);line-height:1.5;margin-top:3px}
+
+/* ── NEWS ── */
+.news-section{padding:80px 0;background:#fff}
+.news-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:48px}
+.news-card{border:1px solid var(--border);border-radius:12px;overflow:hidden;transition:all .3s}
+.news-card:hover{box-shadow:0 8px 32px rgba(0,0,0,.08);transform:translateY(-4px)}
+.nc-img{height:180px;background:linear-gradient(135deg,var(--navy),var(--navy2));position:relative;display:flex;align-items:center;justify-content:center}
+.nc-img i{font-size:36px;color:rgba(255,255,255,.2)}
+.nc-cat{position:absolute;top:12px;left:12px}
+.nc-body{padding:20px}
+.nc-date{font-family:var(--ff-mono);font-size:10px;color:var(--text3);letter-spacing:1px;margin-bottom:8px}
+.nc-title{font-family:var(--ff-head);font-size:15px;font-weight:700;color:var(--navy);line-height:1.4;margin-bottom:10px}
+.nc-text{font-size:13px;color:var(--text3);line-height:1.6}
+.nc-link{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--blue);margin-top:14px}
+.nc-link i{font-size:10px;transition:transform .2s}
+.nc-link:hover i{transform:translateX(3px)}
+
+/* ── CONTACT ── */
+.contact-section{padding:80px 0;background:var(--bg)}
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:start;margin-top:48px}
+.contact-info{display:flex;flex-direction:column;gap:20px}
+.ci-item{display:flex;align-items:flex-start;gap:14px}
+.ci-icon{width:44px;height:44px;background:var(--navy);border-radius:10px;display:flex;align-items:center;justify-content:center;color:var(--blue);font-size:16px;flex-shrink:0}
+.ci-label{font-family:var(--ff-mono);font-size:10px;color:var(--text3);letter-spacing:1px;margin-bottom:4px}
+.ci-value{font-size:14px;font-weight:500;color:var(--navy)}
+.contact-form{background:#fff;border-radius:16px;padding:36px;border:1px solid var(--border)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.form-group{display:flex;flex-direction:column;gap:6px;margin-bottom:16px}
+.form-group label{font-family:var(--ff-mono);font-size:10px;color:var(--text3);letter-spacing:1px;text-transform:uppercase}
+.form-group input,.form-group textarea,.form-group select{border:1px solid var(--border);border-radius:8px;padding:10px 14px;font-family:var(--ff-body);font-size:14px;color:var(--text);outline:none;transition:border-color .2s;background:#fff}
+.form-group input:focus,.form-group textarea:focus,.form-group select:focus{border-color:var(--blue)}
+.form-group textarea{resize:vertical;min-height:100px}
+
+/* ── FOOTER ── */
+footer{background:var(--navy);padding:60px 0 30px;color:rgba(255,255,255,.6)}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;margin-bottom:48px}
+.footer-brand .mark{font-family:var(--ff-head);font-size:18px;font-weight:800;color:#fff;margin-bottom:8px}
+.footer-brand p{font-size:13px;line-height:1.7;max-width:280px}
+.footer-col h4{font-family:var(--ff-head);font-size:13px;font-weight:700;color:#fff;margin-bottom:16px;letter-spacing:.5px}
+.footer-col ul{list-style:none;display:flex;flex-direction:column;gap:10px}
+.footer-col ul a{font-size:13px;color:rgba(255,255,255,.5);transition:color .15s}
+.footer-col ul a:hover{color:var(--blue-lt)}
+.footer-bottom{border-top:1px solid rgba(255,255,255,.08);padding-top:24px;display:flex;justify-content:space-between;align-items:center}
+.footer-bottom p{font-size:12px}
+.footer-socials{display:flex;gap:12px}
+.footer-socials a{width:34px;height:34px;border-radius:8px;background:rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.5);font-size:14px;transition:all .2s}
+.footer-socials a:hover{background:var(--blue);color:#fff}
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+  .nav-links,.nav-cta{display:none}
+  .nav-hamburger{display:block}
+  .services-grid{grid-template-columns:1fr 1fr}
+  .service-card:first-child{border-left:none}
+  .stats-grid{grid-template-columns:repeat(2,1fr)}
+  .about-grid,.eo-inner,.contact-grid{grid-template-columns:1fr}
+  .mandate-grid{grid-template-columns:1fr 1fr}
+  .news-grid{grid-template-columns:1fr}
+  .footer-grid{grid-template-columns:1fr 1fr}
+  .hero-content{padding:0 24px}
+  .hero-badge{display:none}
+  .form-row{grid-template-columns:1fr}
+}
+@media(max-width:540px){
+  .services-grid,.mandate-grid,.stats-grid{grid-template-columns:1fr}
+  .service-card{border:1px solid var(--border);border-radius:8px;margin-bottom:1px}
+  .section-title{font-size:28px}
+  .footer-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="nav">
+  <div class="nav-inner">
+    <a class="nav-logo" href="#">
+      <div class="nav-logo-icon"><i class="fa-solid fa-building-columns"></i></div>
+      <div class="nav-logo-text">
+        <div class="mark">FPAM</div>
+        <div class="sub">Federal Public Assets</div>
+      </div>
+    </a>
+    <div class="nav-links">
+      <a href="#about">About</a>
+      <a href="#services">Services</a>
+      <a href="#mandate">Mandate</a>
+      <a href="#eo">Exec. Order</a>
+      <a href="#news">News</a>
+      <a href="#contact">Contact</a>
+    </div>
+    <a href="#contact" class="nav-cta"><i class="fa-solid fa-file-pen"></i> Report an Issue</a>
+    <button class="nav-hamburger" onclick="toggleMenu()"><i class="fa-solid fa-bars"></i></button>
+  </div>
+  <div class="nav-mobile" id="nav-mobile">
+    <a href="#about" onclick="toggleMenu()">About FPAM</a>
+    <a href="#services" onclick="toggleMenu()">Our Services</a>
+    <a href="#mandate" onclick="toggleMenu()">Mandate</a>
+    <a href="#eo" onclick="toggleMenu()">Executive Order</a>
+    <a href="#news" onclick="toggleMenu()">News</a>
+    <a href="#contact" onclick="toggleMenu()">Contact Us</a>
+  </div>
+</nav>
+
+<!-- HERO: THREE.JS PARTICLE FIELD -->
+<section class="hero" id="home">
+  <canvas id="three-canvas"></canvas>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">Federal Ministry of Housing &amp; Urban Development</div>
+    <h1 class="hero-title">Maintaining Today.<br><span>Preserving Tomorrow.</span><br>Building for Generations.</h1>
+    <p class="hero-sub">FPAM ensures the efficiency, safety and sustainability of federal public assets and housing infrastructures across Nigeria's 36 states and FCT.</p>
+    <div class="hero-actions">
+      <a href="#about" class="btn btn-primary"><i class="fa-solid fa-circle-info"></i> About FPAM</a>
+      <a href="#services" class="btn btn-outline"><i class="fa-solid fa-grid-2"></i> Our Services</a>
+    </div>
+  </div>
+  <div class="hero-badge">
+    <div class="badge-num">2,764<span style="font-size:18px;color:var(--blue-lt)">+</span></div>
+    <div class="badge-label">Federal Assets</div>
+  </div>
+  <div class="hero-scroll">
+    <div class="scroll-line"></div>
+    Scroll
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker-strip">
+  <div class="ticker-inner">
+    <span class="ticker-item"><i class="fa-solid fa-circle-dot"></i>2,764+ Federal Assets Managed Nationwide</span>
+    <span class="ticker-item"><i class="fa-solid fa-circle-dot"></i>250+ Housing Estates Under Active Management</span>
+    <span class="ticker-item"><i class="fa-solid fa-circle-dot"></i>36 States &amp; FCT Coverage</span>
+    <span class="ticker-item"><i class="fa-solid fa-circle-dot"></i>1M+ Lives Impacted Across Nigeria</span>
+    <span class="ticker-item"><i class="fa-solid fa-circle-dot"></i>Presidential Executive Order No. 11 Compliance</span>
+    <span class="ticker-item"><i class="fa-solid fa-circle-dot"></i>Federal Ministry of Housing &amp; Urban Development</span>
+    <span class="ticker-item"><i class="fa-solid fa-circle-dot"></i>31 MDAs Under FPAM Management</span>
+    <span class="ticker-item"><i class="fa-solid fa-circle-dot"></i>2,764+ Federal Assets Managed Nationwide</span>
+    <span class="ticker-item"><i class="fa-solid fa-circle-dot"></i>250+ Housing Estates Under Active Management</span>
+    <span class="ticker-item"><i class="fa-solid fa-circle-dot"></i>36 States &amp; FCT Coverage</span>
+    <span class="ticker-item"><i class="fa-solid fa-circle-dot"></i>1M+ Lives Impacted Across Nigeria</span>
+    <span class="ticker-item"><i class="fa-solid fa-circle-dot"></i>Presidential Executive Order No. 11 Compliance</span>
+    <span class="ticker-item"><i class="fa-solid fa-circle-dot"></i>Federal Ministry of Housing &amp; Urban Development</span>
+    <span class="ticker-item"><i class="fa-solid fa-circle-dot"></i>31 MDAs Under FPAM Management</span>
+  </div>
+</div>
+
+<!-- SERVICES -->
+<section class="services-strip" id="services">
+  <div class="container">
+    <div style="text-align:center;margin-bottom:0">
+      <div class="section-eyebrow" style="justify-content:center"><span>What We Do</span></div>
+      <h2 class="section-title" style="text-align:center">Comprehensive Asset<br>Management Services</h2>
+      <p class="section-sub" style="margin:0 auto;text-align:center">End-to-end stewardship of Nigeria's federal public assets, housing estates, and government infrastructure.</p>
+    </div>
+  </div>
+  <div class="services-grid" style="margin-top:40px">
+    <div class="service-card">
+      <div class="sc-icon"><i class="fa-solid fa-building"></i></div>
+      <div class="sc-title">Asset Maintenance</div>
+      <div class="sc-text">We maintain government buildings and facilities to world-class standards, ensuring longevity and operational efficiency across all 36 states.</div>
+    </div>
+    <div class="service-card">
+      <div class="sc-icon"><i class="fa-solid fa-house-chimney"></i></div>
+      <div class="sc-title">Housing Estates</div>
+      <div class="sc-text">Sustainable management of 250+ federal housing estates and residential communities, ensuring dignified living for Nigerians in public service.</div>
+    </div>
+    <div class="service-card">
+      <div class="sc-icon"><i class="fa-solid fa-gears"></i></div>
+      <div class="sc-title">Facility Management</div>
+      <div class="sc-text">Integrated facility management services covering MEP systems, structural integrity, and operational efficiency of federal infrastructure assets.</div>
+    </div>
+    <div class="service-card">
+      <div class="sc-icon"><i class="fa-solid fa-shield-halved"></i></div>
+      <div class="sc-title">Safety &amp; Compliance</div>
+      <div class="sc-text">Upholding safety standards, quality assurance and regulatory compliance in all operations per Presidential Executive Order No. 11.</div>
+    </div>
+    <div class="service-card">
+      <div class="sc-icon"><i class="fa-solid fa-map-location-dot"></i></div>
+      <div class="sc-title">Asset Inventory</div>
+      <div class="sc-text">Comprehensive digital cataloguing, GIS mapping and valuation of 2,764+ federal assets for transparent governance and accountability.</div>
+    </div>
+    <div class="service-card">
+      <div class="sc-icon"><i class="fa-solid fa-chart-line"></i></div>
+      <div class="sc-title">Revenue Management</div>
+      <div class="sc-text">Optimising returns from federal asset leases, rents and concessions through transparent, accountable and commercially viable frameworks.</div>
+    </div>
+    <div class="service-card">
+      <div class="sc-icon"><i class="fa-solid fa-tree-city"></i></div>
+      <div class="sc-title">Urban Development</div>
+      <div class="sc-text">Supporting sustainable urban renewal and housing provision aligned with the Ministry's vision for modern Nigerian cities and communities.</div>
+    </div>
+    <div class="service-card">
+      <div class="sc-icon"><i class="fa-solid fa-handshake"></i></div>
+      <div class="sc-title">Stakeholder Relations</div>
+      <div class="sc-text">Engaging MDAs, tenants, and communities to build collaborative frameworks for responsible asset stewardship across the federation.</div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section class="stats-band">
+  <div class="container">
+    <div class="stats-grid">
+      <div class="stat-item">
+        <div class="stat-icon"><i class="fa-solid fa-layer-group"></i></div>
+        <div class="stat-num">2,764<span>+</span></div>
+        <div class="stat-label">Assets Maintained</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-icon"><i class="fa-solid fa-city"></i></div>
+        <div class="stat-num">250<span>+</span></div>
+        <div class="stat-label">Housing Estates</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-icon"><i class="fa-solid fa-users"></i></div>
+        <div class="stat-num">1<span>M+</span></div>
+        <div class="stat-label">Lives Impacted</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-icon"><i class="fa-solid fa-map-location-dot"></i></div>
+        <div class="stat-num">36<span>+</span></div>
+        <div class="stat-label">States Covered</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="about-section" id="about">
+  <div class="container">
+    <div class="about-grid">
+      <div class="about-img-block">
+        <div class="about-3d-display">
+          <canvas id="about-canvas"></canvas>
+        </div>
+        <div class="about-img-badge">
+          <div class="big">31</div>
+          <div class="small">MDAs Under Management</div>
+        </div>
+      </div>
+      <div class="about-content">
+        <div class="section-eyebrow"><span>Who We Are</span></div>
+        <h2 class="section-title">Nigeria's Federal Asset Management Authority</h2>
+        <p class="section-sub">The Federal Public Assets Maintenance (FPAM) is the operational arm of the Federal Ministry of Housing &amp; Urban Development, mandated to manage, maintain and preserve federal public assets across Nigeria.</p>
+        <p style="font-size:14px;color:var(--text3);line-height:1.75;margin-top:16px">Under Presidential Executive Order No. 11, FPAM operates with clear authority to ensure all federal government buildings, housing estates and infrastructure assets are maintained to the highest standards — maximising value for the Nigerian people.</p>
+        <div class="about-pills">
+          <span class="pill">Asset Stewardship</span>
+          <span class="pill">Housing Policy</span>
+          <span class="pill">Facility Management</span>
+          <span class="pill">Urban Development</span>
+          <span class="pill">Revenue Optimisation</span>
+          <span class="pill">Compliance</span>
+        </div>
+        <div class="about-director">
+          <div class="director-info">
+            <div class="name">Arc. Chioma Wogu-Ogbonna</div>
+            <div class="title">Director, Federal Public Assets Maintenance</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MANDATE -->
+<section class="mandate-section" id="mandate">
+  <div class="container">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:end;margin-bottom:8px">
+      <div>
+        <div class="section-eyebrow"><span>Our Mandate</span></div>
+        <h2 class="section-title">What We Are<br>Empowered to Do</h2>
+      </div>
+      <div>
+        <p class="section-sub">FPAM derives its mandate directly from the Federal Government of Nigeria, with powers to act across all asset categories and government agencies.</p>
+      </div>
+    </div>
+    <div class="mandate-grid">
+      <div class="mandate-card">
+        <div class="mc-icon"><i class="fa-solid fa-building-columns"></i></div>
+        <div class="mc-num">01</div>
+        <div class="mc-title">Maintenance &amp; Preservation</div>
+        <div class="mc-text">Ensure all federal buildings and infrastructure are maintained to standards that preserve their value and extend their serviceable lifespan.</div>
+      </div>
+      <div class="mandate-card">
+        <div class="mc-icon"><i class="fa-solid fa-scale-balanced"></i></div>
+        <div class="mc-num">02</div>
+        <div class="mc-title">Regulatory Compliance</div>
+        <div class="mc-text">Enforce compliance with building codes, safety regulations and government circulars across all 31 Ministries, Departments and Agencies.</div>
+      </div>
+      <div class="mandate-card">
+        <div class="mc-icon"><i class="fa-solid fa-money-bill-trend-up"></i></div>
+        <div class="mc-num">03</div>
+        <div class="mc-title">Revenue Generation</div>
+        <div class="mc-text">Optimise commercial returns from federal asset rentals, leases and concessions to supplement government revenue streams.</div>
+      </div>
+      <div class="mandate-card">
+        <div class="mc-icon"><i class="fa-solid fa-clipboard-list"></i></div>
+        <div class="mc-num">04</div>
+        <div class="mc-title">Asset Inventory</div>
+        <div class="mc-text">Maintain a comprehensive, up-to-date register of all federal assets including buildings, estates, land and infrastructure nationwide.</div>
+      </div>
+      <div class="mandate-card">
+        <div class="mc-icon"><i class="fa-solid fa-screwdriver-wrench"></i></div>
+        <div class="mc-num">05</div>
+        <div class="mc-title">Renovation &amp; Upgrading</div>
+        <div class="mc-text">Plan and execute renovation projects that modernise federal facilities to meet contemporary operational and living standards.</div>
+      </div>
+      <div class="mandate-card">
+        <div class="mc-icon"><i class="fa-solid fa-people-roof"></i></div>
+        <div class="mc-num">06</div>
+        <div class="mc-title">Tenant Welfare</div>
+        <div class="mc-text">Protect the rights and welfare of federal housing estate residents, ensuring safe, decent and affordable housing conditions.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EXECUTIVE ORDER -->
+<section class="eo-section" id="eo">
+  <canvas id="eo-canvas"></canvas>
+  <div class="container">
+    <div class="eo-inner">
+      <div>
+        <div class="eo-badge"><i class="fa-solid fa-scroll"></i> Presidential Directive</div>
+        <h2 class="eo-title">Presidential Executive<br>Order No. 11</h2>
+        <p class="eo-text">The cornerstone of FPAM's authority, Executive Order No. 11 mandates comprehensive stewardship of all federal public assets, establishes accountability frameworks and empowers the Ministry to enforce maintenance standards across government.</p>
+        <a href="#contact" class="btn btn-primary" style="display:inline-flex"><i class="fa-solid fa-file-lines"></i> Request Compliance Report</a>
+      </div>
+      <div class="eo-pillars">
+        <div class="eo-pillar">
+          <div class="eo-pillar-icon"><i class="fa-solid fa-shield-check"></i></div>
+          <div>
+            <div class="eo-pillar-title">Mandatory Maintenance Standards</div>
+            <div class="eo-pillar-text">All MDAs required to adhere to prescribed maintenance schedules and quality benchmarks for federally-owned assets.</div>
+          </div>
+        </div>
+        <div class="eo-pillar">
+          <div class="eo-pillar-icon"><i class="fa-solid fa-eye"></i></div>
+          <div>
+            <div class="eo-pillar-title">Transparency &amp; Accountability</div>
+            <div class="eo-pillar-text">Regular audits, reports and public disclosures on asset conditions and maintenance expenditure.</div>
+          </div>
+        </div>
+        <div class="eo-pillar">
+          <div class="eo-pillar-icon"><i class="fa-solid fa-landmark"></i></div>
+          <div>
+            <div class="eo-pillar-title">Centralised Oversight</div>
+            <div class="eo-pillar-text">FPAM designated as central authority for asset management coordination across all arms of federal government.</div>
+          </div>
+        </div>
+        <div class="eo-pillar">
+          <div class="eo-pillar-icon"><i class="fa-solid fa-seedling"></i></div>
+          <div>
+            <div class="eo-pillar-title">Sustainability Mandate</div>
+            <div class="eo-pillar-text">Integration of green building principles and sustainable practices in all maintenance and renovation works.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NEWS -->
+<section class="news-section" id="news">
+  <div class="container">
+    <div style="display:flex;justify-content:space-between;align-items:flex-end">
+      <div>
+        <div class="section-eyebrow"><span>Latest Updates</span></div>
+        <h2 class="section-title">News &amp; Announcements</h2>
+      </div>
+      <a href="#news" class="btn btn-ghost" style="background:none;color:var(--blue);border:1.5px solid var(--blue);padding:10px 20px;font-size:13px">View All News</a>
+    </div>
+    <div class="news-grid">
+      <div class="news-card">
+        <div class="nc-img">
+          <i class="fa-solid fa-building"></i>
+          <div class="nc-cat"><span class="tag tag-blue">Infrastructure</span></div>
+        </div>
+        <div class="nc-body">
+          <div class="nc-date">December 2024</div>
+          <div class="nc-title">FPAM Completes Phase 1 Renovation of Federal Secretariat Complex, Abuja</div>
+          <div class="nc-text">The renovation restores the iconic federal secretariat to full operational capacity with upgraded MEP systems and modern workspaces.</div>
+          <a href="#" class="nc-link">Read more <i class="fa-solid fa-arrow-right"></i></a>
+        </div>
+      </div>
+      <div class="news-card">
+        <div class="nc-img" style="background:linear-gradient(135deg,#0D3D70,#1A5EA0)">
+          <i class="fa-solid fa-house-chimney"></i>
+          <div class="nc-cat"><span class="tag tag-gold">Housing</span></div>
+        </div>
+        <div class="nc-body">
+          <div class="nc-date">November 2024</div>
+          <div class="nc-title">250 Housing Estates to Receive Comprehensive Maintenance Uplift Under 2025 Programme</div>
+          <div class="nc-text">Director Wogu-Ogbonna announces a ₦12B maintenance programme targeting all federal housing estates across the country.</div>
+          <a href="#" class="nc-link">Read more <i class="fa-solid fa-arrow-right"></i></a>
+        </div>
+      </div>
+      <div class="news-card">
+        <div class="nc-img" style="background:linear-gradient(135deg,#1B4332,#2D6A4F)">
+          <i class="fa-solid fa-scroll"></i>
+          <div class="nc-cat"><span class="tag" style="background:rgba(45,184,123,.15);color:var(--success)">Policy</span></div>
+        </div>
+        <div class="nc-body">
+          <div class="nc-date">October 2024</div>
+          <div class="nc-title">FPAM Issues New Compliance Guidelines for Ministries Under Executive Order No. 11</div>
+          <div class="nc-text">All 31 MDAs receive updated maintenance compliance frameworks and reporting templates effective January 2025.</div>
+          <a href="#" class="nc-link">Read more <i class="fa-solid fa-arrow-right"></i></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact-section" id="contact">
+  <div class="container">
+    <div style="text-align:center;margin-bottom:0">
+      <div class="section-eyebrow" style="justify-content:center"><span>Get In Touch</span></div>
+      <h2 class="section-title" style="text-align:center">Contact FPAM</h2>
+      <p class="section-sub" style="margin:0 auto;text-align:center">For asset maintenance reports, housing estate enquiries, or official correspondence with the Federal Public Assets Maintenance directorate.</p>
+    </div>
+    <div class="contact-grid">
+      <div class="contact-info">
+        <div class="ci-item">
+          <div class="ci-icon"><i class="fa-solid fa-location-dot"></i></div>
+          <div>
+            <div class="ci-label">Headquarters</div>
+            <div class="ci-value">Federal Ministry of Housing &amp; Urban Development,<br>Mabushi, Abuja, FCT — Nigeria</div>
+          </div>
+        </div>
+        <div class="ci-item">
+          <div class="ci-icon"><i class="fa-solid fa-phone"></i></div>
+          <div>
+            <div class="ci-label">Phone</div>
+            <div class="ci-value">+234 (0) 9 — FPAM Hotline</div>
+          </div>
+        </div>
+        <div class="ci-item">
+          <div class="ci-icon"><i class="fa-solid fa-envelope"></i></div>
+          <div>
+            <div class="ci-label">Email</div>
+            <div class="ci-value">info@fpam.housing.gov.ng</div>
+          </div>
+        </div>
+        <div class="ci-item">
+          <div class="ci-icon"><i class="fa-solid fa-clock"></i></div>
+          <div>
+            <div class="ci-label">Office Hours</div>
+            <div class="ci-value">Monday – Friday: 8:00am – 5:00pm WAT</div>
+          </div>
+        </div>
+        <div style="margin-top:8px;padding:20px;background:#fff;border-radius:12px;border:1px solid var(--border)">
+          <div style="font-family:var(--ff-head);font-size:13px;font-weight:700;color:var(--navy);margin-bottom:8px">Emergency Maintenance Line</div>
+          <div style="font-size:13px;color:var(--text3)">For urgent structural or safety concerns at federal buildings, call our 24/7 emergency maintenance hotline.</div>
+          <div style="font-family:var(--ff-head);font-size:18px;font-weight:700;color:var(--terracotta);margin-top:8px">0800-FPAM-911</div>
+        </div>
+      </div>
+      <div class="contact-form">
+        <div style="font-family:var(--ff-head);font-size:18px;font-weight:700;color:var(--navy);margin-bottom:6px">Submit an Enquiry</div>
+        <div style="font-size:13px;color:var(--text3);margin-bottom:24px">Reports are reviewed within 5 working days</div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Full Name</label>
+            <input type="text" placeholder="Your full name">
+          </div>
+          <div class="form-group">
+            <label>Email Address</label>
+            <input type="email" placeholder="your@email.com">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Subject</label>
+          <select>
+            <option>Asset Maintenance Report</option>
+            <option>Housing Estate Enquiry</option>
+            <option>Compliance &amp; Regulatory</option>
+            <option>Media &amp; Press</option>
+            <option>General Enquiry</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Asset Location / State</label>
+          <input type="text" placeholder="e.g. Mabushi, Abuja FCT">
+        </div>
+        <div class="form-group">
+          <label>Message</label>
+          <textarea placeholder="Describe your enquiry or maintenance issue in detail…"></textarea>
+        </div>
+        <button class="btn btn-primary" style="width:100%;justify-content:center"><i class="fa-solid fa-paper-plane"></i> Submit Enquiry</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+          <div style="width:36px;height:36px;background:var(--blue);border-radius:8px;display:flex;align-items:center;justify-content:center"><i class="fa-solid fa-building-columns" style="color:#fff;font-size:15px"></i></div>
+          <div class="mark">FPAM</div>
+        </div>
+        <p>Federal Public Assets Maintenance — an agency of the Federal Ministry of Housing &amp; Urban Development, mandated to maintain, manage and preserve Nigeria's federal public assets.</p>
+        <div style="margin-top:16px;font-size:11px;color:rgba(255,255,255,.3)">© 2025 FPAM · Federal Government of Nigeria</div>
+      </div>
+      <div class="footer-col">
+        <h4>Our Services</h4>
+        <ul>
+          <li><a href="#services">Asset Maintenance</a></li>
+          <li><a href="#services">Housing Estates</a></li>
+          <li><a href="#services">Facility Management</a></li>
+          <li><a href="#services">Safety &amp; Compliance</a></li>
+          <li><a href="#services">Asset Inventory</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Information</h4>
+        <ul>
+          <li><a href="#about">About FPAM</a></li>
+          <li><a href="#mandate">Our Mandate</a></li>
+          <li><a href="#eo">Executive Order No. 11</a></li>
+          <li><a href="#news">News</a></li>
+          <li><a href="#contact">Contact Us</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Resources</h4>
+        <ul>
+          <li><a href="#">Asset Directory</a></li>
+          <li><a href="#">Compliance Forms</a></li>
+          <li><a href="#">Maintenance Reports</a></li>
+          <li><a href="#">Housing Policy</a></li>
+          <li><a href="#">FOI Requests</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>Federal Ministry of Housing &amp; Urban Development · All rights reserved</p>
+      <div class="footer-socials">
+        <a href="#"><i class="fa-brands fa-twitter"></i></a>
+        <a href="#"><i class="fa-brands fa-facebook-f"></i></a>
+        <a href="#"><i class="fa-brands fa-instagram"></i></a>
+        <a href="#"><i class="fa-brands fa-youtube"></i></a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ── NAV SCROLL ──
+window.addEventListener('scroll', () => {
+  document.getElementById('nav').classList.toggle('scrolled', window.scrollY > 60);
+});
+
+// ── MOBILE MENU ──
+function toggleMenu() {
+  document.getElementById('nav-mobile').classList.toggle('open');
+}
+
+// ── COUNTER ANIMATION ──
+function animateCounters() {
+  document.querySelectorAll('.stat-num').forEach(el => {
+    const target = parseFloat(el.textContent.replace(/[^0-9.]/g, ''));
+    if (!target) return;
+    const suffix = el.innerHTML.replace(/[0-9.,]/g, '').replace('<span>', '').replace('</span>', '');
+    let start = 0, dur = 1800, step = 16;
+    const inc = target / (dur / step);
+    const t = setInterval(() => {
+      start = Math.min(start + inc, target);
+      el.innerHTML = (start < 10 ? start.toFixed(1) : Math.floor(start)).toLocaleString() + '<span>' + suffix + '</span>';
+      if (start >= target) clearInterval(t);
+    }, step);
+  });
+}
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) { animateCounters(); observer.disconnect(); } });
+}, { threshold: 0.3 });
+document.addEventListener('DOMContentLoaded', () => {
+  const band = document.querySelector('.stats-band');
+  if (band) observer.observe(band);
+});
+
+// ══════════════════════════════════════════
+// THREE.JS — HERO: Particle Network Field
+// ══════════════════════════════════════════
+(function() {
+  const canvas = document.getElementById('three-canvas');
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  const hero = document.querySelector('.hero');
+  renderer.setSize(hero.clientWidth, hero.clientHeight);
+  renderer.setClearColor(0x0B2545, 1);
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(60, hero.clientWidth / hero.clientHeight, 0.1, 1000);
+  camera.position.z = 5;
+
+  // Particles
+  const particleCount = 900;
+  const positions = new Float32Array(particleCount * 3);
+  const velocities = [];
+  for (let i = 0; i < particleCount; i++) {
+    positions[i * 3]     = (Math.random() - .5) * 20;
+    positions[i * 3 + 1] = (Math.random() - .5) * 12;
+    positions[i * 3 + 2] = (Math.random() - .5) * 10;
+    velocities.push({
+      x: (Math.random() - .5) * 0.004,
+      y: (Math.random() - .5) * 0.004,
+      z: (Math.random() - .5) * 0.002
+    });
+  }
+
+  const particleGeo = new THREE.BufferGeometry();
+  particleGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+  const particleMat = new THREE.PointsMaterial({
+    color: 0x4A90D9, size: 0.06, transparent: true, opacity: 0.7, sizeAttenuation: true
+  });
+  const particles = new THREE.Points(particleGeo, particleMat);
+  scene.add(particles);
+
+  // Connection lines (limited count for perf)
+  const lineMat = new THREE.LineBasicMaterial({ color: 0x4A90D9, transparent: true, opacity: 0.12 });
+  const lineGroup = new THREE.Group();
+  scene.add(lineGroup);
+
+  function updateLines() {
+    while (lineGroup.children.length) lineGroup.remove(lineGroup.children[0]);
+    const pos = particleGeo.attributes.position.array;
+    const threshold = 3.2;
+    for (let i = 0; i < particleCount; i++) {
+      for (let j = i + 1; j < particleCount; j++) {
+        const dx = pos[i*3] - pos[j*3];
+        const dy = pos[i*3+1] - pos[j*3+1];
+        const dz = pos[i*3+2] - pos[j*3+2];
+        const dist = Math.sqrt(dx*dx + dy*dy + dz*dz);
+        if (dist < threshold) {
+          const geo = new THREE.BufferGeometry().setFromPoints([
+            new THREE.Vector3(pos[i*3], pos[i*3+1], pos[i*3+2]),
+            new THREE.Vector3(pos[j*3], pos[j*3+1], pos[j*3+2])
+          ]);
+          const mat = new THREE.LineBasicMaterial({
+            color: 0x4A90D9, transparent: true,
+            opacity: (1 - dist / threshold) * 0.2
+          });
+          lineGroup.add(new THREE.Line(geo, mat));
+        }
+      }
+    }
+  }
+
+  // Floating buildings (wireframe boxes = stylised city silhouette)
+  const buildingGroup = new THREE.Group();
+  scene.add(buildingGroup);
+  const buildingSizes = [
+    [0.3, 1.2, 0.3], [0.25, 0.9, 0.25], [0.4, 1.8, 0.4],
+    [0.2, 0.7, 0.2], [0.35, 1.4, 0.35], [0.3, 2.2, 0.3]
+  ];
+  const buildingPositions = [
+    [-7, -2.5, -4], [-6, -2.8, -3], [-5, -1.5, -4.5],
+    [-4.5, -3, -3.5], [5, -2, -4], [6.5, -1.5, -4]
+  ];
+  buildingSizes.forEach((size, i) => {
+    const geo = new THREE.BoxGeometry(...size);
+    const edges = new THREE.EdgesGeometry(geo);
+    const mat = new THREE.LineBasicMaterial({ color: 0x4A90D9, transparent: true, opacity: 0.15 });
+    const mesh = new THREE.LineSegments(edges, mat);
+    const p = buildingPositions[i];
+    mesh.position.set(p[0], p[1] + size[1] / 2, p[2]);
+    buildingGroup.add(mesh);
+  });
+
+  // Grid floor
+  const gridHelper = new THREE.GridHelper(30, 30, 0x4A90D9, 0x4A90D9);
+  gridHelper.material.transparent = true;
+  gridHelper.material.opacity = 0.05;
+  gridHelper.position.y = -4;
+  scene.add(gridHelper);
+
+  // Ambient + directional light for future meshes
+  scene.add(new THREE.AmbientLight(0x4A90D9, 0.3));
+  const dirLight = new THREE.DirectionalLight(0x4A90D9, 0.5);
+  dirLight.position.set(5, 5, 5);
+  scene.add(dirLight);
+
+  let frameCount = 0;
+  let mouseX = 0, mouseY = 0;
+  window.addEventListener('mousemove', e => {
+    mouseX = (e.clientX / window.innerWidth - 0.5) * 0.5;
+    mouseY = (e.clientY / window.innerHeight - 0.5) * 0.3;
+  });
+
+  function heroAnimate() {
+    requestAnimationFrame(heroAnimate);
+    frameCount++;
+
+    const pos = particleGeo.attributes.position.array;
+    for (let i = 0; i < particleCount; i++) {
+      pos[i*3]     += velocities[i].x;
+      pos[i*3 + 1] += velocities[i].y;
+      pos[i*3 + 2] += velocities[i].z;
+      if (Math.abs(pos[i*3])     > 10) velocities[i].x *= -1;
+      if (Math.abs(pos[i*3 + 1]) > 6)  velocities[i].y *= -1;
+      if (Math.abs(pos[i*3 + 2]) > 5)  velocities[i].z *= -1;
+    }
+    particleGeo.attributes.position.needsUpdate = true;
+
+    if (frameCount % 8 === 0) updateLines();
+
+    camera.position.x += (mouseX * 2 - camera.position.x) * 0.02;
+    camera.position.y += (-mouseY * 1.5 - camera.position.y) * 0.02;
+    camera.lookAt(scene.position);
+
+    particles.rotation.y += 0.0003;
+    buildingGroup.rotation.y += 0.0002;
+
+    renderer.render(scene, camera);
+  }
+  heroAnimate();
+
+  window.addEventListener('resize', () => {
+    const w = hero.clientWidth, h = hero.clientHeight;
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+    renderer.setSize(w, h);
+  });
+})();
+
+
+// ══════════════════════════════════════════
+// THREE.JS — ABOUT: Rotating DNA-like Asset Network
+// ══════════════════════════════════════════
+(function() {
+  const canvas = document.getElementById('about-canvas');
+  if (!canvas) return;
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setClearColor(0x0B2545, 1);
+
+  const scene = new THREE.Scene();
+  const container = canvas.parentElement;
+  const w = container.clientWidth, h = container.clientHeight;
+  renderer.setSize(w, h);
+  const camera = new THREE.PerspectiveCamera(50, w / h, 0.1, 100);
+  camera.position.z = 6;
+
+  // Create a rotating set of spheres (representing assets/nodes)
+  const nodeGroup = new THREE.Group();
+  scene.add(nodeGroup);
+
+  const nodeCount = 24;
+  const nodeGeo = new THREE.SphereGeometry(0.08, 8, 8);
+
+  for (let i = 0; i < nodeCount; i++) {
+    const t = i / nodeCount;
+    const angle = t * Math.PI * 6;
+    const y = (t - 0.5) * 5;
+    const r = 1.5 + Math.sin(angle * 0.5) * 0.5;
+    const x = Math.cos(angle) * r;
+    const z = Math.sin(angle) * r;
+
+    // Alternate blue / gold
+    const col = i % 3 === 0 ? 0xD4A017 : 0x4A90D9;
+    const mat = new THREE.MeshPhongMaterial({ color: col, emissive: col, emissiveIntensity: 0.3 });
+    const mesh = new THREE.Mesh(nodeGeo, mat);
+    mesh.position.set(x, y, z);
+    nodeGroup.add(mesh);
+
+    // Connect to previous
+    if (i > 0) {
+      const prev = nodeGroup.children[i - 1];
+      const geo = new THREE.BufferGeometry().setFromPoints([prev.position.clone(), mesh.position.clone()]);
+      const lm = new THREE.LineBasicMaterial({ color: 0x4A90D9, transparent: true, opacity: 0.3 });
+      nodeGroup.add(new THREE.Line(geo, lm));
+    }
+  }
+
+  // Central axis glow
+  const axisMat = new THREE.MeshPhongMaterial({ color: 0x4A90D9, transparent: true, opacity: 0.1, wireframe: true });
+  const axis = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, 5, 16), axisMat);
+  nodeGroup.add(axis);
+
+  // Lighting
+  scene.add(new THREE.AmbientLight(0xffffff, 0.4));
+  const pt1 = new THREE.PointLight(0x4A90D9, 1, 10);
+  pt1.position.set(3, 3, 3);
+  scene.add(pt1);
+  const pt2 = new THREE.PointLight(0xD4A017, 0.5, 10);
+  pt2.position.set(-3, -3, 2);
+  scene.add(pt2);
+
+  function aboutAnimate() {
+    requestAnimationFrame(aboutAnimate);
+    nodeGroup.rotation.y += 0.005;
+    nodeGroup.rotation.x += 0.001;
+    renderer.render(scene, camera);
+  }
+
+  const io = new IntersectionObserver(entries => {
+    if (entries[0].isIntersecting) aboutAnimate();
+  }, { threshold: 0.1 });
+  io.observe(canvas);
+})();
+
+
+// ══════════════════════════════════════════
+// THREE.JS — EXECUTIVE ORDER: Floating Gold Rings
+// ══════════════════════════════════════════
+(function() {
+  const canvas = document.getElementById('eo-canvas');
+  if (!canvas) return;
+  const section = document.querySelector('.eo-section');
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setClearColor(0x0B2545, 0);
+  renderer.setSize(section.clientWidth, section.clientHeight);
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(60, section.clientWidth / section.clientHeight, 0.1, 100);
+  camera.position.z = 8;
+
+  const rings = [];
+  for (let i = 0; i < 6; i++) {
+    const geo = new THREE.TorusGeometry(1.2 + i * 0.6, 0.025, 8, 60);
+    const mat = new THREE.MeshBasicMaterial({
+      color: i % 2 === 0 ? 0xD4A017 : 0x4A90D9,
+      transparent: true, opacity: 0.18 - i * 0.02
+    });
+    const ring = new THREE.Mesh(geo, mat);
+    ring.rotation.x = Math.random() * Math.PI;
+    ring.rotation.y = Math.random() * Math.PI;
+    rings.push(ring);
+    scene.add(ring);
+  }
+
+  // Particle dust
+  const pCount = 300;
+  const pPos = new Float32Array(pCount * 3);
+  for (let i = 0; i < pCount; i++) {
+    pPos[i*3] = (Math.random() - .5) * 20;
+    pPos[i*3+1] = (Math.random() - .5) * 15;
+    pPos[i*3+2] = (Math.random() - .5) * 10;
+  }
+  const pGeo = new THREE.BufferGeometry();
+  pGeo.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
+  const pMat = new THREE.PointsMaterial({ color: 0xD4A017, size: 0.04, transparent: true, opacity: 0.4 });
+  scene.add(new THREE.Points(pGeo, pMat));
+
+  let eoStarted = false;
+  function eoAnimate() {
+    if (!eoStarted) return;
+    requestAnimationFrame(eoAnimate);
+    rings.forEach((r, i) => {
+      r.rotation.x += 0.003 + i * 0.0005;
+      r.rotation.y += 0.002 + i * 0.0003;
+    });
+    renderer.render(scene, camera);
+  }
+
+  const io2 = new IntersectionObserver(entries => {
+    if (entries[0].isIntersecting && !eoStarted) {
+      eoStarted = true;
+      eoAnimate();
+    }
+  }, { threshold: 0.1 });
+  io2.observe(section);
+
+  window.addEventListener('resize', () => {
+    const w2 = section.clientWidth, h2 = section.clientHeight;
+    camera.aspect = w2 / h2;
+    camera.updateProjectionMatrix();
+    renderer.setSize(w2, h2);
+  });
+})();
+</script>
+</body>
+</html>

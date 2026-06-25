@@ -1,7 +1,7 @@
 # AssetSpatial — Feature Test Sheet
 **Project:** AssetSpatial — Nigerian Federal Public Asset Management Platform  
 **Stack:** Node.js / Express · MongoDB · GridFS · Leaflet · Chart.js  
-**Tester:** ___________________  **Date:** ___________________  **Server:** http://localhost:3001
+**Tester:** ___________________  **Date:** ___________________  **Server:** https://fpambacend.onrender.com
 
 ---
 
