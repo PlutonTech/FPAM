@@ -349,3 +349,171 @@ CSV written  → output\assets_summary.csv
 15:27:27  INFO     CSV written  → output\assets_summary.csv
          [checkpoint saved — 40 new this run]
 15:27:27  INFO              [checkpoint saved — 40 new this run]
+[  42/1996] National Root Crops Research Institute (NRCRI) Umu  Abia
+15:27:28  INFO     [  42/1996] National Root Crops Research Institute (NRCRI) Umu  Abia
+[  43/1996] National Water Research Institute (NWRI)            Kaduna
+15:27:39  INFO     [  43/1996] National Water Research Institute (NWRI)            Kaduna
+[  44/1996] Nigeria Institute for Oil Palm Research (NIFOR)     Edo
+15:27:49  INFO     [  44/1996] Nigeria Institute for Oil Palm Research (NIFOR)     Edo
+[  45/1996] Nigeria Institute for Tryponosomiasis               Kaduna
+15:28:00  INFO     [  45/1996] Nigeria Institute for Tryponosomiasis               Kaduna
+         image 1200x764 -> asset_dc22bd1a8c.jpg
+15:28:11  INFO              image 1200x764 -> asset_dc22bd1a8c.jpg
+[  46/1996] Nigerian Agricultural Cooperative and Rural Develo  Kaduna
+15:28:12  INFO     [  46/1996] Nigerian Agricultural Cooperative and Rural Develo  Kaduna
+[  47/1996] Nigerian Agricultural Insurance Corporation (NAIC)  Abuja
+15:28:23  INFO     [  47/1996] Nigerian Agricultural Insurance Corporation (NAIC)  Abuja
+[  48/1996] Old Oyo National Park                               Oyo
+15:28:33  INFO     [  48/1996] Old Oyo National Park                               Oyo
+[  49/1996] Rubber Research Institute of Nigeria                Edo
+15:28:44  INFO     [  49/1996] Rubber Research Institute of Nigeria                Edo
+[  50/1996] Strategic Grains Reserve                            Abuja
+15:28:55  INFO     [  50/1996] Strategic Grains Reserve                            Abuja
+         image 1200x801 -> asset_a1f5ea1fb9.jpg
+15:29:08  INFO              image 1200x801 -> asset_a1f5ea1fb9.jpg
+[  51/1996] University of Agriculture                           Ogun
+15:29:09  INFO     [  51/1996] University of Agriculture                           Ogun
+         image 1200x801 -> asset_88cff0c1c6.jpg
+15:29:14  INFO              image 1200x801 -> asset_88cff0c1c6.jpg
+JSON written → output\assets.json  (50 documents)
+15:29:14  INFO     JSON written → output\assets.json  (50 documents)
+CSV written  → output\assets_summary.csv
+15:29:14  INFO     CSV written  → output\assets_summary.csv
+         [checkpoint saved — 50 new this run]
+15:29:14  INFO              [checkpoint saved — 50 new this run]
+[  52/1996] Yankari National Park                               Bauchi
+15:29:15  INFO     [  52/1996] Yankari National Park                               Bauchi
+         image 1200x800 -> asset_e301fbf317.jpg
+15:29:31  INFO              image 1200x800 -> asset_e301fbf317.jpg
+[  53/1996] FEDERAL MINISTRY OF LABOUR AND EMPLOYMENT           
+15:29:32  INFO     [  53/1996] FEDERAL MINISTRY OF LABOUR AND EMPLOYMENT           
+[  54/1996] Federal Ministry Of Labour And Productivity Headqu  Abjua
+15:29:35  INFO     [  54/1996] Federal Ministry Of Labour And Productivity Headqu  Abjua
+[  55/1996] Federal Ministry Of Labour And Productivity         Lagos
+15:29:47  INFO     [  55/1996] Federal Ministry Of Labour And Productivity         Lagos
+[  56/1996] Skill Acquisition And Training                      
+15:29:59  INFO     [  56/1996] Skill Acquisition And Training                      
+         image 720x540 -> asset_64cc8b82be.jpg
+15:30:03  INFO              image 720x540 -> asset_64cc8b82be.jpg
+[  57/1996] National Productivity Center                        Abuja
+15:30:04  INFO     [  57/1996] National Productivity Center                        Abuja
+[  58/1996] National Directorate of Employment                  Abuja
+15:30:16  INFO     [  58/1996] National Directorate of Employment                  Abuja
+[  59/1996] Michael Imodu Institute Of Labour Studies           kwara
+15:30:26  INFO     [  59/1996] Michael Imodu Institute Of Labour Studies           kwara
+[  60/1996] Industrial Arbitration Panel                        Abjua
+15:30:36  INFO     [  60/1996] Industrial Arbitration Panel                        Abjua
+[  61/1996] Nigeria Social Insurance Trust Fund (NSITF)         Abuja
+15:30:47  INFO     [  61/1996] Nigeria Social Insurance Trust Fund (NSITF)         Abuja
+JSON written → output\assets.json  (60 documents)
+15:30:56  INFO     JSON written → output\assets.json  (60 documents)
+CSV written  → output\assets_summary.csv
+15:30:56  INFO     CSV written  → output\assets_summary.csv
+         [checkpoint saved — 60 new this run]
+15:30:56  INFO              [checkpoint saved — 60 new this run]
+[  62/1996] Federal Ministry Of Labour And Employment           Akwa-Ibom
+15:30:57  INFO     [  62/1996] Federal Ministry Of Labour And Employment           Akwa-Ibom
+         image 331x352 -> asset_4ba65f43d6.jpg
+15:31:07  INFO              image 331x352 -> asset_4ba65f43d6.jpg
+[  64/1996] Federal Ministry Of Labour And Employment           Bauchi
+15:31:08  INFO     [  64/1996] Federal Ministry Of Labour And Employment           Bauchi
+[  65/1996] Federal Ministry Of Labour And Employment           Edo
+15:31:19  INFO     [  65/1996] Federal Ministry Of Labour And Employment           Edo
+[  66/1996] Federal Ministry Of Labour And Employment           Borno
+15:31:29  INFO     [  66/1996] Federal Ministry Of Labour And Employment           Borno
+[  67/1996] Federal Ministry Of Labour And Employment           Delta
+15:31:41  INFO     [  67/1996] Federal Ministry Of Labour And Employment           Delta
+[  68/1996] Federal Ministry Of Labour And Employment           Delta
+15:31:52  INFO     [  68/1996] Federal Ministry Of Labour And Employment           Delta
+         image 431x216 -> asset_b998c930dc.jpg
+15:32:01  INFO              image 431x216 -> asset_b998c930dc.jpg
+[  69/1996] Federal Ministry Of Labour And Employment           Enugu
+15:32:02  INFO     [  69/1996] Federal Ministry Of Labour And Employment           Enugu
+         image 502x1200 -> asset_7782bcd46f.jpg
+15:32:15  INFO              image 502x1200 -> asset_7782bcd46f.jpg
+[  70/1996] Federal Ministry Of Labour And Employment           Enugu
+15:32:15  INFO     [  70/1996] Federal Ministry Of Labour And Employment           Enugu
+[  71/1996] Federal Ministry Of Labour And Employment           Kaduna
+15:32:28  INFO     [  71/1996] Federal Ministry Of Labour And Employment           Kaduna
+[  75/1996] Federal Ministry Of Labour And Employment           Kogi
+15:32:39  INFO     [  75/1996] Federal Ministry Of Labour And Employment           Kogi
+JSON written → output\assets.json  (70 documents)
+15:32:50  INFO     JSON written → output\assets.json  (70 documents)
+CSV written  → output\assets_summary.csv
+15:32:50  INFO     CSV written  → output\assets_summary.csv
+         [checkpoint saved — 70 new this run]
+15:32:50  INFO              [checkpoint saved — 70 new this run]
+[  76/1996] Federal Ministry Of Labour And Employment           Kwara
+15:32:51  INFO     [  76/1996] Federal Ministry Of Labour And Employment           Kwara
+         image 1200x900 -> asset_28fb5d48bc.jpg
+15:33:08  INFO              image 1200x900 -> asset_28fb5d48bc.jpg
+[  78/1996] Federal Ministry Of Labour And Employment           Lagos
+15:33:09  INFO     [  78/1996] Federal Ministry Of Labour And Employment           Lagos
+[  79/1996] Federal Ministry Of Labour And Employment           Lagos
+15:33:24  INFO     [  79/1996] Federal Ministry Of Labour And Employment           Lagos
+[  81/1996] Federal Ministry Of Labour And Employment           Nasarawa
+15:33:44  INFO     [  81/1996] Federal Ministry Of Labour And Employment           Nasarawa
+[  84/1996] Federal Ministry Of Labour And Employment           Plateau
+15:33:48  INFO     [  84/1996] Federal Ministry Of Labour And Employment           Plateau
+[  86/1996] Federal Ministry Of Labour And Employment           Ondo
+15:33:52  INFO     [  86/1996] Federal Ministry Of Labour And Employment           Ondo
+[  87/1996] Federal Ministry Of Labour And Employment           Sokoto
+15:33:56  INFO     [  87/1996] Federal Ministry Of Labour And Employment           Sokoto
+[  89/1996] Federal Ministry Of Labour And Employment           Rivers State
+15:33:59  INFO     [  89/1996] Federal Ministry Of Labour And Employment           Rivers State
+[  91/1996] FEDERAL MINISTRY OF COMMUNICATION AND DIGITAL ECON  
+15:34:03  INFO     [  91/1996] FEDERAL MINISTRY OF COMMUNICATION AND DIGITAL ECON  
+[  92/1996] Federal Ministry Of Communication And Digital Econ  FCT, Abuja
+15:34:04  INFO     [  92/1996] Federal Ministry Of Communication And Digital Econ  FCT, Abuja
+JSON written → output\assets.json  (80 documents)
+15:34:07  INFO     JSON written → output\assets.json  (80 documents)
+CSV written  → output\assets_summary.csv
+15:34:07  INFO     CSV written  → output\assets_summary.csv
+         [checkpoint saved — 80 new this run]
+15:34:07  INFO              [checkpoint saved — 80 new this run]
+[  93/1996] Nigeria Postal Service                              FCT, Abuja
+15:34:08  INFO     [  93/1996] Nigeria Postal Service                              FCT, Abuja
+Loading: LOWER_VERSION_Inventory_of_Public_Buildings.xls
+15:35:41  INFO     Loading: LOWER_VERSION_Inventory_of_Public_Buildings.xls
+Loaded 1996 asset rows from 839 unique MDAs
+15:35:42  INFO     Loaded 1996 asset rows from 839 unique MDAs
+Checkpoint loaded — 80 assets already done, resuming…
+15:35:42  INFO     Checkpoint loaded — 80 assets already done, resuming…
+Total rows: 1996  |  Already done: 80  |  Remaining: 1916
+15:35:42  INFO     Total rows: 1996  |  Already done: 80  |  Remaining: 1916
+[  93/1996] Nigeria Postal Service                              FCT, Abuja
+15:35:42  INFO     [  93/1996] Nigeria Postal Service                              FCT, Abuja
+         image 1200x801 -> asset_41d08f6d82.jpg
+15:35:50  INFO              image 1200x801 -> asset_41d08f6d82.jpg
+[  94/1996] Nigeria Communication Satellite Limited             FCT, Abuja
+15:35:51  INFO     [  94/1996] Nigeria Communication Satellite Limited             FCT, Abuja
+         image 1200x801 -> asset_ba6e3e8cf2.jpg
+15:36:08  INFO              image 1200x801 -> asset_ba6e3e8cf2.jpg
+[  95/1996] Nigeria Communication Commission                    FCT, Abuja
+15:36:08  INFO     [  95/1996] Nigeria Communication Commission                    FCT, Abuja
+         image 327x395 -> asset_521943e684.jpg
+15:36:13  INFO              image 327x395 -> asset_521943e684.jpg
+[  96/1996] Nigeria Communication Commission Annexe             FCT, Abuja
+15:36:13  INFO     [  96/1996] Nigeria Communication Commission Annexe             FCT, Abuja
+[  97/1996] Galaxy Backbone Limited                             FCT, Abuja
+15:36:27  INFO     [  97/1996] Galaxy Backbone Limited                             FCT, Abuja
+[  98/1996] Federal Ministry Of Communication And Digital Econ  FCT, Abuja
+15:36:38  INFO     [  98/1996] Federal Ministry Of Communication And Digital Econ  FCT, Abuja
+[  99/1996] National Information Technology Development Agency  FCT, Abuja
+15:36:48  INFO     [  99/1996] National Information Technology Development Agency  FCT, Abuja
+         image 1200x800 -> asset_c3aef9b0a4.jpg
+15:37:08  INFO              image 1200x800 -> asset_c3aef9b0a4.jpg
+[ 100/1996] National Information Technology Development Agency  Kano
+15:37:09  INFO     [ 100/1996] National Information Technology Development Agency  Kano
+         image 1080x1080 -> asset_85f71436b0.jpg
+15:37:14  INFO              image 1080x1080 -> asset_85f71436b0.jpg
+[ 101/1996] Nigerian Communications Satellite Ltd               FCT, Abuja
+15:37:15  INFO     [ 101/1996] Nigerian Communications Satellite Ltd               FCT, Abuja
+[ 104/1996] FEDERAL MINISTRY OF HEALTH                          
+15:37:28  INFO     [ 104/1996] FEDERAL MINISTRY OF HEALTH                          
+JSON written → output\assets.json  (90 documents)
+15:37:30  INFO     JSON written → output\assets.json  (90 documents)
+CSV written  → output\assets_summary.csv
+15:37:30  INFO     CSV written  → output\assets_summary.csv
+         [checkpoint saved — 10 new this run]
+15:37:30  INFO              [checkpoint saved — 10 new this run]

@@ -170,7 +170,7 @@
   {
     "_id": "asset_2a55af20e5",
     "sn": 7,
-    "mda": "Agricultural And Rural Management Training Institute (ARMTI)",
+    "mda": "Agricultural And Rural Management Training InstituteÂ (ARMTI)",
     "purpose": "Office Building",
     "state": "Abuja",
     "lga": "AMAC",
@@ -198,7 +198,7 @@
   {
     "_id": "asset_a96e3b2a5f",
     "sn": 8,
-    "mda": "Nigerian Agricultural Insurance Corporation (NAIS)",
+    "mda": "Nigerian Agricultural Insurance CorporationÂ (NAIS)",
     "purpose": "Office Building",
     "state": "FCT, Abuja",
     "lga": "AMAC",
@@ -254,7 +254,7 @@
   {
     "_id": "asset_9945f0124c",
     "sn": 10,
-    "mda": "National Centre For Agricultural Mechanization (NCAM)",
+    "mda": "National Centre For Agricultural MechanizationÂ (NCAM)",
     "purpose": "Office Building",
     "state": "Kwara",
     "lga": "Ilorin",
@@ -282,7 +282,7 @@
   {
     "_id": "asset_322b908d69",
     "sn": 11,
-    "mda": "Nigeria Institute Of Animal Science (NIAS)",
+    "mda": "Nigeria Institute Of Animal ScienceÂ (NIAS)",
     "purpose": "Office Building",
     "state": "FCT, Abuja",
     "lga": "AMAC",
@@ -310,7 +310,7 @@
   {
     "_id": "asset_1d7c1cf9b2",
     "sn": 12,
-    "mda": "Nigeria Institute Of Soil Science (NISS)",
+    "mda": "Nigeria Institute Of Soil ScienceÂ (NISS)",
     "purpose": "Office Building",
     "state": "FCT, Abuja",
     "lga": "AMAC",
@@ -1116,6 +1116,1406 @@
     "metadata": {
       "scraped_at": "2026-06-27T14:27:17.705017Z",
       "geocoded": true,
+      "image_found": false
+    }
+  },
+  {
+    "_id": "asset_02b3158eea",
+    "sn": 42,
+    "mda": "National Root Crops Research Institute (NRCRI) Umudike",
+    "purpose": "Office Building",
+    "state": "Abia",
+    "lga": "Umudike",
+    "address": "FGMR+4Q9, 440101, Umudike",
+    "landmark": "Chimex Less Privilieged Foundation",
+    "year_commissioned": null,
+    "valuation": null,
+    "coordinates": {
+      "lat": 5.5,
+      "lng": 7.533333
+    },
+    "image": {
+      "filename": null,
+      "source_url": null,
+      "width": null,
+      "height": null,
+      "scraped_at": null
+    },
+    "metadata": {
+      "scraped_at": "2026-06-27T14:27:28.072064Z",
+      "geocoded": true,
+      "image_found": false
+    }
+  },
+  {
+    "_id": "asset_1079ff4e36",
+    "sn": 43,
+    "mda": "National Water Research Institute (NWRI)",
+    "purpose": "Office Building",
+    "state": "Kaduna",
+    "lga": "Kaduna",
+    "address": "Sabon Gida 802151, Sabon Gida",
+    "landmark": "Babangida Amanda",
+    "year_commissioned": null,
+    "valuation": null,
+    "coordinates": {
+      "lat": 10.5182899,
+      "lng": 7.4359863
+    },
+    "image": {
+      "filename": null,
+      "source_url": null,
+      "width": null,
+      "height": null,
+      "scraped_at": null
+    },
+    "metadata": {
+      "scraped_at": "2026-06-27T14:27:39.225083Z",
+      "geocoded": true,
+      "image_found": false
+    }
+  },
+  {
+    "_id": "asset_489fdbe723",
+    "sn": 44,
+    "mda": "Nigeria Institute for Oil Palm Research (NIFOR)",
+    "purpose": "Office Building",
+    "state": "Edo",
+    "lga": "Benin",
+    "address": "pmb 1030 ugbowo post office, 300271, Benin City",
+    "landmark": "Gods Own Anointed Church",
+    "year_commissioned": null,
+    "valuation": null,
+    "coordinates": {
+      "lat": 6.3330586,
+      "lng": 5.6221058
+    },
+    "image": {
+      "filename": null,
+      "source_url": null,
+      "width": null,
+      "height": null,
+      "scraped_at": null
+    },
+    "metadata": {
+      "scraped_at": "2026-06-27T14:27:49.906540Z",
+      "geocoded": true,
+      "image_found": false
+    }
+  },
+  {
+    "_id": "asset_dc22bd1a8c",
+    "sn": 45,
+    "mda": "Nigeria Institute for Tryponosomiasis",
+    "purpose": "Office Building",
+    "state": "Kaduna",
+    "lga": "Kaduna",
+    "address": "15 Okigwe street, Kabala Doki 800283, Kaduna",
+    "landmark": "Oliver Store",
+    "year_commissioned": null,
+    "valuation": null,
+    "coordinates": {
+      "lat": 10.5182899,
+      "lng": 7.4359863
+    },
+    "image": {
+      "filename": "asset_dc22bd1a8c.jpg",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/b/b0/Lugard_Hall%2C_Kaduna._Parliamentary_house_of_assembly_Capital_of_North_Region.jpg",
+      "width": 1200,
+      "height": 764,
+      "scraped_at": "2026-06-27T14:28:11.860566Z"
+    },
+    "metadata": {
+      "scraped_at": "2026-06-27T14:28:00.919332Z",
+      "geocoded": true,
+      "image_found": true
+    }
+  },
+  {
+    "_id": "asset_9ff9f8649f",
+    "sn": 46,
+    "mda": "Nigerian Agricultural Cooperative and Rural Development Bank (NACRDB)",
+    "purpose": "Office Building",
+    "state": "Kaduna",
+    "lga": "Kaduna",
+    "address": "1 Yakubu Gowon Way, Sabon Gari 800283, Kaduna",
+    "landmark": "Chicken Republic",
+    "year_commissioned": null,
+    "valuation": null,
+    "coordinates": {
+      "lat": 10.5182899,
+      "lng": 7.4359863
+    },
+    "image": {
+      "filename": null,
+      "source_url": null,
+      "width": null,
+      "height": null,
+      "scraped_at": null
+    },
+    "metadata": {
+      "scraped_at": "2026-06-27T14:28:12.661604Z",
+      "geocoded": true,
+      "image_found": false
+    }
+  },
+  {
+    "_id": "asset_c0a067b335",
+    "sn": 47,
+    "mda": "Nigerian Agricultural Insurance Corporation (NAIC)",
+    "purpose": "Office Building",
+    "state": "Abuja",
+    "lga": "AMAC",
+    "address": "Plot 590 Zone A.O. Central Area, Abuja",
+    "landmark": "Novateur Nigeria",
+    "year_commissioned": null,
+    "valuation": null,
+    "coordinates": {
+      "lat": 9.0552729,
+      "lng": 7.4662595
+    },
+    "image": {
+      "filename": null,
+      "source_url": null,
+      "width": null,
+      "height": null,
+      "scraped_at": null
+    },
+    "metadata": {
+      "scraped_at": "2026-06-27T14:28:23.451429Z",
+      "geocoded": true,
+      "image_found": false
+    }
+  },
+  {
+    "_id": "asset_86f62ba6d6",
+    "sn": 48,
+    "mda": "Old Oyo National Park",
+    "purpose": "Office Building",
+    "state": "Oyo",
+    "lga": "Ibadan",
+    "address": "9RHF+6WG, Bayo, Ibadan",
+    "landmark": "Oloko",
+    "year_commissioned": null,
+    "valuation": null,
+    "coordinates": {
+      "lat": 7.3786064,
+      "lng": 3.8969928
+    },
+    "image": {
+      "filename": null,
+      "source_url": null,
+      "width": null,
+      "height": null,
+      "scraped_at": null
+    },
+    "metadata": {
+      "scraped_at": "2026-06-27T14:28:33.976844Z",
+      "geocoded": true,
+      "image_found": false
+    }
+  },
+  {
+    "_id": "asset_0a9901adf3",
+    "sn": 49,
+    "mda": "Rubber Research Institute of Nigeria",
+    "purpose": "Office Building",
+    "state": "Edo",
+    "lga": "Benin",
+    "address": "Off KM 19, Benin/Sapele Highway, Iyanomo, P.M.B, 1049, Benin City",
+    "landmark": "Habib Bank",
+    "year_commissioned": null,
+    "valuation": null,
+    "coordinates": {
+      "lat": 6.3330586,
+      "lng": 5.6221058
+    },
+    "image": {
+      "filename": null,
+      "source_url": null,
+      "width": null,
+      "height": null,
+      "scraped_at": null
+    },
+    "metadata": {
+      "scraped_at": "2026-06-27T14:28:44.530840Z",
+      "geocoded": true,
+      "image_found": false
+    }
+  },
+  {
+    "_id": "asset_a1f5ea1fb9",
+    "sn": 50,
+    "mda": "Strategic Grains Reserve",
+    "purpose": "Office Building",
+    "state": "Abuja",
+    "lga": "AMAC",
+    "address": "Block 1 Manzini St, Wuse 904101, Abuja",
+    "landmark": "Boligo Bar and Restaurant",
+    "year_commissioned": null,
+    "valuation": null,
+    "coordinates": {
+      "lat": 9.0552729,
+      "lng": 7.4662595
+    },
+    "image": {
+      "filename": "asset_a1f5ea1fb9.jpg",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/1/1b/Abuja_heritages_30.jpg",
+      "width": 1200,
+      "height": 801,
+      "scraped_at": "2026-06-27T14:29:08.446613Z"
+    },
+    "metadata": {
+      "scraped_at": "2026-06-27T14:28:55.450239Z",
+      "geocoded": true,
+      "image_found": true
+    }
+  },
+  {
+    "_id": "asset_88cff0c1c6",
+    "sn": 51,
+    "mda": "University of Agriculture",
+    "purpose": "Office Building",
+    "state": "Ogun",
+    "lga": "Abeokuta",
+    "address": "68VV+F8F, Alabata Street, 111101, Abeokuta",
+    "landmark": "Elelu Town",
+    "year_commissioned": null,
+    "valuation": null,
+    "coordinates": {
+      "lat": 7.161,
+      "lng": 3.348
+    },
+    "image": {
+      "filename": "asset_88cff0c1c6.jpg",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/f/f6/Abeokuta_city_01.jpg",
+      "width": 1200,
+      "height": 801,
+      "scraped_at": "2026-06-27T14:29:14.410494Z"
+    },
+    "metadata": {
+      "scraped_at": "2026-06-27T14:29:09.247613Z",
+      "geocoded": true,
+      "image_found": true
+    }
+  },
+  {
+    "_id": "asset_e301fbf317",
+    "sn": 52,
+    "mda": "Yankari National Park",
+    "purpose": "Office Building",
+    "state": "Bauchi",
+    "lga": "Bauchi",
+    "address": "Yankari, 234077, Mainamaji",
+    "landmark": "Wildlife Conservation Society",
+    "year_commissioned": null,
+    "valuation": null,
+    "coordinates": {
+      "lat": 10.3168749,
+      "lng": 9.8410189
+    },
+    "image": {
+      "filename": "asset_e301fbf317.jpg",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/3/35/Wikki_warm_spring_in_Yankari.jpg",
+      "width": 1200,
+      "height": 800,
+      "scraped_at": "2026-06-27T14:29:31.467428Z"
+    },
+    "metadata": {
+      "scraped_at": "2026-06-27T14:29:15.222118Z",
+      "geocoded": true,
+      "image_found": true
+    }
+  },
+  {
+    "_id": "asset_b25db298ec",
+    "sn": null,
+    "mda": "FEDERAL MINISTRY OF LABOUR AND EMPLOYMENT",
+    "purpose": "Office Building",
+    "state": null,
+    "lga": null,
+    "address": null,
+    "landmark": null,
+    "year_commissioned": null,
+    "valuation": null,
+    "coordinates": {
+      "lat": null,
+      "lng": null
+    },
+    "image": {
+      "filename": null,
+      "source_url": null,
+      "width": null,
+      "height": null,
+      "scraped_at": null
+    },
+    "metadata": {
+      "scraped_at": "2026-06-27T14:29:32.295212Z",
+      "geocoded": false,
+      "image_found": false
+    }
+  },
+  {
+    "_id": "asset_d25e8b928e",
+    "sn": 53,
+    "mda": "Federal Ministry Of Labour And Productivity Headquarters",
+    "purpose": "Office Building",
+    "state": "Abjua",
+    "lga": "AMAC",
+    "address": "2nd Floor, Phase 1 Fed. Secretariat Complex Shehu Shagari WayP.M.B 04, Central Business District, Abuja, FCT",
+    "landmark": "Federal Ministry of Health",
+    "year_commissioned": null,
+    "valuation": null,
+    "coordinates": {
+      "lat": null,
+      "lng": null
+    },
+    "image": {
+      "filename": null,
+      "source_url": null,
+      "width": null,
+      "height": null,
+      "scraped_at": null
+    },
+    "metadata": {
+      "scraped_at": "2026-06-27T14:29:35.505598Z",
+      "geocoded": false,
+      "image_found": false
+    }
+  },
+  {
+    "_id": "asset_3dc5888ac4",
+    "sn": 54,
+    "mda": "Federal Ministry Of Labour And Productivity",
+    "purpose": "Office Building",
+    "state": "Lagos",
+    "lga": "Island",
+    "address": "G94J+WGV, Lancaster St, Onike 101245, Lagos",
+    "landmark": "Queens College yaba",
+    "year_commissioned": null,
+    "valuation": null,
+    "coordinates": {
+      "lat": 6.434344,
+      "lng": 3.4095965
+    },
+    "image": {
+      "filename": null,
+      "source_url": null,
+      "width": null,
+      "height": null,
+      "scraped_at": null
+    },
+    "metadata": {
+      "scraped_at": "2026-06-27T14:29:47.450466Z",
+      "geocoded": true,
+      "image_found": false
+    }
+  },
+  {
+    "_id": "asset_64cc8b82be",
+    "sn": 55,
+    "mda": "Skill Acquisition And Training",
+    "purpose": "Office Building",
+    "state": null,
+    "lga": null,
+    "address": null,
+    "landmark": null,
+    "year_commissioned": null,
+    "valuation": null,
+    "coordinates": {
+      "lat": null,
+      "lng": null
+    },
+    "image": {
+      "filename": "asset_64cc8b82be.jpg",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/5/52/Azama_Entrepreneurship_Students.jpg",
+      "width": 720,
+      "height": 540,
+      "scraped_at": "2026-06-27T14:30:03.758129Z"
+    },
+    "metadata": {
+      "scraped_at": "2026-06-27T14:29:59.632268Z",
+      "geocoded": false,
+      "image_found": true
+    }
+  },
+  {
+    "_id": "asset_dc914df4d5",
+    "sn": 56,
+    "mda": "National Productivity Center",
+    "purpose": "Office Building",
+    "state": "Abuja",
+    "lga": "AMAC",
+    "address": "7 Cape Town, Wuse 904101, Abuja",
+    "landmark": "Newton Park Hotel and Resort",
+    "year_commissioned": null,
+    "valuation": null,
+    "coordinates": {
+      "lat": 9.0654371,
+      "lng": 7.4739825
+    },
+    "image": {
+      "filename": null,
+      "source_url": null,
+      "width": null,
+      "height": null,
+      "scraped_at": null
+    },
+    "metadata": {
+      "scraped_at": "2026-06-27T14:30:04.559643Z",
+      "geocoded": true,
+      "image_found": false
+    }
+  },
+  {
+    "_id": "asset_e213fbe00a",
+    "sn": 57,
+    "mda": "National Directorate of Employment",
+    "purpose": "Office Building",
+    "state": "Abuja",
+    "lga": "AMAC",
+    "address": "1529 Nouakchott St, Wuse 904101, Abuja",
+    "landmark": "Unity Bank",
+    "year_commissioned": null,
+    "valuation": null,
+    "coordinates": {
+      "lat": 9.0512722,
+      "lng": 7.4640858
+    },
+    "image": {
+      "filename": null,
+      "source_url": null,
+      "width": null,
+      "height": null,
+      "scraped_at": null
+    },
+    "metadata": {
+      "scraped_at": "2026-06-27T14:30:16.512970Z",
+      "geocoded": true,
+      "image_found": false
+    }
+  },
+  {
+    "_id": "asset_fbe1151e7a",
+    "sn": 58,
+    "mda": "Michael Imodu Institute Of Labour Studies",
+    "purpose": "Office Building",
+    "state": "kwara",
+    "lga": "illorin",
+    "address": "Km 7 Olunlade Village, Ajasse-Ipo Road, 240102, Ilorin, Kwara State",
+    "landmark": "Bovas Filling Station",
+    "year_commissioned": null,
+    "valuation": null,
+    "coordinates": {
+      "lat": 8.5397417,
+      "lng": 4.5223167
+    },
+    "image": {
+      "filename": null,
+      "source_url": null,
+      "width": null,
+      "height": null,
+      "scraped_at": null
+    },
+    "metadata": {
+      "scraped_at": "2026-06-27T14:30:26.090767Z",
+      "geocoded": true,
+      "image_found": false
+    }
+  },
+  {
+    "_id": "asset_9ce8a7e94e",
+    "sn": 59,
+    "mda": "Industrial Arbitration Panel",
+    "purpose": "Office Building",
+    "state": "Abjua",
+    "lga": "AMAC",
+    "address": "Future View Plaza, Plot 259 Samuel Ademulegun Ave, opposite National Mosque, Municipal 900107, Abuja",
+    "landmark": "National Mosque",
+    "year_commissioned": null,
+    "valuation": null,
+    "coordinates": {
+      "lat": null,
+      "lng": null
+    },
+    "image": {
+      "filename": null,
+      "source_url": null,
+      "width": null,
+      "height": null,
+      "scraped_at": null
+    },
+    "metadata": {
+      "scraped_at": "2026-06-27T14:30:36.684889Z",
+      "geocoded": false,
+      "image_found": false
+    }
+  },
+  {
+    "_id": "asset_0ea965e3aa",
+    "sn": 60,
+    "mda": "Nigeria Social Insurance Trust Fund (NSITF)",
+    "purpose": "Office Building",
+    "state": "Abuja",
+    "lga": "AMAC",
+    "address": "Plot 794, Mohammadu Buhari Way, Central Business Area, P.M.B. 446, Mohammadu Buhari Way, Garki, Abuja",
+    "landmark": "Galazy Investment",
+    "year_commissioned": null,
+    "valuation": null,
+    "coordinates": {
+      "lat": 9.0552729,
+      "lng": 7.4662595
+    },
+    "image": {
+      "filename": null,
+      "source_url": null,
+      "width": null,
+      "height": null,
+      "scraped_at": null
+    },
+    "metadata": {
+      "scraped_at": "2026-06-27T14:30:47.808452Z",
+      "geocoded": true,
+      "image_found": false
+    }
+  },
+  {
+    "_id": "asset_4ba65f43d6",
+    "sn": 61,
+    "mda": "Federal Ministry Of Labour And Employment",
+    "purpose": "Office Building",
+    "state": "Akwa-Ibom",
+    "lga": "Uyo",
+    "address": "No. 4, Etim Ibanga Udosen street",
+    "landmark": "Akpayak village close to Govt house",
+    "year_commissioned": "1978",
+    "valuation": null,
+    "coordinates": {
+      "lat": 4.990237,
+      "lng": 7.9974399
+    },
+    "image": {
+      "filename": "asset_4ba65f43d6.jpg",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/5/5b/Nigeria-CIA_WFB_Map.png",
+      "width": 331,
+      "height": 352,
+      "scraped_at": "2026-06-27T14:31:07.500517Z"
+    },
+    "metadata": {
+      "scraped_at": "2026-06-27T14:30:57.173641Z",
+      "geocoded": true,
+      "image_found": true
+    }
+  },
+  {
+    "_id": "asset_463c765468",
+    "sn": 63,
+    "mda": "Federal Ministry Of Labour And Employment",
+    "purpose": "Mixed Use",
+    "state": "Bauchi",
+    "lga": "Bauchi",
+    "address": "Yelwa road, Bauchi",
+    "landmark": "Shafat Filling Station",
+    "year_commissioned": null,
+    "valuation": null,
+    "coordinates": {
+      "lat": 10.2783566,
+      "lng": 9.7948111
+    },
+    "image": {
+      "filename": null,
+      "source_url": null,
+      "width": null,
+      "height": null,
+      "scraped_at": null
+    },
+    "metadata": {
+      "scraped_at": "2026-06-27T14:31:08.304321Z",
+      "geocoded": true,
+      "image_found": false
+    }
+  },
+  {
+    "_id": "asset_60f69a5bfc",
+    "sn": 64,
+    "mda": "Federal Ministry Of Labour And Employment",
+    "purpose": "Land",
+    "state": "Edo",
+    "lga": "Oredo",
+    "address": "Off Siluko road, Evbuotubo",
+    "landmark": "Police Station, Evbuotubo",
+    "year_commissioned": "1982",
+    "valuation": null,
+    "coordinates": {
+      "lat": 6.2297631,
+      "lng": 5.5617902
+    },
+    "image": {
+      "filename": null,
+      "source_url": null,
+      "width": null,
+      "height": null,
+      "scraped_at": null
+    },
+    "metadata": {
+      "scraped_at": "2026-06-27T14:31:19.250103Z",
+      "geocoded": true,
+      "image_found": false
+    }
+  },
+  {
+    "_id": "asset_62b375c496",
+    "sn": 65,
+    "mda": "Federal Ministry Of Labour And Employment",
+    "purpose": "Office Building",
+    "state": "Borno",
+    "lga": "Maiduguri South",
+    "address": "Sir Kassim Ibrahim road, Abbaganara",
+    "landmark": "New Prison",
+    "year_commissioned": "1976",
+    "valuation": null,
+    "coordinates": {
+      "lat": 12.492626,
+      "lng": 12.785386
+    },
+    "image": {
+      "filename": null,
+      "source_url": null,
+      "width": null,
+      "height": null,
+      "scraped_at": null
+    },
+    "metadata": {
+      "scraped_at": "2026-06-27T14:31:29.823180Z",
+      "geocoded": true,
+      "image_found": false
+    }
+  },
+  {
+    "_id": "asset_409862953f",
+    "sn": 66,
+    "mda": "Federal Ministry Of Labour And Employment",
+    "purpose": "Skill Acquisition Centre",
+    "state": "Delta",
+    "lga": "Warri North",
+    "address": "Okere Road",
+    "landmark": "Igbo Market",
+    "year_commissioned": "1982",
+    "valuation": null,
+    "coordinates": {
+      "lat": 5.5172686,
+      "lng": 5.7483171
+    },
+    "image": {
+      "filename": null,
+      "source_url": null,
+      "width": null,
+      "height": null,
+      "scraped_at": null
+    },
+    "metadata": {
+      "scraped_at": "2026-06-27T14:31:41.144839Z",
+      "geocoded": true,
+      "image_found": false
+    }
+  },
+  {
+    "_id": "asset_b998c930dc",
+    "sn": 67,
+    "mda": "Federal Ministry Of Labour And Employment",
+    "purpose": "Office Building",
+    "state": "Delta",
+    "lga": "Sapele",
+    "address": "23, Market Road Sapele",
+    "landmark": "Sapele Prisons",
+    "year_commissioned": "1948",
+    "valuation": null,
+    "coordinates": {
+      "lat": 5.8948144,
+      "lng": 5.6795885
+    },
+    "image": {
+      "filename": "asset_b998c930dc.jpg",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/a/aa/Flag_of_Delta_State.gif",
+      "width": 431,
+      "height": 216,
+      "scraped_at": "2026-06-27T14:32:01.689956Z"
+    },
+    "metadata": {
+      "scraped_at": "2026-06-27T14:31:52.056648Z",
+      "geocoded": true,
+      "image_found": true
+    }
+  },
+  {
+    "_id": "asset_7782bcd46f",
+    "sn": 68,
+    "mda": "Federal Ministry Of Labour And Employment",
+    "purpose": "Office Building",
+    "state": "Enugu",
+    "lga": "Enugu South",
+    "address": "23, Awolowo street, Uwani, Enugu",
+    "landmark": "Police barracks, Uwani",
+    "year_commissioned": "1970s",
+    "valuation": null,
+    "coordinates": {
+      "lat": 6.4001343,
+      "lng": 7.5139031
+    },
+    "image": {
+      "filename": "asset_7782bcd46f.jpg",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/4/46/Collage_pics_of_Enugu%2C_MJW.jpg",
+      "width": 502,
+      "height": 1200,
+      "scraped_at": "2026-06-27T14:32:15.031672Z"
+    },
+    "metadata": {
+      "scraped_at": "2026-06-27T14:32:02.491258Z",
+      "geocoded": true,
+      "image_found": true
+    }
+  },
+  {
+    "_id": "asset_5f79e42649",
+    "sn": 69,
+    "mda": "Federal Ministry Of Labour And Employment",
+    "purpose": "School/Vocational Training Institute",
+    "state": "Enugu",
+    "lga": "Enugu East",
+    "address": "Km 3, Enugu-Abakaliki Expressway, Emene, Enugu",
+    "landmark": "Nkpologu bus stop, after airport road flyover, before Innoson motors",
+    "year_commissioned": "Ongoing",
+    "valuation": null,
+    "coordinates": {
+      "lat": 6.5483445,
+      "lng": 7.5568359
+    },
+    "image": {
+      "filename": null,
+      "source_url": null,
+      "width": null,
+      "height": null,
+      "scraped_at": null
+    },
+    "metadata": {
+      "scraped_at": "2026-06-27T14:32:15.833226Z",
+      "geocoded": true,
+      "image_found": false
+    }
+  },
+  {
+    "_id": "asset_b75bcd22f2",
+    "sn": 70,
+    "mda": "Federal Ministry Of Labour And Employment",
+    "purpose": "Office Building",
+    "state": "Kaduna",
+    "lga": "Kaduna North",
+    "address": "Ibadan Street, Kaduna",
+    "landmark": "Mugaji Gari Secretairiat",
+    "year_commissioned": null,
+    "valuation": null,
+    "coordinates": {
+      "lat": 10.5116673,
+      "lng": 7.4315542
+    },
+    "image": {
+      "filename": null,
+      "source_url": null,
+      "width": null,
+      "height": null,
+      "scraped_at": null
+    },
+    "metadata": {
+      "scraped_at": "2026-06-27T14:32:28.315446Z",
+      "geocoded": true,
+      "image_found": false
+    }
+  },
+  {
+    "_id": "asset_d6c2ccfc73",
+    "sn": 74,
+    "mda": "Federal Ministry Of Labour And Employment",
+    "purpose": "Office Building",
+    "state": "Kogi",
+    "lga": "Lokoja",
+    "address": "No.11 Labour Road, Adankolo",
+    "landmark": "Adankolo Market, UBA",
+    "year_commissioned": "1974",
+    "valuation": null,
+    "coordinates": {
+      "lat": 7.802355,
+      "lng": 6.7430327
+    },
+    "image": {
+      "filename": null,
+      "source_url": null,
+      "width": null,
+      "height": null,
+      "scraped_at": null
+    },
+    "metadata": {
+      "scraped_at": "2026-06-27T14:32:39.196279Z",
+      "geocoded": true,
+      "image_found": false
+    }
+  },
+  {
+    "_id": "asset_28fb5d48bc",
+    "sn": 75,
+    "mda": "Federal Ministry Of Labour And Employment",
+    "purpose": "Office Building",
+    "state": "Kwara",
+    "lga": "Ilorin South",
+    "address": "1, Railway Station Road",
+    "landmark": "Aziyat & Total Filling Station",
+    "year_commissioned": null,
+    "valuation": null,
+    "coordinates": {
+      "lat": 8.4404502,
+      "lng": 4.6894414
+    },
+    "image": {
+      "filename": "asset_28fb5d48bc.jpg",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/e/e1/Ilorin_West_Local_Government_Secretariat%2C_Warah.jpg",
+      "width": 1200,
+      "height": 900,
+      "scraped_at": "2026-06-27T14:33:08.948136Z"
+    },
+    "metadata": {
+      "scraped_at": "2026-06-27T14:32:51.383557Z",
+      "geocoded": true,
+      "image_found": true
+    }
+  },
+  {
+    "_id": "asset_23c0a1b51b",
+    "sn": 77,
+    "mda": "Federal Ministry Of Labour And Employment",
+    "purpose": "Office Building",
+    "state": "Lagos",
+    "lga": "Etiosa",
+    "address": "14, Ikoyi road",
+    "landmark": "Immigration Passport Office",
+    "year_commissioned": "1945",
+    "valuation": null,
+    "coordinates": {
+      "lat": 6.4516147,
+      "lng": 3.4151181
+    },
+    "image": {
+      "filename": null,
+      "source_url": null,
+      "width": null,
+      "height": null,
+      "scraped_at": null
+    },
+    "metadata": {
+      "scraped_at": "2026-06-27T14:33:09.769159Z",
+      "geocoded": true,
+      "image_found": false
+    }
+  },
+  {
+    "_id": "asset_52b3079f3c",
+    "sn": 78,
+    "mda": "Federal Ministry Of Labour And Employment",
+    "purpose": "Workshop/Offices",
+    "state": "Lagos",
+    "lga": "Mainland",
+    "address": "Yaba Skills Centre",
+    "landmark": "Queens College",
+    "year_commissioned": null,
+    "valuation": null,
+    "coordinates": {
+      "lat": 6.4932779,
+      "lng": 3.3883546
+    },
+    "image": {
+      "filename": null,
+      "source_url": null,
+      "width": null,
+      "height": null,
+      "scraped_at": null
+    },
+    "metadata": {
+      "scraped_at": "2026-06-27T14:33:24.107855Z",
+      "geocoded": true,
+      "image_found": false
+    }
+  },
+  {
+    "_id": "asset_1ac45bb11f",
+    "sn": 80,
+    "mda": "Federal Ministry Of Labour And Employment",
+    "purpose": "Mixed Use",
+    "state": "Nasarawa",
+    "lga": "Lafia",
+    "address": "Km 1, Doma Road, Lafia",
+    "landmark": "Near Tudun Amba River",
+    "year_commissioned": "2012",
+    "valuation": null,
+    "coordinates": {
+      "lat": null,
+      "lng": null
+    },
+    "image": {
+      "filename": null,
+      "source_url": null,
+      "width": null,
+      "height": null,
+      "scraped_at": null
+    },
+    "metadata": {
+      "scraped_at": "2026-06-27T14:33:44.656993Z",
+      "geocoded": false,
+      "image_found": false
+    }
+  },
+  {
+    "_id": "asset_8dcf214bd5",
+    "sn": 83,
+    "mda": "Federal Ministry Of Labour And Employment",
+    "purpose": "Office Building",
+    "state": "Plateau",
+    "lga": "Jos North",
+    "address": "Dilimi",
+    "landmark": "Terminus Market",
+    "year_commissioned": null,
+    "valuation": null,
+    "coordinates": {
+      "lat": null,
+      "lng": null
+    },
+    "image": {
+      "filename": null,
+      "source_url": null,
+      "width": null,
+      "height": null,
+      "scraped_at": null
+    },
+    "metadata": {
+      "scraped_at": "2026-06-27T14:33:48.463262Z",
+      "geocoded": false,
+      "image_found": false
+    }
+  },
+  {
+    "_id": "asset_f1e8222b2b",
+    "sn": 85,
+    "mda": "Federal Ministry Of Labour And Employment",
+    "purpose": "Land",
+    "state": "Ondo",
+    "lga": "Ondo South",
+    "address": "Ondo-Obaile Road, Akure",
+    "landmark": "Old Petrol Station",
+    "year_commissioned": "1990",
+    "valuation": null,
+    "coordinates": {
+      "lat": null,
+      "lng": null
+    },
+    "image": {
+      "filename": null,
+      "source_url": null,
+      "width": null,
+      "height": null,
+      "scraped_at": null
+    },
+    "metadata": {
+      "scraped_at": "2026-06-27T14:33:52.212198Z",
+      "geocoded": false,
+      "image_found": false
+    }
+  },
+  {
+    "_id": "asset_ef366b1111",
+    "sn": 86,
+    "mda": "Federal Ministry Of Labour And Employment",
+    "purpose": "Office Building",
+    "state": "Sokoto",
+    "lga": "Sokoto South",
+    "address": "No,7 Dendo Street",
+    "landmark": "St. Paul's Church Sokoto",
+    "year_commissioned": null,
+    "valuation": null,
+    "coordinates": {
+      "lat": null,
+      "lng": null
+    },
+    "image": {
+      "filename": null,
+      "source_url": null,
+      "width": null,
+      "height": null,
+      "scraped_at": null
+    },
+    "metadata": {
+      "scraped_at": "2026-06-27T14:33:56.050309Z",
+      "geocoded": false,
+      "image_found": false
+    }
+  },
+  {
+    "_id": "asset_84efb163a2",
+    "sn": 88,
+    "mda": "Federal Ministry Of Labour And Employment",
+    "purpose": "Office Building",
+    "state": "Rivers State",
+    "lga": "Port Harcourt",
+    "address": "FML&E District, Labour Office",
+    "landmark": "NICN",
+    "year_commissioned": "1960s",
+    "valuation": null,
+    "coordinates": {
+      "lat": null,
+      "lng": null
+    },
+    "image": {
+      "filename": null,
+      "source_url": null,
+      "width": null,
+      "height": null,
+      "scraped_at": null
+    },
+    "metadata": {
+      "scraped_at": "2026-06-27T14:33:59.876355Z",
+      "geocoded": false,
+      "image_found": false
+    }
+  },
+  {
+    "_id": "asset_87e686a0c4",
+    "sn": null,
+    "mda": "FEDERAL MINISTRY OF COMMUNICATION AND DIGITAL ECONOMY",
+    "purpose": "Office Building",
+    "state": null,
+    "lga": null,
+    "address": null,
+    "landmark": null,
+    "year_commissioned": null,
+    "valuation": null,
+    "coordinates": {
+      "lat": null,
+      "lng": null
+    },
+    "image": {
+      "filename": null,
+      "source_url": null,
+      "width": null,
+      "height": null,
+      "scraped_at": null
+    },
+    "metadata": {
+      "scraped_at": "2026-06-27T14:34:03.652214Z",
+      "geocoded": false,
+      "image_found": false
+    }
+  },
+  {
+    "_id": "asset_31a31c581c",
+    "sn": 89,
+    "mda": "Federal Ministry Of Communication And Digital Economy",
+    "purpose": "Office Building",
+    "state": "FCT, Abuja",
+    "lga": "AMAC",
+    "address": "P.M.B. 12578 Federal Secretariat Complex Phase I, Annex III, Shehu Shagari Way, 900211, Abuja",
+    "landmark": "Federal Ministry of Science and Technology",
+    "year_commissioned": null,
+    "valuation": null,
+    "coordinates": {
+      "lat": 9.0552729,
+      "lng": 7.4662595
+    },
+    "image": {
+      "filename": null,
+      "source_url": null,
+      "width": null,
+      "height": null,
+      "scraped_at": null
+    },
+    "metadata": {
+      "scraped_at": "2026-06-27T14:34:04.861046Z",
+      "geocoded": true,
+      "image_found": false
+    }
+  },
+  {
+    "_id": "asset_41d08f6d82",
+    "sn": 90,
+    "mda": "Nigeria Postal Service",
+    "purpose": "Office Building",
+    "state": "FCT, Abuja",
+    "lga": "AMAC",
+    "address": "Abubakar Musa Argungu House Plot 1279 Muhammadu Buhari Way PMB 12537, 1279 Mohammadu Buhari Way, Garki 900001, Abuja",
+    "landmark": "Petral Digital Press",
+    "year_commissioned": null,
+    "valuation": null,
+    "coordinates": {
+      "lat": 9.0552729,
+      "lng": 7.4662595
+    },
+    "image": {
+      "filename": "asset_41d08f6d82.jpg",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/1/1b/Abuja_heritages_30.jpg",
+      "width": 1200,
+      "height": 801,
+      "scraped_at": "2026-06-27T14:35:50.324617Z"
+    },
+    "metadata": {
+      "scraped_at": "2026-06-27T14:35:42.071614Z",
+      "geocoded": true,
+      "image_found": true
+    }
+  },
+  {
+    "_id": "asset_ba6e3e8cf2",
+    "sn": 91,
+    "mda": "Nigeria Communication Satellite Limited",
+    "purpose": "Office Building",
+    "state": "FCT, Abuja",
+    "lga": "AMAC",
+    "address": "222b 1st Ave Fha, Sector 900108, Abuja",
+    "landmark": "Ministry of Mines and Steel",
+    "year_commissioned": null,
+    "valuation": null,
+    "coordinates": {
+      "lat": 9.0552729,
+      "lng": 7.4662595
+    },
+    "image": {
+      "filename": "asset_ba6e3e8cf2.jpg",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/1/1b/Abuja_heritages_30.jpg",
+      "width": 1200,
+      "height": 801,
+      "scraped_at": "2026-06-27T14:36:08.000165Z"
+    },
+    "metadata": {
+      "scraped_at": "2026-06-27T14:35:51.142469Z",
+      "geocoded": true,
+      "image_found": true
+    }
+  },
+  {
+    "_id": "asset_521943e684",
+    "sn": 92,
+    "mda": "Nigeria Communication Commission",
+    "purpose": "Office Building",
+    "state": "FCT, Abuja",
+    "lga": "AMAC",
+    "address": "Plot 423 Aguiyi Ironsi St, Maitama 900271, Abuja",
+    "landmark": "Nigeria Investment Promotion Commision",
+    "year_commissioned": null,
+    "valuation": null,
+    "coordinates": {
+      "lat": 9.0819803,
+      "lng": 7.4903489
+    },
+    "image": {
+      "filename": "asset_521943e684.jpg",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/0/04/National_Open_University_of_Nigeria_Logo.png",
+      "width": 327,
+      "height": 395,
+      "scraped_at": "2026-06-27T14:36:13.173822Z"
+    },
+    "metadata": {
+      "scraped_at": "2026-06-27T14:36:08.806653Z",
+      "geocoded": true,
+      "image_found": true
+    }
+  },
+  {
+    "_id": "asset_6e1ffc7cca",
+    "sn": 93,
+    "mda": "Nigeria Communication Commission Annexe",
+    "purpose": "Office Building",
+    "state": "FCT, Abuja",
+    "lga": "AMAC",
+    "address": "Plot 1253, Cadastral Zone C06 Behind Major Oil Services, Before CITEC Estate Jabi-Airport Road Mbora",
+    "landmark": "Communication and Digital Economy Complex",
+    "year_commissioned": null,
+    "valuation": null,
+    "coordinates": {
+      "lat": 9.0552729,
+      "lng": 7.4662595
+    },
+    "image": {
+      "filename": null,
+      "source_url": null,
+      "width": null,
+      "height": null,
+      "scraped_at": null
+    },
+    "metadata": {
+      "scraped_at": "2026-06-27T14:36:13.976965Z",
+      "geocoded": true,
+      "image_found": false
+    }
+  },
+  {
+    "_id": "asset_2a095e88f2",
+    "sn": 94,
+    "mda": "Galaxy Backbone Limited",
+    "purpose": "Office Building",
+    "state": "FCT, Abuja",
+    "lga": "AMAC",
+    "address": "61 Adetokunbo Ademola Cres, Wuse 2 904101, Abuja",
+    "landmark": "Fidelity Bank",
+    "year_commissioned": null,
+    "valuation": null,
+    "coordinates": {
+      "lat": 9.0552729,
+      "lng": 7.4662595
+    },
+    "image": {
+      "filename": null,
+      "source_url": null,
+      "width": null,
+      "height": null,
+      "scraped_at": null
+    },
+    "metadata": {
+      "scraped_at": "2026-06-27T14:36:27.072078Z",
+      "geocoded": true,
+      "image_found": false
+    }
+  },
+  {
+    "_id": "asset_d3edaf5ff9",
+    "sn": 95,
+    "mda": "Federal Ministry Of Communication And Digital Economy Headquarters",
+    "purpose": "Office Building",
+    "state": "FCT, Abuja",
+    "lga": "AMAC",
+    "address": "P.M.B. 12578 Federal Secretariat Complex Phase I, Annex III, Shehu Shagari Way, 900211, Abuja",
+    "landmark": "Federal Ministry of Science and Technology",
+    "year_commissioned": null,
+    "valuation": null,
+    "coordinates": {
+      "lat": 9.0552729,
+      "lng": 7.4662595
+    },
+    "image": {
+      "filename": null,
+      "source_url": null,
+      "width": null,
+      "height": null,
+      "scraped_at": null
+    },
+    "metadata": {
+      "scraped_at": "2026-06-27T14:36:38.278684Z",
+      "geocoded": true,
+      "image_found": false
+    }
+  },
+  {
+    "_id": "asset_c3aef9b0a4",
+    "sn": 96,
+    "mda": "National Information Technology Development Agency",
+    "purpose": "Office Building",
+    "state": "FCT, Abuja",
+    "lga": "AMAC",
+    "address": "28, PortHarcourt Crescent, Off Gimbiya Street, Area 11, Garki",
+    "landmark": "Baptist Church",
+    "year_commissioned": "2003",
+    "valuation": null,
+    "coordinates": {
+      "lat": 9.0552729,
+      "lng": 7.4662595
+    },
+    "image": {
+      "filename": "asset_c3aef9b0a4.jpg",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/b/bd/FUT.Minna_NITDA_36.jpg",
+      "width": 1200,
+      "height": 800,
+      "scraped_at": "2026-06-27T14:37:08.713380Z"
+    },
+    "metadata": {
+      "scraped_at": "2026-06-27T14:36:48.485529Z",
+      "geocoded": true,
+      "image_found": true
+    }
+  },
+  {
+    "_id": "asset_85f71436b0",
+    "sn": 97,
+    "mda": "National Information Technology Development Agency",
+    "purpose": "Office Building",
+    "state": "Kano",
+    "lga": "Kumbotso",
+    "address": "Amana City Estate, Zaria-Kano ExpressWay, Kano",
+    "landmark": "WHO & Nigerian Immigration Service",
+    "year_commissioned": "2019",
+    "valuation": null,
+    "coordinates": {
+      "lat": 11.9174554,
+      "lng": 8.5198363
+    },
+    "image": {
+      "filename": "asset_85f71436b0.jpg",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/4/40/Kano_City_Aerial.jpg",
+      "width": 1080,
+      "height": 1080,
+      "scraped_at": "2026-06-27T14:37:14.679698Z"
+    },
+    "metadata": {
+      "scraped_at": "2026-06-27T14:37:09.523926Z",
+      "geocoded": true,
+      "image_found": true
+    }
+  },
+  {
+    "_id": "asset_1f1f472761",
+    "sn": 98,
+    "mda": "Nigerian Communications Satellite Ltd",
+    "purpose": "Office Building",
+    "state": "FCT, Abuja",
+    "lga": "AMAC",
+    "address": "Olusegun Obasonjo Space Centre, Umar Yar'Adua ExpressWay, Lugbe",
+    "landmark": "Abuja Trade Fair Centre, Airport Road",
+    "year_commissioned": "2007",
+    "valuation": null,
+    "coordinates": {
+      "lat": 9.0552729,
+      "lng": 7.4662595
+    },
+    "image": {
+      "filename": null,
+      "source_url": null,
+      "width": null,
+      "height": null,
+      "scraped_at": null
+    },
+    "metadata": {
+      "scraped_at": "2026-06-27T14:37:15.487403Z",
+      "geocoded": true,
+      "image_found": false
+    }
+  },
+  {
+    "_id": "asset_36e3063cc3",
+    "sn": null,
+    "mda": "FEDERAL MINISTRY OF HEALTH",
+    "purpose": "Office Building",
+    "state": null,
+    "lga": null,
+    "address": null,
+    "landmark": null,
+    "year_commissioned": null,
+    "valuation": null,
+    "coordinates": {
+      "lat": null,
+      "lng": null
+    },
+    "image": {
+      "filename": null,
+      "source_url": null,
+      "width": null,
+      "height": null,
+      "scraped_at": null
+    },
+    "metadata": {
+      "scraped_at": "2026-06-27T14:37:28.393281Z",
+      "geocoded": false,
       "image_found": false
     }
   }
