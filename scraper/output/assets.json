@@ -1,0 +1,582 @@
+[
+  {
+    "_id": "asset_fc1983bc30",
+    "sn": 1,
+    "mda": "Federal Ministry of Agriculture And Rural Development",
+    "purpose": "Office Building",
+    "state": "Lagos",
+    "lga": "Agege",
+    "address": "J8W8+8W3, Ifako Agege 101232, Lagos",
+    "landmark": "Maple Wood Estate",
+    "year_commissioned": null,
+    "valuation": null,
+    "coordinates": {
+      "lat": 6.6252516,
+      "lng": 3.3112096
+    },
+    "image": {
+      "filename": "asset_fc1983bc30.jpg",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/2/20/Powrer_house%2C_Abuja.jpg",
+      "width": 1000,
+      "height": 667,
+      "scraped_at": "2026-06-27T13:55:41.847672Z"
+    },
+    "metadata": {
+      "scraped_at": "2026-06-27T13:55:34.717161Z",
+      "geocoded": true,
+      "image_found": true,
+      "search_queries": []
+    }
+  },
+  {
+    "_id": "asset_be7f1b079b",
+    "sn": 2,
+    "mda": "Federal Ministry of Agriculture And Rural Development",
+    "purpose": "Office Building",
+    "state": "Lagos",
+    "lga": "Victoria Island",
+    "address": "1 Wilmot Point Road\nOff Ahmadu Bello Way",
+    "landmark": "Nigerian Institute for Oceanography and Marine Research",
+    "year_commissioned": null,
+    "valuation": null,
+    "coordinates": {
+      "lat": 6.4300279,
+      "lng": 3.4259904
+    },
+    "image": {
+      "filename": "asset_be7f1b079b.jpg",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/2/20/Powrer_house%2C_Abuja.jpg",
+      "width": 1000,
+      "height": 667,
+      "scraped_at": "2026-06-27T13:55:48.240107Z"
+    },
+    "metadata": {
+      "scraped_at": "2026-06-27T13:55:42.649500Z",
+      "geocoded": true,
+      "image_found": true,
+      "search_queries": []
+    }
+  },
+  {
+    "_id": "asset_036db50b77",
+    "sn": 3,
+    "mda": "Federal Ministry of Agriculture And Rural Development",
+    "purpose": "Office Building",
+    "state": "Abuja",
+    "lga": "AMAC",
+    "address": "Kapital Road, Area 11",
+    "landmark": "Federal Capital Territory Adminstration",
+    "year_commissioned": null,
+    "valuation": null,
+    "coordinates": {
+      "lat": 9.0552729,
+      "lng": 7.4662595
+    },
+    "image": {
+      "filename": "asset_036db50b77.jpg",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/1/1b/Abuja_heritages_30.jpg",
+      "width": 1200,
+      "height": 801,
+      "scraped_at": "2026-06-27T13:56:07.587754Z"
+    },
+    "metadata": {
+      "scraped_at": "2026-06-27T13:55:49.042067Z",
+      "geocoded": true,
+      "image_found": true,
+      "search_queries": []
+    }
+  },
+  {
+    "_id": "asset_f8a053571e",
+    "sn": 4,
+    "mda": "Vetinary Council Of Nigeria (VCN)",
+    "purpose": "Office Building",
+    "state": "FCT, Abuja",
+    "lga": "AMAC",
+    "address": "Plot 8, Zambezi Crescent, Maitama,",
+    "landmark": "National Board for Technology Incubation",
+    "year_commissioned": null,
+    "valuation": null,
+    "coordinates": {
+      "lat": 9.0797656,
+      "lng": 7.4906207
+    },
+    "image": {
+      "filename": null,
+      "source_url": null,
+      "width": null,
+      "height": null,
+      "scraped_at": null
+    },
+    "metadata": {
+      "scraped_at": "2026-06-27T13:56:08.389208Z",
+      "geocoded": true,
+      "image_found": false,
+      "search_queries": []
+    }
+  },
+  {
+    "_id": "asset_0afb30edbb",
+    "sn": 5,
+    "mda": "Nigeria Quarantine Services (NAQS)",
+    "purpose": "Office Building",
+    "state": "FCT, Abuja",
+    "lga": "AMAC",
+    "address": "Plot 81 Ralph Shodeinde street",
+    "landmark": "Imo State Liason Office",
+    "year_commissioned": null,
+    "valuation": null,
+    "coordinates": {
+      "lat": 9.0542323,
+      "lng": 7.4999344
+    },
+    "image": {
+      "filename": null,
+      "source_url": null,
+      "width": null,
+      "height": null,
+      "scraped_at": null
+    },
+    "metadata": {
+      "scraped_at": "2026-06-27T13:56:21.609148Z",
+      "geocoded": true,
+      "image_found": false,
+      "search_queries": []
+    }
+  },
+  {
+    "_id": "asset_a820ed8118",
+    "sn": 6,
+    "mda": "Bank of Agriculture (BOA)",
+    "purpose": "Office Building",
+    "state": "Kaduna",
+    "lga": "Kaduna",
+    "address": "1 Yakubu Gowon Way, Sabongiri",
+    "landmark": "NIPOST General Post Office GPO",
+    "year_commissioned": null,
+    "valuation": null,
+    "coordinates": {
+      "lat": 10.5182899,
+      "lng": 7.4359863
+    },
+    "image": {
+      "filename": null,
+      "source_url": null,
+      "width": null,
+      "height": null,
+      "scraped_at": null
+    },
+    "metadata": {
+      "scraped_at": "2026-06-27T13:56:32.041519Z",
+      "geocoded": true,
+      "image_found": false,
+      "search_queries": []
+    }
+  },
+  {
+    "_id": "asset_2a55af20e5",
+    "sn": 7,
+    "mda": "Agricultural And Rural Management Training Institute (ARMTI)",
+    "purpose": "Office Building",
+    "state": "Abuja",
+    "lga": "AMAC",
+    "address": "41, David Ejoor, Gudu",
+    "landmark": "Agricultural and Rural Management Institute",
+    "year_commissioned": null,
+    "valuation": null,
+    "coordinates": {
+      "lat": 9.0552729,
+      "lng": 7.4662595
+    },
+    "image": {
+      "filename": null,
+      "source_url": null,
+      "width": null,
+      "height": null,
+      "scraped_at": null
+    },
+    "metadata": {
+      "scraped_at": "2026-06-27T13:56:43.225093Z",
+      "geocoded": true,
+      "image_found": false,
+      "search_queries": []
+    }
+  },
+  {
+    "_id": "asset_a96e3b2a5f",
+    "sn": 8,
+    "mda": "Nigerian Agricultural Insurance Corporation (NAIS)",
+    "purpose": "Office Building",
+    "state": "FCT, Abuja",
+    "lga": "AMAC",
+    "address": "Plot 950 Zone A.O Central Area, Abuja",
+    "landmark": "Nigerian Integrated Water Resources management Commission",
+    "year_commissioned": null,
+    "valuation": null,
+    "coordinates": {
+      "lat": 9.0552729,
+      "lng": 7.4662595
+    },
+    "image": {
+      "filename": null,
+      "source_url": null,
+      "width": null,
+      "height": null,
+      "scraped_at": null
+    },
+    "metadata": {
+      "scraped_at": "2026-06-27T13:56:54.433912Z",
+      "geocoded": true,
+      "image_found": false,
+      "search_queries": []
+    }
+  },
+  {
+    "_id": "asset_9eb00765e6",
+    "sn": 9,
+    "mda": "Nigeria Agricultural Seed Council",
+    "purpose": "Office Building",
+    "state": "FCT, Abuja",
+    "lga": "AMAC",
+    "address": "Km 29, Abuja-Lokoja Expressway\n\nSheda, FCT",
+    "landmark": "ASCA Oil Tank Farm",
+    "year_commissioned": null,
+    "valuation": null,
+    "coordinates": {
+      "lat": 9.0552729,
+      "lng": 7.4662595
+    },
+    "image": {
+      "filename": null,
+      "source_url": null,
+      "width": null,
+      "height": null,
+      "scraped_at": null
+    },
+    "metadata": {
+      "scraped_at": "2026-06-27T13:57:04.732036Z",
+      "geocoded": true,
+      "image_found": false,
+      "search_queries": []
+    }
+  },
+  {
+    "_id": "asset_9945f0124c",
+    "sn": 10,
+    "mda": "National Centre For Agricultural Mechanization (NCAM)",
+    "purpose": "Office Building",
+    "state": "Kwara",
+    "lga": "Ilorin",
+    "address": "Km 20 Ilorin- Lokoja Highway, Idofian, 240103, Ilorin,",
+    "landmark": "Famtech Communications",
+    "year_commissioned": null,
+    "valuation": null,
+    "coordinates": {
+      "lat": 8.4963657,
+      "lng": 4.5480484
+    },
+    "image": {
+      "filename": null,
+      "source_url": null,
+      "width": null,
+      "height": null,
+      "scraped_at": null
+    },
+    "metadata": {
+      "scraped_at": "2026-06-27T13:57:12.261217Z",
+      "geocoded": true,
+      "image_found": false,
+      "search_queries": []
+    }
+  },
+  {
+    "_id": "asset_322b908d69",
+    "sn": 11,
+    "mda": "Nigeria Institute Of Animal Science (NIAS)",
+    "purpose": "Office Building",
+    "state": "FCT, Abuja",
+    "lga": "AMAC",
+    "address": "Plot 1882 C13 Kabusa",
+    "landmark": "Breden Luxury Estate II",
+    "year_commissioned": null,
+    "valuation": null,
+    "coordinates": {
+      "lat": 9.0552729,
+      "lng": 7.4662595
+    },
+    "image": {
+      "filename": null,
+      "source_url": null,
+      "width": null,
+      "height": null,
+      "scraped_at": null
+    },
+    "metadata": {
+      "scraped_at": "2026-06-27T13:57:25.877719Z",
+      "geocoded": true,
+      "image_found": false,
+      "search_queries": []
+    }
+  },
+  {
+    "_id": "asset_1d7c1cf9b2",
+    "sn": 12,
+    "mda": "Nigeria Institute Of Soil Science (NISS)",
+    "purpose": "Office Building",
+    "state": "FCT, Abuja",
+    "lga": "AMAC",
+    "address": "8 Abdullahi Ibrahim St, mabushi",
+    "landmark": "Lighted Refined Energies LTD",
+    "year_commissioned": null,
+    "valuation": null,
+    "coordinates": {
+      "lat": 9.0552729,
+      "lng": 7.4662595
+    },
+    "image": {
+      "filename": null,
+      "source_url": null,
+      "width": null,
+      "height": null,
+      "scraped_at": null
+    },
+    "metadata": {
+      "scraped_at": "2026-06-27T13:57:36.484601Z",
+      "geocoded": true,
+      "image_found": false,
+      "search_queries": []
+    }
+  },
+  {
+    "_id": "asset_fc7fe5dca3",
+    "sn": 13,
+    "mda": "National Agricultural Land Development Authority (NALDA)",
+    "purpose": "Office Building",
+    "state": "FCT, Abuja",
+    "lga": "AMAC",
+    "address": "Area 11, Plot 802 Tafawa Balewa, Malumfashi Cl",
+    "landmark": "Garki Hospital",
+    "year_commissioned": null,
+    "valuation": null,
+    "coordinates": {
+      "lat": 9.0552729,
+      "lng": 7.4662595
+    },
+    "image": {
+      "filename": null,
+      "source_url": null,
+      "width": null,
+      "height": null,
+      "scraped_at": null
+    },
+    "metadata": {
+      "scraped_at": "2026-06-27T13:57:47.862380Z",
+      "geocoded": true,
+      "image_found": false,
+      "search_queries": []
+    }
+  },
+  {
+    "_id": "asset_0ac22b4510",
+    "sn": 14,
+    "mda": "Agricultural Research Council Of Nigeria (ARCN)",
+    "purpose": "Office Building",
+    "state": "FCT, Abuja",
+    "lga": "AMAC",
+    "address": "Plot 223D, Cadestral Zone B6 Mabushi",
+    "landmark": "Stanbic IBTC Bank",
+    "year_commissioned": null,
+    "valuation": null,
+    "coordinates": {
+      "lat": 9.0552729,
+      "lng": 7.4662595
+    },
+    "image": {
+      "filename": "asset_0ac22b4510.jpg",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/7/7d/ARCN_Building_image.jpg",
+      "width": 960,
+      "height": 403,
+      "scraped_at": "2026-06-27T13:58:03.978201Z"
+    },
+    "metadata": {
+      "scraped_at": "2026-06-27T13:57:58.864812Z",
+      "geocoded": true,
+      "image_found": true,
+      "search_queries": []
+    }
+  },
+  {
+    "_id": "asset_64895873c1",
+    "sn": 15,
+    "mda": "Federal College Of Forestry",
+    "purpose": "Office Building",
+    "state": "Oyo",
+    "lga": "Ibadan",
+    "address": "Jericho St, Jericho 200284, Ibadan",
+    "landmark": "Foodco Supermarket",
+    "year_commissioned": null,
+    "valuation": null,
+    "coordinates": {
+      "lat": 7.4060577,
+      "lng": 3.8467468
+    },
+    "image": {
+      "filename": null,
+      "source_url": null,
+      "width": null,
+      "height": null,
+      "scraped_at": null
+    },
+    "metadata": {
+      "scraped_at": "2026-06-27T13:58:04.779205Z",
+      "geocoded": true,
+      "image_found": false,
+      "search_queries": []
+    }
+  },
+  {
+    "_id": "asset_4dc476b382",
+    "sn": 16,
+    "mda": "Chad Basin National Park",
+    "purpose": "Office Building",
+    "state": "Borno",
+    "lga": "Maiduguri",
+    "address": "R489+VW8, 600282, Maiduguri",
+    "landmark": "INEC Office",
+    "year_commissioned": null,
+    "valuation": null,
+    "coordinates": {
+      "lat": 11.8395375,
+      "lng": 13.1536214
+    },
+    "image": {
+      "filename": null,
+      "source_url": null,
+      "width": null,
+      "height": null,
+      "scraped_at": null
+    },
+    "metadata": {
+      "scraped_at": "2026-06-27T13:58:09.180847Z",
+      "geocoded": true,
+      "image_found": false,
+      "search_queries": []
+    }
+  },
+  {
+    "_id": "asset_17163bdc88",
+    "sn": 17,
+    "mda": "Cocoa Research Institute Of Nigeria",
+    "purpose": "Office Building",
+    "state": "Oyo",
+    "lga": "Ibadan",
+    "address": "21b Aba Akinjide Rd, Agodi 200285, Ibadan",
+    "landmark": "Pauls Anglican Primary School",
+    "year_commissioned": null,
+    "valuation": null,
+    "coordinates": {
+      "lat": 7.3786064,
+      "lng": 3.8969928
+    },
+    "image": {
+      "filename": null,
+      "source_url": null,
+      "width": null,
+      "height": null,
+      "scraped_at": null
+    },
+    "metadata": {
+      "scraped_at": "2026-06-27T13:58:16.902252Z",
+      "geocoded": true,
+      "image_found": false,
+      "search_queries": []
+    }
+  },
+  {
+    "_id": "asset_ea2b4664e7",
+    "sn": 18,
+    "mda": "College Of Forestry Mechanisation",
+    "purpose": "Office Building",
+    "state": "Kaduna",
+    "lga": "Afaka",
+    "address": "Kaduna pmb 2312",
+    "landmark": "Sabon Gida Mosque",
+    "year_commissioned": null,
+    "valuation": null,
+    "coordinates": {
+      "lat": 10.5182899,
+      "lng": 7.4359863
+    },
+    "image": {
+      "filename": null,
+      "source_url": null,
+      "width": null,
+      "height": null,
+      "scraped_at": null
+    },
+    "metadata": {
+      "scraped_at": "2026-06-27T13:58:29.609473Z",
+      "geocoded": true,
+      "image_found": false,
+      "search_queries": []
+    }
+  },
+  {
+    "_id": "asset_af985ca605",
+    "sn": 19,
+    "mda": "Cross River National Park",
+    "purpose": "Office Building",
+    "state": "Cross River",
+    "lga": "Calabar",
+    "address": "669 Ikom-Abanliko Rd",
+    "landmark": "Basua",
+    "year_commissioned": null,
+    "valuation": null,
+    "coordinates": {
+      "lat": 4.9795999,
+      "lng": 8.3373597
+    },
+    "image": {
+      "filename": null,
+      "source_url": null,
+      "width": null,
+      "height": null,
+      "scraped_at": null
+    },
+    "metadata": {
+      "scraped_at": "2026-06-27T13:58:40.495499Z",
+      "geocoded": true,
+      "image_found": false,
+      "search_queries": []
+    }
+  },
+  {
+    "_id": "asset_9535e22195",
+    "sn": 20,
+    "mda": "Federal Agricultural Co-Ordinating Unit (FACU) Headquarters",
+    "purpose": "Office Building",
+    "state": "Abuja",
+    "lga": "AMAC",
+    "address": "31 Lokoja St, Garki 900103, Abuja",
+    "landmark": "NEM Insurance",
+    "year_commissioned": null,
+    "valuation": null,
+    "coordinates": {
+      "lat": 9.0552729,
+      "lng": 7.4662595
+    },
+    "image": {
+      "filename": "asset_9535e22195.jpg",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/1/1b/Abuja_heritages_30.jpg",
+      "width": 1200,
+      "height": 801,
+      "scraped_at": "2026-06-27T13:59:06.726839Z"
+    },
+    "metadata": {
+      "scraped_at": "2026-06-27T13:58:52.332586Z",
+      "geocoded": true,
+      "image_found": true,
+      "search_queries": []
+    }
+  }
+]
