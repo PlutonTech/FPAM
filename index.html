@@ -80,13 +80,13 @@ img{display:block;max-width:100%}
 #slideshow{position:relative;flex:1;overflow:hidden;background:#000}
 .slide{position:absolute;inset:0;opacity:0;transition:opacity 1.4s ease;background-size:cover;background-position:center}
 .slide.active{opacity:1}
-.slide-overlay{position:absolute;inset:0;z-index:1;background:linear-gradient(108deg,rgba(11,37,69,.82) 0%,rgba(11,37,69,.42) 52%,rgba(0,0,0,.04) 100%)}
+.slide-overlay{position:absolute;inset:0;z-index:1;background:linear-gradient(108deg,rgba(11,37,69,.88) 0%,rgba(11,37,69,.72) 55%,rgba(0,0,0,.55) 100%)}
 .hero-text{position:absolute;z-index:5;inset:0;display:flex;flex-direction:column;justify-content:center;padding:0 64px;max-width:720px}
 .hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.08);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.14);border-radius:4px;padding:5px 14px;font-family:var(--ff-m);font-size:8.5px;color:rgba(255,255,255,.8);letter-spacing:2px;text-transform:uppercase;margin-bottom:20px;width:fit-content}
 .hero-h1{font-family:var(--ff-d);font-size:clamp(28px,3.6vw,58px);font-weight:600;color:#fff;line-height:1.08;letter-spacing:.5px;text-transform:uppercase;margin-bottom:10px}
 .hero-sub{font-family:var(--ff-b);font-size:12.5px;font-weight:300;letter-spacing:2.5px;text-transform:uppercase;color:var(--blue-lt);margin-bottom:20px}
 .hero-p{font-family:var(--ff-b);font-size:14px;font-weight:300;color:rgba(255,255,255,.6);line-height:1.82;max-width:440px;margin-bottom:30px}
-.hero-btns{display:flex;gap:12px;flex-wrap:wrap}
+.hero-btns{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}
 .slide-label{position:absolute;bottom:24px;left:64px;z-index:5;font-family:var(--ff-m);font-size:8px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.32)}
 .hero-dots{position:absolute;bottom:24px;right:14px;z-index:5;display:flex;gap:7px}
 .hdot{width:24px;height:2.5px;border-radius:2px;background:rgba(255,255,255,.22);cursor:pointer;transition:.4s}
@@ -183,12 +183,12 @@ img{display:block;max-width:100%}
   /* Slideshow tall enough to show all hero content comfortably */
   #slideshow{
     height:auto;
-    min-height:520px;
+    min-height:420px;
   }
 
   /* Hero text: reduce padding, give bottom room for buttons */
   .hero-text{
-    padding:36px 24px 52px;
+    padding:10px 24px 28px;
     max-width:100%;
     justify-content:flex-end;
   }
@@ -248,8 +248,8 @@ img{display:block;max-width:100%}
   .stat-item{border:none;border-bottom:1px solid rgba(255,255,255,.06)}
 
   /* Even smaller screens — more compact hero text */
-  #slideshow{min-height:480px}
-  .hero-text{padding:28px 20px 44px}
+  #slideshow{min-height:400px}
+  .hero-text{padding:6px 20px 22px}
   .hero-badge{font-size:7.5px;padding:4px 10px;margin-bottom:14px}
   .hero-h1{font-size:clamp(22px,7vw,34px)}
   .hero-p{font-size:12.5px;margin-bottom:16px}
@@ -265,6 +265,21 @@ img{display:block;max-width:100%}
   .section{padding:52px 0}
   .container{padding:0 16px}
 }
+
+/* stronger text protection on all slides */
+.slide::after{
+  content:"";
+  position:absolute;inset:0;
+  background:linear-gradient(
+    to top,
+    rgba(5,12,28,.82) 0%,
+    rgba(5,12,28,.38) 45%,
+    transparent 100%
+  );
+  pointer-events:none;
+  z-index:1;
+}
+
 </style>
 </head>
 <body>
