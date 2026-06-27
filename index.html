@@ -166,118 +166,83 @@ img{display:block;max-width:100%}
 .mc-t{font-family:var(--ff-b);font-size:14px;font-weight:600;color:var(--navy);margin-bottom:8px}
 .mc-b{font-family:var(--ff-b);font-size:12.5px;color:var(--text3);line-height:1.7;font-weight:300}
 
+
+
+
+
+/* ══════════════════════════════════════════
+   MOBILE — 960px
+══════════════════════════════════════════ */
 @media(max-width:960px){
-  /* ── NAV ── */
+  /* NAV */
   .nav-links,.nav-actions{display:none}
   .nav-burger{display:block}
   .nav-inner{padding:0 20px}
 
-  /* ── HERO: stack vertically, slide on top, panel below ── */
-  #hero{
-    flex-direction:column;
-    height:auto;
-    /* push below ticker+nav — recalc for smaller screens */
-    margin-top:var(--top-offset);
-  }
+  /* HERO */
+  #hero{flex-direction:column;height:auto;margin-top:var(--top-offset)}
+  #slideshow{height:auto;min-height:440px}
 
-  /* Slideshow tall enough to show all hero content comfortably */
-  #slideshow{
-    height:auto;
-    min-height:420px;
-  }
-
-  /* Hero text: reduce padding, give bottom room for buttons */
+  /* Hero text: 20% from top, comfortable line heights */
   .hero-text{
-    padding:10px 24px 28px;
-    max-width:100%;
-    justify-content:flex-end;
-  }
-
-  /* Smaller heading on mobile */
-  .hero-h1{
-    font-size:clamp(26px,6vw,40px);
-    margin-bottom:8px;
-  }
-
-  /* Hide the sub-tagline to save space */
-  .hero-sub{ display:none }
-
-  /* Shorter body text */
-  .hero-p{
-    font-size:13px;
-    line-height:1.65;
-    margin-bottom:20px;
-    max-width:100%;
-  }
-
-  /* Buttons side by side, enough bottom gap */
-  .hero-btns{
+    top:20%;
+    bottom:auto;
+    left:0;
+    right:0;
     display:flex;
-    gap:10px;
-    flex-wrap:wrap;
-    padding-bottom:0;
-  }
-  .hero-btns .btn{
-    font-size:12.5px;
-    padding:10px 18px;
+    flex-direction:column;
+    justify-content:flex-start;
+    padding:0 22px 0;
+    max-width:100%;
   }
 
-  /* Slide label and dots */
-  .slide-label{left:24px;bottom:16px}
-  .hero-dots{bottom:16px;right:12px}
+  .hero-badge{font-size:8px;padding:4px 12px;margin-bottom:12px}
+  .hero-h1{font-size:clamp(24px,6vw,38px);margin-bottom:10px;line-height:1.18}
+  .hero-sub{display:none}
 
-  /* Panel below the slideshow */
-  #panel{
-    width:100%;
-    border-left:none;
-    border-top:1px solid rgba(255,255,255,.07);
-    min-height:260px;
-  }
+  /* paragraph — tight line height, no excess space below */
+  .hero-p{font-size:13px;line-height:1.85;margin-bottom:0;max-width:100%}
 
-  /* Other layout fixes */
+  /* buttons — 16px gap above (from paragraph), no extra below */
+  .hero-btns{margin-top:16px;gap:10px}
+  .hero-btns .btn{font-size:12.5px;padding:10px 18px}
+
+  /* dots and label sit below the buttons padding zone */
+  .slide-label{left:22px;bottom:14px;font-size:7.5px}
+  .hero-dots{bottom:14px;right:12px}
+  .hdot{width:20px}.hdot.active{width:32px}
+
+  /* PANEL */
+  #panel{width:100%;border-left:none;border-top:1px solid rgba(255,255,255,.07);min-height:240px}
+
+  /* SECTIONS */
   .about-grid{grid-template-columns:1fr}
   .svc-grid,.mandate-grid{grid-template-columns:1fr 1fr}
   .stats-grid{grid-template-columns:repeat(2,1fr)}
+  .fg-grid{grid-template-columns:1fr 1fr}
   .ap-accent{display:none}
   #services-logo-bg{width:280px;height:280px}
   .container{padding:0 20px}
   .section{padding:64px 0}
 }
+
+/* ══════════════════════════════════════════
+   MOBILE — 560px (small phones)
+══════════════════════════════════════════ */
 @media(max-width:560px){
-  .svc-grid,.mandate-grid,.stats-grid{grid-template-columns:1fr}
-  .stat-item{border:none;border-bottom:1px solid rgba(255,255,255,.06)}
-
-  /* Even smaller screens — more compact hero text */
   #slideshow{min-height:400px}
-  .hero-text{padding:6px 20px 22px}
-  .hero-badge{font-size:7.5px;padding:4px 10px;margin-bottom:14px}
-  .hero-h1{font-size:clamp(22px,7vw,34px)}
-  .hero-p{font-size:12.5px;margin-bottom:16px}
-  .hero-btns .btn{font-size:12px;padding:9px 16px}
-  .hero-dots{right:8px}
-
-  /* Mandate grid single col */
-  .mandate-grid{grid-template-columns:1fr}
-
-  /* Stats */
+  .hero-text{top:20%;bottom:auto;padding:0 18px 0}
+  .hero-badge{font-size:7.5px;padding:4px 10px;margin-bottom:10px}
+  .hero-h1{font-size:clamp(20px,7vw,32px)}
+  .hero-p{font-size:12.5px}
+  .hero-btns{margin-top:14px}
+  .hero-btns .btn{font-size:12px;padding:9px 14px}
+  .svc-grid,.mandate-grid{grid-template-columns:1fr}
   .stats-grid{grid-template-columns:1fr 1fr}
-
-  .section{padding:52px 0}
+  .stat-item{border:none;border-bottom:1px solid rgba(255,255,255,.06)}
+  .fg-grid{grid-template-columns:1fr}
   .container{padding:0 16px}
-}
-
-/* stronger text protection on all slides */
-.slide::after{
-  content:"";
-  position:absolute;inset:0;
-  background:linear-gradient(
-    to top,
-    rgba(5,12,28,.82) 0%,
-    rgba(5,12,28,.38) 45%,
-    transparent 100%
-  );
-  pointer-events:none;
-  z-index:1;
+  .section{padding:52px 0}
 }
 
 </style>
@@ -409,7 +374,7 @@ img{display:block;max-width:100%}
   </div>
 </section>
 
-<style>footer{background:#04080f;padding:56px 0 24px;color:rgba(255,255,255,.5)}.fg-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;margin-bottom:44px}.fb-logo{display:flex;align-items:center;gap:10px;margin-bottom:14px}.fb-logo img{height:44px;width:auto;filter:drop-shadow(0 2px 8px rgba(0,0,0,.4))}.fb-logo-div{width:1px;height:32px;background:rgba(255,255,255,.12)}footer p{font-family:var(--ff-b);font-size:12.5px;font-weight:300;line-height:1.8;max-width:270px}.fc-t{font-family:var(--ff-b);font-size:11px;font-weight:600;color:#fff;margin-bottom:13px;letter-spacing:1px;text-transform:uppercase}footer ul{list-style:none;display:flex;flex-direction:column;gap:8px}footer ul a{font-family:var(--ff-b);font-size:12.5px;font-weight:300;color:rgba(255,255,255,.4);transition:.15s}footer ul a:hover{color:var(--blue-lt)}.f-bottom{border-top:1px solid rgba(255,255,255,.06);padding-top:20px;display:flex;justify-content:space-between;align-items:center}.f-bottom p{font-family:var(--ff-m);font-size:9.5px;letter-spacing:1px;color:rgba(255,255,255,.22)}.f-soc{display:flex;gap:8px}.f-soc a{width:32px;height:32px;border-radius:6px;background:rgba(255,255,255,.04);display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.38);font-size:13px;transition:.2s}.f-soc a:hover{background:var(--blue);color:#fff}@media(max-width:960px){.fg-grid{grid-template-columns:1fr 1fr}}@media(max-width:560px){.fg-grid{grid-template-columns:1fr}}</style><footer><div class="container"><div class="fg-grid"><div><div class="fb-logo"><img src="images/logo_ministry.png" alt="Ministry"><div class="fb-logo-div"></div><img src="images/logo_fpam.png" alt="FPAM"></div><p>Federal Public Assets Maintenance Department &#8212; agency of the Federal Ministry of Housing &amp; Urban Development.</p><div style="margin-top:14px;font-family:var(--ff-m);font-size:9px;color:rgba(255,255,255,.18);letter-spacing:1.5px">&#169; 2025 FPAM &#183; FEDERAL GOVERNMENT OF NIGERIA</div></div><div><div class="fc-t">Navigate</div><ul><li><a href="index.html">Home</a></li><li><a href="about.html">About</a></li><li><a href="gallery.html">Gallery</a></li><li><a href="assets.html">Asset</a></li><li><a href="contact.html">Contact</a></li></ul></div><div><div class="fc-t">Resources</div><ul><li><a href="#">Asset Directory</a></li><li><a href="#">Compliance Forms</a></li><li><a href="#">Maintenance Reports</a></li><li><a href="#">Housing Policy</a></li><li><a href="complaint.html">Log a Complaint</a></li></ul></div><div><div class="fc-t">Contact</div><ul><li><a href="#">Federal Secretariat Complex</a></li><li><a href="#">Phase III, Shehu Shagari Way, Abuja</a></li><li><a href="mailto:info@fpam.housing.gov.ng">info@fpam.housing.gov.ng</a></li><li><a href="#">+234 800 000 0000</a></li></ul><div style="margin-top:16px;padding:12px 14px;background:rgba(181,74,47,.1);border:1px solid rgba(181,74,47,.22);border-radius:4px"><div style="font-family:var(--ff-m);font-size:8px;color:rgba(255,255,255,.35);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px">Emergency Line</div><div style="font-family:var(--ff-d);font-size:18px;font-weight:600;color:var(--terra)">0800-FPAM-911</div></div></div></div><div class="f-bottom"><p>FEDERAL MINISTRY OF HOUSING &amp; URBAN DEVELOPMENT &#183; ALL RIGHTS RESERVED</p><div class="f-soc"><a href="#"><i class="fa-brands fa-twitter"></i></a><a href="#"><i class="fa-brands fa-facebook-f"></i></a><a href="#"><i class="fa-brands fa-instagram"></i></a><a href="#"><i class="fa-brands fa-youtube"></i></a><a href="#"><i class="fa-brands fa-linkedin-in"></i></a></div></div></div></footer>
+<style>footer{background:#04080f;padding:56px 0 24px;color:rgba(255,255,255,.5)}.fg-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;margin-bottom:44px}.fb-logo{display:flex;align-items:center;gap:10px;margin-bottom:14px}.fb-logo img{height:44px;width:auto;filter:drop-shadow(0 2px 8px rgba(0,0,0,.4))}.fb-logo-div{width:1px;height:32px;background:rgba(255,255,255,.12)}footer p{font-family:var(--ff-b);font-size:12.5px;font-weight:300;line-height:1.8;max-width:270px}.fc-t{font-family:var(--ff-b);font-size:11px;font-weight:600;color:#fff;margin-bottom:13px;letter-spacing:1px;text-transform:uppercase}footer ul{list-style:none;display:flex;flex-direction:column;gap:8px}footer ul a{font-family:var(--ff-b);font-size:12.5px;font-weight:300;color:rgba(255,255,255,.4);transition:.15s}footer ul a:hover{color:var(--blue-lt)}.f-bottom{border-top:1px solid rgba(255,255,255,.06);padding-top:20px;display:flex;justify-content:space-between;align-items:center}.f-bottom p{font-family:var(--ff-m);font-size:9.5px;letter-spacing:1px;color:rgba(255,255,255,.22)}.f-soc{display:flex;gap:8px}.f-soc a{width:32px;height:32px;border-radius:6px;background:rgba(255,255,255,.04);display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.38);font-size:13px;transition:.2s}.f-soc a:hover{background:var(--blue);color:#fff}</style><footer><div class="container"><div class="fg-grid"><div><div class="fb-logo"><img src="images/logo_ministry.png" alt="Ministry"><div class="fb-logo-div"></div><img src="images/logo_fpam.png" alt="FPAM"></div><p>Federal Public Assets Maintenance Department &#8212; agency of the Federal Ministry of Housing &amp; Urban Development.</p><div style="margin-top:14px;font-family:var(--ff-m);font-size:9px;color:rgba(255,255,255,.18);letter-spacing:1.5px">&#169; 2025 FPAM &#183; FEDERAL GOVERNMENT OF NIGERIA</div></div><div><div class="fc-t">Navigate</div><ul><li><a href="index.html">Home</a></li><li><a href="about.html">About</a></li><li><a href="gallery.html">Gallery</a></li><li><a href="assets.html">Asset</a></li><li><a href="contact.html">Contact</a></li></ul></div><div><div class="fc-t">Resources</div><ul><li><a href="#">Asset Directory</a></li><li><a href="#">Compliance Forms</a></li><li><a href="#">Maintenance Reports</a></li><li><a href="#">Housing Policy</a></li><li><a href="complaint.html">Log a Complaint</a></li></ul></div><div><div class="fc-t">Contact</div><ul><li><a href="#">Federal Secretariat Complex</a></li><li><a href="#">Phase III, Shehu Shagari Way, Abuja</a></li><li><a href="mailto:info@fpam.housing.gov.ng">info@fpam.housing.gov.ng</a></li><li><a href="#">+234 800 000 0000</a></li></ul><div style="margin-top:16px;padding:12px 14px;background:rgba(181,74,47,.1);border:1px solid rgba(181,74,47,.22);border-radius:4px"><div style="font-family:var(--ff-m);font-size:8px;color:rgba(255,255,255,.35);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px">Emergency Line</div><div style="font-family:var(--ff-d);font-size:18px;font-weight:600;color:var(--terra)">0800-FPAM-911</div></div></div></div><div class="f-bottom"><p>FEDERAL MINISTRY OF HOUSING &amp; URBAN DEVELOPMENT &#183; ALL RIGHTS RESERVED</p><div class="f-soc"><a href="#"><i class="fa-brands fa-twitter"></i></a><a href="#"><i class="fa-brands fa-facebook-f"></i></a><a href="#"><i class="fa-brands fa-instagram"></i></a><a href="#"><i class="fa-brands fa-youtube"></i></a><a href="#"><i class="fa-brands fa-linkedin-in"></i></a></div></div></div></footer>
 
 <script>
 const BG=[

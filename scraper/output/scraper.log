@@ -199,3 +199,153 @@ Processing 1996 assets…
 15:07:22  INFO     [  52/1996] Yankari National Park                             Bauchi
 [  53/1996] FEDERAL MINISTRY OF LABOUR AND EMPLOYMENT         
 15:07:28  INFO     [  53/1996] FEDERAL MINISTRY OF LABOUR AND EMPLOYMENT         
+Loading: LOWER_VERSION_Inventory_of_Public_Buildings.xls
+15:17:41  INFO     Loading: LOWER_VERSION_Inventory_of_Public_Buildings.xls
+Loaded 1996 asset rows from 839 unique MDAs
+15:17:41  INFO     Loaded 1996 asset rows from 839 unique MDAs
+JSON written → output\assets.json  (0 documents)
+15:17:41  INFO     JSON written → output\assets.json  (0 documents)
+CSV written  → output\assets_summary.csv
+15:17:41  INFO     CSV written  → output\assets_summary.csv
+JSON written → output\assets.json  (0 documents)
+15:17:41  INFO     JSON written → output\assets.json  (0 documents)
+CSV written  → output\assets_summary.csv
+15:17:41  INFO     CSV written  → output\assets_summary.csv
+Loading: LOWER_VERSION_Inventory_of_Public_Buildings.xls
+15:20:14  INFO     Loading: LOWER_VERSION_Inventory_of_Public_Buildings.xls
+Loaded 1996 asset rows from 839 unique MDAs
+15:20:14  INFO     Loaded 1996 asset rows from 839 unique MDAs
+Checkpoint loaded — 0 assets already done, resuming…
+15:20:14  INFO     Checkpoint loaded — 0 assets already done, resuming…
+Total rows: 1996  |  Already done: 0  |  Remaining: 1996
+15:20:14  INFO     Total rows: 1996  |  Already done: 0  |  Remaining: 1996
+[   1/1996] Federal Ministry of Agriculture And Rural Developm  Lagos
+15:20:14  INFO     [   1/1996] Federal Ministry of Agriculture And Rural Developm  Lagos
+         image 1000x667 -> asset_fc1983bc30.jpg
+15:20:21  INFO              image 1000x667 -> asset_fc1983bc30.jpg
+[   2/1996] Federal Ministry of Agriculture And Rural Developm  Lagos
+15:20:22  INFO     [   2/1996] Federal Ministry of Agriculture And Rural Developm  Lagos
+         image 1000x667 -> asset_be7f1b079b.jpg
+15:20:28  INFO              image 1000x667 -> asset_be7f1b079b.jpg
+[   3/1996] Federal Ministry of Agriculture And Rural Developm  Abuja
+15:20:29  INFO     [   3/1996] Federal Ministry of Agriculture And Rural Developm  Abuja
+[   4/1996] Vetinary Council Of Nigeria (VCN)                   FCT, Abuja
+15:20:44  INFO     [   4/1996] Vetinary Council Of Nigeria (VCN)                   FCT, Abuja
+[   5/1996] Nigeria Quarantine Services (NAQS)                  FCT, Abuja
+15:20:55  INFO     [   5/1996] Nigeria Quarantine Services (NAQS)                  FCT, Abuja
+         image 1200x801 -> asset_0afb30edbb.jpg
+15:21:05  INFO              image 1200x801 -> asset_0afb30edbb.jpg
+[   6/1996] Bank of Agriculture (BOA)                           Kaduna
+15:21:06  INFO     [   6/1996] Bank of Agriculture (BOA)                           Kaduna
+         image 486x1080 -> asset_a820ed8118.jpg
+15:21:09  INFO              image 486x1080 -> asset_a820ed8118.jpg
+[   7/1996] Agricultural And Rural Management Training Institu  Abuja
+15:21:10  INFO     [   7/1996] Agricultural And Rural Management Training Institu  Abuja
+         image 1024x682 -> asset_2a55af20e5.jpg
+15:21:14  INFO              image 1024x682 -> asset_2a55af20e5.jpg
+[   8/1996] Nigerian Agricultural Insurance Corporation (NAIS)  FCT, Abuja
+15:21:15  INFO     [   8/1996] Nigerian Agricultural Insurance Corporation (NAIS)  FCT, Abuja
+[   9/1996] Nigeria Agricultural Seed Council                   FCT, Abuja
+15:21:28  INFO     [   9/1996] Nigeria Agricultural Seed Council                   FCT, Abuja
+[  10/1996] National Centre For Agricultural Mechanization (NC  Kwara
+15:21:39  INFO     [  10/1996] National Centre For Agricultural Mechanization (NC  Kwara
+JSON written → output\assets.json  (10 documents)
+15:21:50  INFO     JSON written → output\assets.json  (10 documents)
+CSV written  → output\assets_summary.csv
+15:21:50  INFO     CSV written  → output\assets_summary.csv
+         [checkpoint saved — 10 new this run]
+15:21:50  INFO              [checkpoint saved — 10 new this run]
+[  11/1996] Nigeria Institute Of Animal Science (NIAS)          FCT, Abuja
+15:21:51  INFO     [  11/1996] Nigeria Institute Of Animal Science (NIAS)          FCT, Abuja
+[  12/1996] Nigeria Institute Of Soil Science (NISS)            FCT, Abuja
+15:22:00  INFO     [  12/1996] Nigeria Institute Of Soil Science (NISS)            FCT, Abuja
+         image 1200x801 -> asset_1d7c1cf9b2.jpg
+15:22:15  INFO              image 1200x801 -> asset_1d7c1cf9b2.jpg
+[  13/1996] National Agricultural Land Development Authority (  FCT, Abuja
+15:22:16  INFO     [  13/1996] National Agricultural Land Development Authority (  FCT, Abuja
+[  14/1996] Agricultural Research Council Of Nigeria (ARCN)     FCT, Abuja
+15:22:25  INFO     [  14/1996] Agricultural Research Council Of Nigeria (ARCN)     FCT, Abuja
+[  15/1996] Federal College Of Forestry                         Oyo
+15:22:34  INFO     [  15/1996] Federal College Of Forestry                         Oyo
+[  16/1996] Chad Basin National Park                            Borno
+15:22:44  INFO     [  16/1996] Chad Basin National Park                            Borno
+[  17/1996] Cocoa Research Institute Of Nigeria                 Oyo
+15:22:53  INFO     [  17/1996] Cocoa Research Institute Of Nigeria                 Oyo
+[  18/1996] College Of Forestry Mechanisation                   Kaduna
+15:23:06  INFO     [  18/1996] College Of Forestry Mechanisation                   Kaduna
+[  19/1996] Cross River National Park                           Cross River
+15:23:19  INFO     [  19/1996] Cross River National Park                           Cross River
+[  20/1996] Federal Agricultural Co-Ordinating Unit (FACU) Hea  Abuja
+15:23:31  INFO     [  20/1996] Federal Agricultural Co-Ordinating Unit (FACU) Hea  Abuja
+JSON written → output\assets.json  (20 documents)
+15:23:40  INFO     JSON written → output\assets.json  (20 documents)
+CSV written  → output\assets_summary.csv
+15:23:40  INFO     CSV written  → output\assets_summary.csv
+         [checkpoint saved — 20 new this run]
+15:23:40  INFO              [checkpoint saved — 20 new this run]
+[  21/1996] Federal Agricultural Co-Ordinating Unit (FACU)      Abuja
+15:23:40  INFO     [  21/1996] Federal Agricultural Co-Ordinating Unit (FACU)      Abuja
+[  22/1996] Federal College of Agriculture                      Ondo
+15:23:51  INFO     [  22/1996] Federal College of Agriculture                      Ondo
+[  23/1996] Federal College of Agriculture Umudike              Abia
+15:24:03  INFO     [  23/1996] Federal College of Agriculture Umudike              Abia
+         image 604x453 -> asset_2ede4c1929.jpg
+15:24:07  INFO              image 604x453 -> asset_2ede4c1929.jpg
+[  24/1996] Federal College of Fisheries and Marine Technology  Lagos
+15:24:08  INFO     [  24/1996] Federal College of Fisheries and Marine Technology  Lagos
+[  26/1996] Federal College of Veterinary Research              Plateau
+15:24:19  INFO     [  26/1996] Federal College of Veterinary Research              Plateau
+[  27/1996] Federal College of Wildlife Management              Niger
+15:24:30  INFO     [  27/1996] Federal College of Wildlife Management              Niger
+[  28/1996] Federal Superphosphate Fertilizer Company           Kaduna
+15:24:42  INFO     [  28/1996] Federal Superphosphate Fertilizer Company           Kaduna
+[  29/1996] Gashaka - Gumi National Park                        Adamawa And Taraba
+15:24:53  INFO     [  29/1996] Gashaka - Gumi National Park                        Adamawa And Taraba
+         image 1200x900 -> asset_8ab5904684.jpg
+15:25:04  INFO              image 1200x900 -> asset_8ab5904684.jpg
+[  30/1996] Institute for Agricultural Research and Training,   Osun
+15:25:05  INFO     [  30/1996] Institute for Agricultural Research and Training,   Osun
+         image 1200x800 -> asset_97ba055001.jpg
+15:25:13  INFO              image 1200x800 -> asset_97ba055001.jpg
+[  31/1996] Institute for Agriculture Research, Ahmadu Bello U  Kaduna
+15:25:13  INFO     [  31/1996] Institute for Agriculture Research, Ahmadu Bello U  Kaduna
+         image 506x533 -> asset_d79befa269.jpg
+15:25:19  INFO              image 506x533 -> asset_d79befa269.jpg
+JSON written → output\assets.json  (30 documents)
+15:25:19  INFO     JSON written → output\assets.json  (30 documents)
+CSV written  → output\assets_summary.csv
+15:25:19  INFO     CSV written  → output\assets_summary.csv
+         [checkpoint saved — 30 new this run]
+15:25:19  INFO              [checkpoint saved — 30 new this run]
+[  32/1996] International Institute for Tropical Agriculture (  Oyo
+15:25:20  INFO     [  32/1996] International Institute for Tropical Agriculture (  Oyo
+[  33/1996] Kainji Lake National Park                           Niger
+15:25:34  INFO     [  33/1996] Kainji Lake National Park                           Niger
+[  34/1996] Lake Chad Research Institute                        Borno
+15:25:45  INFO     [  34/1996] Lake Chad Research Institute                        Borno
+[  35/1996] National Animal Production Research Institute (NAP  Kaduna
+15:25:56  INFO     [  35/1996] National Animal Production Research Institute (NAP  Kaduna
+         image 1200x800 -> asset_a4124c8936.jpg
+15:26:18  INFO              image 1200x800 -> asset_a4124c8936.jpg
+[  36/1996] National Centre for Agricultural Mechanization (NC  Kwara
+15:26:19  INFO     [  36/1996] National Centre for Agricultural Mechanization (NC  Kwara
+[  37/1996] National Cereals Research Institute (NCRI)          Niger
+15:26:31  INFO     [  37/1996] National Cereals Research Institute (NCRI)          Niger
+[  38/1996] National Horticultural Research Institute           Oyo
+15:26:43  INFO     [  38/1996] National Horticultural Research Institute           Oyo
+[  39/1996] National Institute For Fresh Water Fisheries Resea  Niger
+15:26:55  INFO     [  39/1996] National Institute For Fresh Water Fisheries Resea  Niger
+         image 1200x800 -> asset_3753e2bf5f.jpg
+15:27:11  INFO              image 1200x800 -> asset_3753e2bf5f.jpg
+[  40/1996] National Institute of Oceanography and Marine Rese  Lagos
+15:27:12  INFO     [  40/1996] National Institute of Oceanography and Marine Rese  Lagos
+         image 960x403 -> asset_4515145a57.jpg
+15:27:16  INFO              image 960x403 -> asset_4515145a57.jpg
+[  41/1996] National Park Services                              Abuja
+15:27:17  INFO     [  41/1996] National Park Services                              Abuja
+JSON written → output\assets.json  (40 documents)
+15:27:27  INFO     JSON written → output\assets.json  (40 documents)
+CSV written  → output\assets_summary.csv
+15:27:27  INFO     CSV written  → output\assets_summary.csv
+         [checkpoint saved — 40 new this run]
+15:27:27  INFO              [checkpoint saved — 40 new this run]

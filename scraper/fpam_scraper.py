@@ -48,6 +48,7 @@ JSON_OUT     = OUTPUT_DIR / "assets.json"
 CSV_OUT      = OUTPUT_DIR / "assets_summary.csv"
 
 DELAY_SEC    = 0.8          # polite delay between HTTP requests
+CHECKPOINT_FILE = OUTPUT_DIR / "checkpoint.json"   # tracks completed _ids
 IMG_MAX_PX   = 1200         # max image dimension (longest side)
 IMG_QUALITY  = 88           # JPEG quality
 MIN_IMG_W    = 200          # skip images smaller than this
@@ -145,7 +146,9 @@ def geocode(address, lga, state, country="Nigeria"):
             pass
         time.sleep(0.3)
 
-    _geo_cache[q] = (None, None)
+    # Cache the miss against the first query (if any) to avoid re-hitting it
+    if queries:
+        _geo_cache[queries[0]] = (None, None)
     return None, None
 
 
@@ -301,87 +304,122 @@ def load_excel(path):
     return df
 
 
+def load_checkpoint():
+    """Return set of already-processed _ids."""
+    if CHECKPOINT_FILE.exists():
+        try:
+            with open(CHECKPOINT_FILE) as f:
+                data = json.load(f)
+            done = set(data.get("completed", []))
+            log.info(f"Checkpoint loaded — {len(done)} assets already done, resuming…")
+            return done
+        except Exception:
+            pass
+    return set()
+
+
+def save_checkpoint(completed_ids):
+    """Persist the set of completed _ids to disk."""
+    with open(CHECKPOINT_FILE, "w") as f:
+        json.dump({"completed": list(completed_ids), "updated": datetime.utcnow().isoformat()}, f)
+
+
+def load_existing_records():
+    """Load already-scraped records from assets.json so we can append."""
+    if JSON_OUT.exists():
+        try:
+            with open(JSON_OUT) as f:
+                return json.load(f)
+        except Exception:
+            pass
+    return []
+
+
 def process(df, limit=None):
     IMAGE_DIR.mkdir(parents=True, exist_ok=True)
 
-    records = []
-    total   = len(df) if limit is None else min(limit, len(df))
-    success = 0
-    no_img  = 0
-    no_geo  = 0
+    completed     = load_checkpoint()
+    records       = load_existing_records()
+    done_ids      = {r["_id"] for r in records} | completed
+    new_this_run  = 0
+    success       = sum(1 for r in records if r.get("metadata", {}).get("image_found"))
+    no_img        = 0
+    no_geo        = 0
 
-    log.info(f"Processing {total} assets…")
+    subset = df.head(limit) if limit else df
+    total  = len(subset)
 
-    for idx, row in df.head(total).iterrows():
-        mda      = clean(row.get("mda"))
-        purpose  = clean(row.get("purpose"))
-        state    = clean(row.get("state"))
-        lga      = clean(row.get("lga"))
-        address  = clean(row.get("address"))
-        landmark = clean(row.get("landmark"))
-        year     = clean(row.get("year"))
-        valuation= clean(row.get("valuation"))
+    log.info(f"Total rows: {total}  |  Already done: {len(done_ids)}  |  Remaining: {total - len(done_ids)}")
+
+    for idx, row in subset.iterrows():
+
+        mda     = clean(row.get("mda"))
+        address = clean(row.get("address")) or ""
 
         if not mda:
             continue
 
-        # Build record skeleton
+        # Build the id for this row and skip if already done
+        row_id = asset_id({"mda": mda, "address": address})
+        if row_id in done_ids:
+            continue
+
+        purpose  = clean(row.get("purpose"))
+        state    = clean(row.get("state"))
+        lga      = clean(row.get("lga"))
+        landmark = clean(row.get("landmark"))
+        year     = clean(row.get("year"))
+        valuation= clean(row.get("valuation"))
+
         rec = {
-            "_id":           None,        # filled below
-            "sn":            int(row["sn"]) if str(row.get("sn","")).isdigit() else None,
+            "_id":           row_id,
+            "sn":            int(row["sn"]) if str(row.get("sn","")).replace(".0","").isdigit() else None,
             "mda":           mda,
             "purpose":       purpose or "Office Building",
             "state":         state,
             "lga":           lga,
-            "address":       address,
+            "address":       address or None,
             "landmark":      landmark,
             "year_commissioned": year,
             "valuation":     valuation,
             "coordinates":   {"lat": None, "lng": None},
             "image": {
-                "filename":  None,
+                "filename":   None,
                 "source_url": None,
-                "width":     None,
-                "height":    None,
+                "width":      None,
+                "height":     None,
                 "scraped_at": None,
             },
             "metadata": {
-                "scraped_at":    datetime.utcnow().isoformat() + "Z",
-                "geocoded":      False,
-                "image_found":   False,
-                "search_queries": []
+                "scraped_at":  datetime.utcnow().isoformat() + "Z",
+                "geocoded":    False,
+                "image_found": False,
             }
         }
-        rec["_id"] = asset_id(rec)
 
         num = idx + 1
-        log.info(f"[{num:>4}/{total}] {(mda or '')[:48]:<48}  {(state or '')}")
+        log.info(f"[{num:>4}/{total}] {(mda or '')[:50]:<50}  {state or ''}")
 
-        # ── GEOCODE ──────────────────────────────────────────────────────────
+        # Geocode
         lat, lng = geocode(address, lga, state)
         if lat and lng:
             rec["coordinates"] = {"lat": lat, "lng": lng}
             rec["metadata"]["geocoded"] = True
         else:
             no_geo += 1
-            log.debug(f"         No coordinates found")
 
-        # ── IMAGE SEARCH ─────────────────────────────────────────────────────
+        # Image
         img_url = find_image(mda, address, lga, state)
-
         if img_url:
-            fname = rec["_id"] + ".jpg"
+            fname = row_id + ".jpg"
             dest  = IMAGE_DIR / fname
             ok    = download_image(img_url, dest)
-
             if ok:
-                # Read back dimensions
                 try:
                     with Image.open(dest) as im:
                         w, h = im.size
                 except Exception:
                     w = h = None
-
                 rec["image"] = {
                     "filename":   fname,
                     "source_url": img_url,
@@ -391,16 +429,26 @@ def process(df, limit=None):
                 }
                 rec["metadata"]["image_found"] = True
                 success += 1
-                log.info(f"         ✓ image  {w}×{h}  → {fname}")
+                log.info(f"         image {w}x{h} -> {fname}")
             else:
                 no_img += 1
-                log.debug(f"         ✗ image download failed")
         else:
             no_img += 1
-            log.debug(f"         ✗ no image found")
 
         records.append(rec)
+        done_ids.add(row_id)
+        new_this_run += 1
+
+        # Save checkpoint + JSON every 10 records
+        if new_this_run % 10 == 0:
+            save_checkpoint(done_ids)
+            write_outputs(records)
+            log.info(f"         [checkpoint saved — {new_this_run} new this run]")
+
         time.sleep(DELAY_SEC)
+
+    # Final save
+    save_checkpoint(done_ids)
 
     return records, success, no_geo, no_img
 

@@ -19,13 +19,12 @@
       "source_url": "https://upload.wikimedia.org/wikipedia/commons/2/20/Powrer_house%2C_Abuja.jpg",
       "width": 1000,
       "height": 667,
-      "scraped_at": "2026-06-27T13:55:41.847672Z"
+      "scraped_at": "2026-06-27T14:20:21.567061Z"
     },
     "metadata": {
-      "scraped_at": "2026-06-27T13:55:34.717161Z",
+      "scraped_at": "2026-06-27T14:20:14.591003Z",
       "geocoded": true,
-      "image_found": true,
-      "search_queries": []
+      "image_found": true
     }
   },
   {
@@ -48,13 +47,12 @@
       "source_url": "https://upload.wikimedia.org/wikipedia/commons/2/20/Powrer_house%2C_Abuja.jpg",
       "width": 1000,
       "height": 667,
-      "scraped_at": "2026-06-27T13:55:48.240107Z"
+      "scraped_at": "2026-06-27T14:20:28.500864Z"
     },
     "metadata": {
-      "scraped_at": "2026-06-27T13:55:42.649500Z",
+      "scraped_at": "2026-06-27T14:20:22.369635Z",
       "geocoded": true,
-      "image_found": true,
-      "search_queries": []
+      "image_found": true
     }
   },
   {
@@ -73,17 +71,16 @@
       "lng": 7.4662595
     },
     "image": {
-      "filename": "asset_036db50b77.jpg",
-      "source_url": "https://upload.wikimedia.org/wikipedia/commons/1/1b/Abuja_heritages_30.jpg",
-      "width": 1200,
-      "height": 801,
-      "scraped_at": "2026-06-27T13:56:07.587754Z"
+      "filename": null,
+      "source_url": null,
+      "width": null,
+      "height": null,
+      "scraped_at": null
     },
     "metadata": {
-      "scraped_at": "2026-06-27T13:55:49.042067Z",
+      "scraped_at": "2026-06-27T14:20:29.302866Z",
       "geocoded": true,
-      "image_found": true,
-      "search_queries": []
+      "image_found": false
     }
   },
   {
@@ -109,10 +106,9 @@
       "scraped_at": null
     },
     "metadata": {
-      "scraped_at": "2026-06-27T13:56:08.389208Z",
+      "scraped_at": "2026-06-27T14:20:44.460897Z",
       "geocoded": true,
-      "image_found": false,
-      "search_queries": []
+      "image_found": false
     }
   },
   {
@@ -131,17 +127,16 @@
       "lng": 7.4999344
     },
     "image": {
-      "filename": null,
-      "source_url": null,
-      "width": null,
-      "height": null,
-      "scraped_at": null
+      "filename": "asset_0afb30edbb.jpg",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/1/1b/Abuja_heritages_30.jpg",
+      "width": 1200,
+      "height": 801,
+      "scraped_at": "2026-06-27T14:21:05.381554Z"
     },
     "metadata": {
-      "scraped_at": "2026-06-27T13:56:21.609148Z",
+      "scraped_at": "2026-06-27T14:20:55.061864Z",
       "geocoded": true,
-      "image_found": false,
-      "search_queries": []
+      "image_found": true
     }
   },
   {
@@ -160,17 +155,16 @@
       "lng": 7.4359863
     },
     "image": {
-      "filename": null,
-      "source_url": null,
-      "width": null,
-      "height": null,
-      "scraped_at": null
+      "filename": "asset_a820ed8118.jpg",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/8/8b/Bank_of_Agriculture_%28BOA%29_02.jpg",
+      "width": 486,
+      "height": 1080,
+      "scraped_at": "2026-06-27T14:21:09.994467Z"
     },
     "metadata": {
-      "scraped_at": "2026-06-27T13:56:32.041519Z",
+      "scraped_at": "2026-06-27T14:21:06.183151Z",
       "geocoded": true,
-      "image_found": false,
-      "search_queries": []
+      "image_found": true
     }
   },
   {
@@ -189,17 +183,16 @@
       "lng": 7.4662595
     },
     "image": {
-      "filename": null,
-      "source_url": null,
-      "width": null,
-      "height": null,
-      "scraped_at": null
+      "filename": "asset_2a55af20e5.jpg",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/7/77/Federal_University_of_Agriculture_Abeokuta_gate%2C_Abeokuta.jpg",
+      "width": 1024,
+      "height": 682,
+      "scraped_at": "2026-06-27T14:21:14.981959Z"
     },
     "metadata": {
-      "scraped_at": "2026-06-27T13:56:43.225093Z",
+      "scraped_at": "2026-06-27T14:21:10.796624Z",
       "geocoded": true,
-      "image_found": false,
-      "search_queries": []
+      "image_found": true
     }
   },
   {
@@ -225,10 +218,9 @@
       "scraped_at": null
     },
     "metadata": {
-      "scraped_at": "2026-06-27T13:56:54.433912Z",
+      "scraped_at": "2026-06-27T14:21:15.783829Z",
       "geocoded": true,
-      "image_found": false,
-      "search_queries": []
+      "image_found": false
     }
   },
   {
@@ -254,10 +246,9 @@
       "scraped_at": null
     },
     "metadata": {
-      "scraped_at": "2026-06-27T13:57:04.732036Z",
+      "scraped_at": "2026-06-27T14:21:28.840910Z",
       "geocoded": true,
-      "image_found": false,
-      "search_queries": []
+      "image_found": false
     }
   },
   {
@@ -283,10 +274,9 @@
       "scraped_at": null
     },
     "metadata": {
-      "scraped_at": "2026-06-27T13:57:12.261217Z",
+      "scraped_at": "2026-06-27T14:21:39.701674Z",
       "geocoded": true,
-      "image_found": false,
-      "search_queries": []
+      "image_found": false
     }
   },
   {
@@ -312,10 +302,9 @@
       "scraped_at": null
     },
     "metadata": {
-      "scraped_at": "2026-06-27T13:57:25.877719Z",
+      "scraped_at": "2026-06-27T14:21:51.222808Z",
       "geocoded": true,
-      "image_found": false,
-      "search_queries": []
+      "image_found": false
     }
   },
   {
@@ -334,17 +323,16 @@
       "lng": 7.4662595
     },
     "image": {
-      "filename": null,
-      "source_url": null,
-      "width": null,
-      "height": null,
-      "scraped_at": null
+      "filename": "asset_1d7c1cf9b2.jpg",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/1/1b/Abuja_heritages_30.jpg",
+      "width": 1200,
+      "height": 801,
+      "scraped_at": "2026-06-27T14:22:15.416258Z"
     },
     "metadata": {
-      "scraped_at": "2026-06-27T13:57:36.484601Z",
+      "scraped_at": "2026-06-27T14:22:00.777147Z",
       "geocoded": true,
-      "image_found": false,
-      "search_queries": []
+      "image_found": true
     }
   },
   {
@@ -370,10 +358,9 @@
       "scraped_at": null
     },
     "metadata": {
-      "scraped_at": "2026-06-27T13:57:47.862380Z",
+      "scraped_at": "2026-06-27T14:22:16.218655Z",
       "geocoded": true,
-      "image_found": false,
-      "search_queries": []
+      "image_found": false
     }
   },
   {
@@ -392,17 +379,16 @@
       "lng": 7.4662595
     },
     "image": {
-      "filename": "asset_0ac22b4510.jpg",
-      "source_url": "https://upload.wikimedia.org/wikipedia/commons/7/7d/ARCN_Building_image.jpg",
-      "width": 960,
-      "height": 403,
-      "scraped_at": "2026-06-27T13:58:03.978201Z"
+      "filename": null,
+      "source_url": null,
+      "width": null,
+      "height": null,
+      "scraped_at": null
     },
     "metadata": {
-      "scraped_at": "2026-06-27T13:57:58.864812Z",
+      "scraped_at": "2026-06-27T14:22:25.367372Z",
       "geocoded": true,
-      "image_found": true,
-      "search_queries": []
+      "image_found": false
     }
   },
   {
@@ -428,10 +414,9 @@
       "scraped_at": null
     },
     "metadata": {
-      "scraped_at": "2026-06-27T13:58:04.779205Z",
+      "scraped_at": "2026-06-27T14:22:34.504482Z",
       "geocoded": true,
-      "image_found": false,
-      "search_queries": []
+      "image_found": false
     }
   },
   {
@@ -457,10 +442,9 @@
       "scraped_at": null
     },
     "metadata": {
-      "scraped_at": "2026-06-27T13:58:09.180847Z",
+      "scraped_at": "2026-06-27T14:22:44.144864Z",
       "geocoded": true,
-      "image_found": false,
-      "search_queries": []
+      "image_found": false
     }
   },
   {
@@ -486,10 +470,9 @@
       "scraped_at": null
     },
     "metadata": {
-      "scraped_at": "2026-06-27T13:58:16.902252Z",
+      "scraped_at": "2026-06-27T14:22:53.859480Z",
       "geocoded": true,
-      "image_found": false,
-      "search_queries": []
+      "image_found": false
     }
   },
   {
@@ -515,10 +498,9 @@
       "scraped_at": null
     },
     "metadata": {
-      "scraped_at": "2026-06-27T13:58:29.609473Z",
+      "scraped_at": "2026-06-27T14:23:06.574745Z",
       "geocoded": true,
-      "image_found": false,
-      "search_queries": []
+      "image_found": false
     }
   },
   {
@@ -544,10 +526,9 @@
       "scraped_at": null
     },
     "metadata": {
-      "scraped_at": "2026-06-27T13:58:40.495499Z",
+      "scraped_at": "2026-06-27T14:23:19.549414Z",
       "geocoded": true,
-      "image_found": false,
-      "search_queries": []
+      "image_found": false
     }
   },
   {
@@ -566,17 +547,576 @@
       "lng": 7.4662595
     },
     "image": {
-      "filename": "asset_9535e22195.jpg",
-      "source_url": "https://upload.wikimedia.org/wikipedia/commons/1/1b/Abuja_heritages_30.jpg",
-      "width": 1200,
-      "height": 801,
-      "scraped_at": "2026-06-27T13:59:06.726839Z"
+      "filename": null,
+      "source_url": null,
+      "width": null,
+      "height": null,
+      "scraped_at": null
     },
     "metadata": {
-      "scraped_at": "2026-06-27T13:58:52.332586Z",
+      "scraped_at": "2026-06-27T14:23:31.261144Z",
       "geocoded": true,
-      "image_found": true,
-      "search_queries": []
+      "image_found": false
+    }
+  },
+  {
+    "_id": "asset_4e835ab237",
+    "sn": 21,
+    "mda": "Federal Agricultural Co-Ordinating Unit (FACU)",
+    "purpose": "Office Building",
+    "state": "Abuja",
+    "lga": "Sheda",
+    "address": "2FMQ+76F, Abuja-Lokoja Expressway, Gwagwalada Cl, 900103, Abuja",
+    "landmark": "X-pert Hotels",
+    "year_commissioned": null,
+    "valuation": null,
+    "coordinates": {
+      "lat": 9.0643305,
+      "lng": 7.4892974
+    },
+    "image": {
+      "filename": null,
+      "source_url": null,
+      "width": null,
+      "height": null,
+      "scraped_at": null
+    },
+    "metadata": {
+      "scraped_at": "2026-06-27T14:23:40.819319Z",
+      "geocoded": true,
+      "image_found": false
+    }
+  },
+  {
+    "_id": "asset_487d7e072d",
+    "sn": 22,
+    "mda": "Federal College of Agriculture",
+    "purpose": "Office Building",
+    "state": "Ondo",
+    "lga": "Akure",
+    "address": "School of Agric Road, 340106, Akure",
+    "landmark": "Otunba Furniture",
+    "year_commissioned": null,
+    "valuation": null,
+    "coordinates": {
+      "lat": 7.2525595,
+      "lng": 5.1932647
+    },
+    "image": {
+      "filename": null,
+      "source_url": null,
+      "width": null,
+      "height": null,
+      "scraped_at": null
+    },
+    "metadata": {
+      "scraped_at": "2026-06-27T14:23:51.584857Z",
+      "geocoded": true,
+      "image_found": false
+    }
+  },
+  {
+    "_id": "asset_2ede4c1929",
+    "sn": 23,
+    "mda": "Federal College of Agriculture Umudike",
+    "purpose": "Office Building",
+    "state": "Abia",
+    "lga": "Umudike",
+    "address": "PMB 700 Umudike",
+    "landmark": "Five Star Business Consultant",
+    "year_commissioned": null,
+    "valuation": null,
+    "coordinates": {
+      "lat": 5.5,
+      "lng": 7.533333
+    },
+    "image": {
+      "filename": "asset_2ede4c1929.jpg",
+      "source_url": "https://upload.wikimedia.org/wikipedia/en/1/11/University_Gate_of_Micheal_Okpara_University_of_Agriculture.jpg",
+      "width": 604,
+      "height": 453,
+      "scraped_at": "2026-06-27T14:24:07.539788Z"
+    },
+    "metadata": {
+      "scraped_at": "2026-06-27T14:24:03.729796Z",
+      "geocoded": true,
+      "image_found": true
+    }
+  },
+  {
+    "_id": "asset_e0b027142c",
+    "sn": 24,
+    "mda": "Federal College of Fisheries and Marine Technology (FCTMT)",
+    "purpose": "Office Building",
+    "state": "Lagos",
+    "lga": "Victoria Island",
+    "address": "Wilmot Point Rd, Victoria Island 106104, Lagos",
+    "landmark": "Japanese Hotel",
+    "year_commissioned": null,
+    "valuation": null,
+    "coordinates": {
+      "lat": 6.4219919,
+      "lng": 3.4089107
+    },
+    "image": {
+      "filename": null,
+      "source_url": null,
+      "width": null,
+      "height": null,
+      "scraped_at": null
+    },
+    "metadata": {
+      "scraped_at": "2026-06-27T14:24:08.350809Z",
+      "geocoded": true,
+      "image_found": false
+    }
+  },
+  {
+    "_id": "asset_c51118fd6f",
+    "sn": 26,
+    "mda": "Federal College of Veterinary Research",
+    "purpose": "Office Building",
+    "state": "Plateau",
+    "lga": "Vom Jos",
+    "address": "National Veterinary Research Institute, 930101, Vom",
+    "landmark": "Federal college of Animal Health",
+    "year_commissioned": null,
+    "valuation": null,
+    "coordinates": {
+      "lat": 9.6666095,
+      "lng": 8.7333418
+    },
+    "image": {
+      "filename": null,
+      "source_url": null,
+      "width": null,
+      "height": null,
+      "scraped_at": null
+    },
+    "metadata": {
+      "scraped_at": "2026-06-27T14:24:19.309796Z",
+      "geocoded": true,
+      "image_found": false
+    }
+  },
+  {
+    "_id": "asset_c356e1c8c8",
+    "sn": 27,
+    "mda": "Federal College of Wildlife Management",
+    "purpose": "Office Building",
+    "state": "Niger",
+    "lga": "Bussa",
+    "address": "VGM9+VX8, 912106, New Bussa",
+    "landmark": "New Bussa Baptist Primary School",
+    "year_commissioned": null,
+    "valuation": null,
+    "coordinates": {
+      "lat": 10.230833,
+      "lng": 4.475278
+    },
+    "image": {
+      "filename": null,
+      "source_url": null,
+      "width": null,
+      "height": null,
+      "scraped_at": null
+    },
+    "metadata": {
+      "scraped_at": "2026-06-27T14:24:30.354126Z",
+      "geocoded": true,
+      "image_found": false
+    }
+  },
+  {
+    "_id": "asset_75fa41e593",
+    "sn": 28,
+    "mda": "Federal Superphosphate Fertilizer Company",
+    "purpose": "Office Building",
+    "state": "Kaduna",
+    "lga": "Kaduna",
+    "address": "4 Nassarawa Road, Industrial Area, P. M. B 2203 Kaduna Kaduna",
+    "landmark": "Salam Salam Islamic Society Of Nig.",
+    "year_commissioned": null,
+    "valuation": null,
+    "coordinates": {
+      "lat": 10.5182899,
+      "lng": 7.4359863
+    },
+    "image": {
+      "filename": null,
+      "source_url": null,
+      "width": null,
+      "height": null,
+      "scraped_at": null
+    },
+    "metadata": {
+      "scraped_at": "2026-06-27T14:24:42.026126Z",
+      "geocoded": true,
+      "image_found": false
+    }
+  },
+  {
+    "_id": "asset_8ab5904684",
+    "sn": 29,
+    "mda": "Gashaka - Gumi National Park",
+    "purpose": "Park",
+    "state": "Adamawa And Taraba",
+    "lga": "Gashaka - Gumi",
+    "address": "Gashaka",
+    "landmark": null,
+    "year_commissioned": null,
+    "valuation": null,
+    "coordinates": {
+      "lat": null,
+      "lng": null
+    },
+    "image": {
+      "filename": "asset_8ab5904684.jpg",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/a/a5/Chappal_Wadi.jpg",
+      "width": 1200,
+      "height": 900,
+      "scraped_at": "2026-06-27T14:25:04.557311Z"
+    },
+    "metadata": {
+      "scraped_at": "2026-06-27T14:24:53.385556Z",
+      "geocoded": false,
+      "image_found": true
+    }
+  },
+  {
+    "_id": "asset_97ba055001",
+    "sn": 30,
+    "mda": "Institute for Agricultural Research and Training, Obafemi Awolowo University",
+    "purpose": "Office Building",
+    "state": "Osun",
+    "lga": "Ife",
+    "address": "Ile, 220101, Ife",
+    "landmark": "Hotel Diganga",
+    "year_commissioned": null,
+    "valuation": null,
+    "coordinates": {
+      "lat": 7.4889747,
+      "lng": 4.5402026
+    },
+    "image": {
+      "filename": "asset_97ba055001.jpg",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/e/ef/Landscape_of_Obafemi_Awolowo_University%2C_Ile-Ife.jpg",
+      "width": 1200,
+      "height": 800,
+      "scraped_at": "2026-06-27T14:25:13.112546Z"
+    },
+    "metadata": {
+      "scraped_at": "2026-06-27T14:25:05.358319Z",
+      "geocoded": true,
+      "image_found": true
+    }
+  },
+  {
+    "_id": "asset_d79befa269",
+    "sn": 31,
+    "mda": "Institute for Agriculture Research, Ahmadu Bello University",
+    "purpose": "Office Building",
+    "state": "Kaduna",
+    "lga": "Zaria",
+    "address": "Samaru Campus, Community Market, 810211, Zaria",
+    "landmark": "Destiny Medical center",
+    "year_commissioned": null,
+    "valuation": null,
+    "coordinates": {
+      "lat": 11.0248119,
+      "lng": 7.6518533
+    },
+    "image": {
+      "filename": "asset_d79befa269.jpg",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/e/e8/ABU_Zaria_logo.jpg",
+      "width": 506,
+      "height": 533,
+      "scraped_at": "2026-06-27T14:25:19.706546Z"
+    },
+    "metadata": {
+      "scraped_at": "2026-06-27T14:25:13.918544Z",
+      "geocoded": true,
+      "image_found": true
+    }
+  },
+  {
+    "_id": "asset_2a6df6bf3a",
+    "sn": 32,
+    "mda": "International Institute for Tropical Agriculture (IITA)",
+    "purpose": "Office Building",
+    "state": "Oyo",
+    "lga": "Ibadan",
+    "address": "IITA Entrance Rd, 200136, Ibadan",
+    "landmark": "Idi Ose Bus stop",
+    "year_commissioned": null,
+    "valuation": null,
+    "coordinates": {
+      "lat": 7.3786064,
+      "lng": 3.8969928
+    },
+    "image": {
+      "filename": null,
+      "source_url": null,
+      "width": null,
+      "height": null,
+      "scraped_at": null
+    },
+    "metadata": {
+      "scraped_at": "2026-06-27T14:25:20.565544Z",
+      "geocoded": true,
+      "image_found": false
+    }
+  },
+  {
+    "_id": "asset_2b901c46dc",
+    "sn": 33,
+    "mda": "Kainji Lake National Park",
+    "purpose": "Office Building",
+    "state": "Niger",
+    "lga": "Bussa",
+    "address": "912106, New Bussa",
+    "landmark": "Odeku Shopping Centre",
+    "year_commissioned": null,
+    "valuation": null,
+    "coordinates": {
+      "lat": 10.230833,
+      "lng": 4.475278
+    },
+    "image": {
+      "filename": null,
+      "source_url": null,
+      "width": null,
+      "height": null,
+      "scraped_at": null
+    },
+    "metadata": {
+      "scraped_at": "2026-06-27T14:25:34.264089Z",
+      "geocoded": true,
+      "image_found": false
+    }
+  },
+  {
+    "_id": "asset_69360a245e",
+    "sn": 34,
+    "mda": "Lake Chad Research Institute",
+    "purpose": "Office Building",
+    "state": "Borno",
+    "lga": "Maiduguri",
+    "address": "Kilometer 5 along Ngala Road, Gamboru 600282, Lagos",
+    "landmark": "Community health and social development centre",
+    "year_commissioned": null,
+    "valuation": null,
+    "coordinates": {
+      "lat": 11.8395375,
+      "lng": 13.1536214
+    },
+    "image": {
+      "filename": null,
+      "source_url": null,
+      "width": null,
+      "height": null,
+      "scraped_at": null
+    },
+    "metadata": {
+      "scraped_at": "2026-06-27T14:25:45.576360Z",
+      "geocoded": true,
+      "image_found": false
+    }
+  },
+  {
+    "_id": "asset_a4124c8936",
+    "sn": 35,
+    "mda": "National Animal Production Research Institute (NAPRI)",
+    "purpose": "Office Building",
+    "state": "Kaduna",
+    "lga": "Zaria",
+    "address": "6H45+JF8, 810105, Kaduna",
+    "landmark": "Konkura Hills",
+    "year_commissioned": null,
+    "valuation": null,
+    "coordinates": {
+      "lat": 11.0248119,
+      "lng": 7.6518533
+    },
+    "image": {
+      "filename": "asset_a4124c8936.jpg",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/6/6e/Zazzau_Emirs_Palace_Gate.jpg",
+      "width": 1200,
+      "height": 800,
+      "scraped_at": "2026-06-27T14:26:18.320537Z"
+    },
+    "metadata": {
+      "scraped_at": "2026-06-27T14:25:56.460374Z",
+      "geocoded": true,
+      "image_found": true
+    }
+  },
+  {
+    "_id": "asset_07dc56cf4d",
+    "sn": 36,
+    "mda": "National Centre for Agricultural Mechanization (NCAM)",
+    "purpose": "Office Building",
+    "state": "Kwara",
+    "lga": "Ilorin",
+    "address": "Km 20 Ilorin- Lokoja Highway, Idofian, 240103, Ilorin, Kwara",
+    "landmark": "Ideal Speech Phonics Tutor",
+    "year_commissioned": null,
+    "valuation": null,
+    "coordinates": {
+      "lat": 8.4963657,
+      "lng": 4.5480484
+    },
+    "image": {
+      "filename": null,
+      "source_url": null,
+      "width": null,
+      "height": null,
+      "scraped_at": null
+    },
+    "metadata": {
+      "scraped_at": "2026-06-27T14:26:19.125555Z",
+      "geocoded": true,
+      "image_found": false
+    }
+  },
+  {
+    "_id": "asset_550dc14538",
+    "sn": 37,
+    "mda": "National Cereals Research Institute (NCRI)",
+    "purpose": "Office Building",
+    "state": "Niger",
+    "lga": "Bida",
+    "address": "344V+P9M, 912104, Badeggi",
+    "landmark": "Badeggi link rice and resources nigeria limited",
+    "year_commissioned": null,
+    "valuation": null,
+    "coordinates": {
+      "lat": 9.083333,
+      "lng": 6.016667
+    },
+    "image": {
+      "filename": null,
+      "source_url": null,
+      "width": null,
+      "height": null,
+      "scraped_at": null
+    },
+    "metadata": {
+      "scraped_at": "2026-06-27T14:26:31.857535Z",
+      "geocoded": true,
+      "image_found": false
+    }
+  },
+  {
+    "_id": "asset_653851a784",
+    "sn": 38,
+    "mda": "National Horticultural Research Institute",
+    "purpose": "Office Building",
+    "state": "Oyo",
+    "lga": "Idi Ishin",
+    "address": "P.M.B. 5432, Jericho Reservation Area, Ibadan",
+    "landmark": "GG Fashion College",
+    "year_commissioned": null,
+    "valuation": null,
+    "coordinates": {
+      "lat": 7.4098194,
+      "lng": 3.8575478
+    },
+    "image": {
+      "filename": null,
+      "source_url": null,
+      "width": null,
+      "height": null,
+      "scraped_at": null
+    },
+    "metadata": {
+      "scraped_at": "2026-06-27T14:26:43.389550Z",
+      "geocoded": true,
+      "image_found": false
+    }
+  },
+  {
+    "_id": "asset_3753e2bf5f",
+    "sn": 39,
+    "mda": "National Institute For Fresh Water Fisheries Research",
+    "purpose": "Office Building",
+    "state": "Niger",
+    "lga": "Bussa",
+    "address": "Besidw Iya ada, 912106, New Bussa",
+    "landmark": "Haybura Global Resources",
+    "year_commissioned": null,
+    "valuation": null,
+    "coordinates": {
+      "lat": 10.230833,
+      "lng": 4.475278
+    },
+    "image": {
+      "filename": "asset_3753e2bf5f.jpg",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/d/d0/Minna.photowalk_Tudun_Fulani_City_Gate.jpg",
+      "width": 1200,
+      "height": 800,
+      "scraped_at": "2026-06-27T14:27:11.797353Z"
+    },
+    "metadata": {
+      "scraped_at": "2026-06-27T14:26:55.342925Z",
+      "geocoded": true,
+      "image_found": true
+    }
+  },
+  {
+    "_id": "asset_4515145a57",
+    "sn": 40,
+    "mda": "National Institute of Oceanography and Marine Research (NIOMR)",
+    "purpose": "Office Building",
+    "state": "Lagos",
+    "lga": "Victoria Island",
+    "address": "3 Wilmot Point Rd, Victoria Island 106104, Lagos",
+    "landmark": "Nigeri Fisheries Laboratories",
+    "year_commissioned": null,
+    "valuation": null,
+    "coordinates": {
+      "lat": 6.4219919,
+      "lng": 3.4089107
+    },
+    "image": {
+      "filename": "asset_4515145a57.jpg",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/7/7d/ARCN_Building_image.jpg",
+      "width": 960,
+      "height": 403,
+      "scraped_at": "2026-06-27T14:27:16.902143Z"
+    },
+    "metadata": {
+      "scraped_at": "2026-06-27T14:27:12.602115Z",
+      "geocoded": true,
+      "image_found": true
+    }
+  },
+  {
+    "_id": "asset_bd54acbbf4",
+    "sn": 41,
+    "mda": "National Park Services",
+    "purpose": "Office Building",
+    "state": "Abuja",
+    "lga": "AMAC",
+    "address": "Umaru Musa Yaradua Expressway, 900231, Abuja",
+    "landmark": "Chivik International School",
+    "year_commissioned": null,
+    "valuation": null,
+    "coordinates": {
+      "lat": 9.0552729,
+      "lng": 7.4662595
+    },
+    "image": {
+      "filename": null,
+      "source_url": null,
+      "width": null,
+      "height": null,
+      "scraped_at": null
+    },
+    "metadata": {
+      "scraped_at": "2026-06-27T14:27:17.705017Z",
+      "geocoded": true,
+      "image_found": false
     }
   }
 ]
