@@ -476,7 +476,7 @@ table.rt tbody tr:hover { background: rgba(74,144,217,.04); }
     <button id="menu-toggle" class="menu-toggle-btn"><i class="fa-solid fa-bars"></i></button>
     <div class="header-welcome">
       <h2 id="welcome-name">Welcome 👋</h2>
-      <p>Federal Public Assets Management Dashboard</p>
+      <p>Federal Public Asset Maintenance Management Dashboard</p>
     </div>
     <div class="header-right">
       <div class="global-search-wrap" id="global-search-wrap">
@@ -689,11 +689,11 @@ table.rt tbody tr:hover { background: rgba(74,144,217,.04); }
 
 <script>
 function doLogout() {
-  apiLogout().finally(() => { localStorage.removeItem('as_token'); window.location.href = 'login.html'; });
+  apiLogout().finally(() => { localStorage.removeItem('as_token'); window.location.href = '../login.html'; });
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
-  if (!localStorage.getItem('as_token')) { window.location.href = 'login.html'; return; }
+  if (!localStorage.getItem('as_token')) { window.location.href = '../login.html'; return; }
 
   const u = getCurrentUser();
   if (u) {

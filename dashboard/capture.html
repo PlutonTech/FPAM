@@ -636,7 +636,7 @@ textarea.form-control { resize: vertical; }
 <script src="js/capture.js"></script>
 <script>
 function doLogout() {
-  apiLogout().finally(() => { localStorage.removeItem('as_token'); window.location.href = 'login.html'; });
+  apiLogout().finally(() => { localStorage.removeItem('as_token'); window.location.href = '../login.html'; });
 }
 
 function setAssessment(val) {
@@ -653,7 +653,7 @@ function setAssessment(val) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  if (!localStorage.getItem('as_token')) { window.location.href = 'login.html'; return; }
+  if (!localStorage.getItem('as_token')) { window.location.href = '../login.html'; return; }
 
   checkApiHealth();
 

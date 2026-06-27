@@ -770,7 +770,7 @@ let _tabsLoaded = {};
 
 // ── INIT ──────────────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', async () => {
-  if (!localStorage.getItem('as_token')) { window.location.href = 'login.html'; return; }
+  if (!localStorage.getItem('as_token')) { window.location.href = '../login.html'; return; }
 
 
 
@@ -1745,7 +1745,7 @@ async function saveAssetEdits() {
 }
 
 function doLogout() {
-  apiLogout().finally(() => { localStorage.removeItem('as_token'); window.location.href = 'login.html'; });
+  apiLogout().finally(() => { localStorage.removeItem('as_token'); window.location.href = '../login.html'; });
 }
 
 function showError() {

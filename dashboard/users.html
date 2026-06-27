@@ -214,7 +214,7 @@ async function doResetRoleConfigs() {
 
 // ── Page setup ────────────────────────────────────────────────────────────────
 function doLogout() {
-  apiLogout().finally(() => { localStorage.removeItem('as_token'); window.location.href = 'login.html'; });
+  apiLogout().finally(() => { localStorage.removeItem('as_token'); window.location.href = '../login.html'; });
 }
 
 function switchTab(t) {
@@ -226,7 +226,7 @@ function switchTab(t) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  if (!localStorage.getItem('as_token')) { window.location.href = 'login.html'; return; }
+  if (!localStorage.getItem('as_token')) { window.location.href = '../login.html'; return; }
   initTheme(); renderUserBadge(); checkApiHealth();
   document.getElementById('modal-overlay')?.addEventListener('click', e => {
     if (e.target === e.currentTarget) closeModal();
