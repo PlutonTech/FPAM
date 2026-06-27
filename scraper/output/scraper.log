@@ -517,3 +517,65 @@ CSV written  → output\assets_summary.csv
 15:37:30  INFO     CSV written  → output\assets_summary.csv
          [checkpoint saved — 10 new this run]
 15:37:30  INFO              [checkpoint saved — 10 new this run]
+[ 105/1996] Federal Ministry Of Health                          Abuja
+15:37:30  INFO     [ 105/1996] Federal Ministry Of Health                          Abuja
+[ 106/1996] Federal Ministry Of Health                          Lagos
+15:37:40  INFO     [ 106/1996] Federal Ministry Of Health                          Lagos
+[ 107/1996] Radiographers Registration Board                    Abuja
+15:37:52  INFO     [ 107/1996] Radiographers Registration Board                    Abuja
+         image 1200x801 -> asset_4cd8407d6b.jpg
+15:38:06  INFO              image 1200x801 -> asset_4cd8407d6b.jpg
+[ 108/1996] Post Health Services (PHS)                          Abuja
+15:38:07  INFO     [ 108/1996] Post Health Services (PHS)                          Abuja
+         image 1200x799 -> asset_992b6a2578.jpg
+15:38:19  INFO              image 1200x799 -> asset_992b6a2578.jpg
+[ 109/1996] Post Health Services (PHS)                          Adamawa
+15:38:20  INFO     [ 109/1996] Post Health Services (PHS)                          Adamawa
+         image 1200x799 -> asset_a47c2d7217.jpg
+15:38:35  INFO              image 1200x799 -> asset_a47c2d7217.jpg
+[ 110/1996] Post Health Services (PHS)                          Delta
+15:38:35  INFO     [ 110/1996] Post Health Services (PHS)                          Delta
+[ 111/1996] Post Health Services (PHS)                          Sokoto
+15:38:46  INFO     [ 111/1996] Post Health Services (PHS)                          Sokoto
+[ 112/1996] Post Health Services (PHS)                          River
+15:38:59  INFO     [ 112/1996] Post Health Services (PHS)                          River
+         image 696x506 -> asset_9c1146f002.jpg
+15:39:05  INFO              image 696x506 -> asset_9c1146f002.jpg
+[ 113/1996] Post Health Services (PHS)                          Borno
+15:39:05  INFO     [ 113/1996] Post Health Services (PHS)                          Borno
+         image 1200x799 -> asset_5267e3eb5c.jpg
+15:39:20  INFO              image 1200x799 -> asset_5267e3eb5c.jpg
+[ 114/1996] Post Health Services (PHS)                          Lagos
+15:39:21  INFO     [ 114/1996] Post Health Services (PHS)                          Lagos
+JSON written → output\assets.json  (100 documents)
+15:39:26  INFO     JSON written → output\assets.json  (100 documents)
+CSV written  → output\assets_summary.csv
+15:39:26  INFO     CSV written  → output\assets_summary.csv
+         [checkpoint saved — 20 new this run]
+15:39:26  INFO              [checkpoint saved — 20 new this run]
+[ 115/1996] Post Health Services (PHS)                          Kastina
+15:39:27  INFO     [ 115/1996] Post Health Services (PHS)                          Kastina
+[ 116/1996] Post Health Services (PHS)                          Kano
+15:39:41  INFO     [ 116/1996] Post Health Services (PHS)                          Kano
+[ 117/1996] Post Health Services (PHS)                          Taraba
+15:39:52  INFO     [ 117/1996] Post Health Services (PHS)                          Taraba
+[ 118/1996] Post Health Services (PHS)                          Kwara
+15:40:02  INFO     [ 118/1996] Post Health Services (PHS)                          Kwara
+[ 119/1996] Post Health Services (PHS)                          Oyo
+15:40:10  INFO     [ 119/1996] Post Health Services (PHS)                          Oyo
+[ 120/1996] Post Health Services (PHS)                          Jigawa
+15:40:17  INFO     [ 120/1996] Post Health Services (PHS)                          Jigawa
+[ 121/1996] Post Health Services (PHS)                          Yobe
+15:40:28  INFO     [ 121/1996] Post Health Services (PHS)                          Yobe
+[ 122/1996] Post Health Services (PHS)                          Cross River
+15:40:40  INFO     [ 122/1996] Post Health Services (PHS)                          Cross River
+[ 125/1996] PHC Tutors Programme UCH                            Oyo
+15:40:49  INFO     [ 125/1996] PHC Tutors Programme UCH                            Oyo
+[ 126/1996] PHC Tutors Programme KADUNA Polytechnic             Kaduna
+15:41:00  INFO     [ 126/1996] PHC Tutors Programme KADUNA Polytechnic             Kaduna
+JSON written → output\assets.json  (110 documents)
+15:41:08  INFO     JSON written → output\assets.json  (110 documents)
+CSV written  → output\assets_summary.csv
+15:41:08  INFO     CSV written  → output\assets_summary.csv
+         [checkpoint saved — 30 new this run]
+15:41:08  INFO              [checkpoint saved — 30 new this run]

@@ -2518,5 +2518,565 @@
       "geocoded": false,
       "image_found": false
     }
+  },
+  {
+    "_id": "asset_11781c5d37",
+    "sn": 101,
+    "mda": "Federal Ministry Of Health",
+    "purpose": "Office Building",
+    "state": "Abuja",
+    "lga": "AMAC",
+    "address": "3F6W+GMJ, New Federal Secretariat Complex, Ahmadu Bello Way, Phase III, Abuja",
+    "landmark": "Federal Secretariat",
+    "year_commissioned": null,
+    "valuation": null,
+    "coordinates": {
+      "lat": 9.0552729,
+      "lng": 7.4662595
+    },
+    "image": {
+      "filename": null,
+      "source_url": null,
+      "width": null,
+      "height": null,
+      "scraped_at": null
+    },
+    "metadata": {
+      "scraped_at": "2026-06-27T14:37:30.812244Z",
+      "geocoded": true,
+      "image_found": false
+    }
+  },
+  {
+    "_id": "asset_bcbed14b88",
+    "sn": 102,
+    "mda": "Federal Ministry Of Health",
+    "purpose": "Office Building",
+    "state": "Lagos",
+    "lga": "Lagos",
+    "address": "443 Herbert Macaulay Way, Yaba 101245, Lagos",
+    "landmark": "National Health Insurance Scheme",
+    "year_commissioned": null,
+    "valuation": null,
+    "coordinates": {
+      "lat": 6.4550575,
+      "lng": 3.3941795
+    },
+    "image": {
+      "filename": null,
+      "source_url": null,
+      "width": null,
+      "height": null,
+      "scraped_at": null
+    },
+    "metadata": {
+      "scraped_at": "2026-06-27T14:37:40.851193Z",
+      "geocoded": true,
+      "image_found": false
+    }
+  },
+  {
+    "_id": "asset_4cd8407d6b",
+    "sn": 103,
+    "mda": "Radiographers Registration Board",
+    "purpose": "Office Building",
+    "state": "Abuja",
+    "lga": "AMAC",
+    "address": "Ishaya Shekari Crescent, Gwarinpa",
+    "landmark": "Apple Store",
+    "year_commissioned": null,
+    "valuation": null,
+    "coordinates": {
+      "lat": 9.1126924,
+      "lng": 7.4256335
+    },
+    "image": {
+      "filename": "asset_4cd8407d6b.jpg",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/1/1b/Abuja_heritages_30.jpg",
+      "width": 1200,
+      "height": 801,
+      "scraped_at": "2026-06-27T14:38:06.388913Z"
+    },
+    "metadata": {
+      "scraped_at": "2026-06-27T14:37:52.118117Z",
+      "geocoded": true,
+      "image_found": true
+    }
+  },
+  {
+    "_id": "asset_992b6a2578",
+    "sn": 104,
+    "mda": "Post Health Services (PHS)",
+    "purpose": "Office Building",
+    "state": "Abuja",
+    "lga": "AMAC",
+    "address": "2FQJ+HQ2, Garki 900103, Abuja",
+    "landmark": "Massey Street children Hospital",
+    "year_commissioned": null,
+    "valuation": null,
+    "coordinates": {
+      "lat": 9.0552729,
+      "lng": 7.4662595
+    },
+    "image": {
+      "filename": "asset_992b6a2578.jpg",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/2/2c/Marines_feel_the_burn_during_OC_spray_training_150306-M-RH401-038.jpg",
+      "width": 1200,
+      "height": 799,
+      "scraped_at": "2026-06-27T14:38:19.590970Z"
+    },
+    "metadata": {
+      "scraped_at": "2026-06-27T14:38:07.207230Z",
+      "geocoded": true,
+      "image_found": true
+    }
+  },
+  {
+    "_id": "asset_a47c2d7217",
+    "sn": 105,
+    "mda": "Post Health Services (PHS)",
+    "purpose": "Office Building",
+    "state": "Adamawa",
+    "lga": "Yola",
+    "address": "Opposite Custom Office, Zone 3, Wuro Jabbe, Jimeta",
+    "landmark": "Nigeria Custom Service",
+    "year_commissioned": null,
+    "valuation": null,
+    "coordinates": {
+      "lat": 9.2089255,
+      "lng": 12.4802485
+    },
+    "image": {
+      "filename": "asset_a47c2d7217.jpg",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/2/2c/Marines_feel_the_burn_during_OC_spray_training_150306-M-RH401-038.jpg",
+      "width": 1200,
+      "height": 799,
+      "scraped_at": "2026-06-27T14:38:35.070123Z"
+    },
+    "metadata": {
+      "scraped_at": "2026-06-27T14:38:20.392974Z",
+      "geocoded": true,
+      "image_found": true
+    }
+  },
+  {
+    "_id": "asset_b40f026fbd",
+    "sn": 106,
+    "mda": "Post Health Services (PHS)",
+    "purpose": "Office Building",
+    "state": "Delta",
+    "lga": "Warri",
+    "address": "6M3V+Q39, Central Area 320242, Asaba",
+    "landmark": "Local Government Service Commission",
+    "year_commissioned": null,
+    "valuation": null,
+    "coordinates": {
+      "lat": 5.5186186,
+      "lng": 5.7480196
+    },
+    "image": {
+      "filename": null,
+      "source_url": null,
+      "width": null,
+      "height": null,
+      "scraped_at": null
+    },
+    "metadata": {
+      "scraped_at": "2026-06-27T14:38:35.872121Z",
+      "geocoded": true,
+      "image_found": false
+    }
+  },
+  {
+    "_id": "asset_356e258d11",
+    "sn": 107,
+    "mda": "Post Health Services (PHS)",
+    "purpose": "Office Building",
+    "state": "Sokoto",
+    "lga": "Sokoto",
+    "address": "Five Star Secretariat, 840103, Sokoto",
+    "landmark": "Dan Talaka Restaurant",
+    "year_commissioned": null,
+    "valuation": null,
+    "coordinates": {
+      "lat": 13.0610588,
+      "lng": 5.2373194
+    },
+    "image": {
+      "filename": null,
+      "source_url": null,
+      "width": null,
+      "height": null,
+      "scraped_at": null
+    },
+    "metadata": {
+      "scraped_at": "2026-06-27T14:38:46.537010Z",
+      "geocoded": true,
+      "image_found": false
+    }
+  },
+  {
+    "_id": "asset_9c1146f002",
+    "sn": 108,
+    "mda": "Post Health Services (PHS)",
+    "purpose": "Office Building",
+    "state": "River",
+    "lga": "Port Harcourt(Bonny, Brass, Onne, Airport And Wharf)",
+    "address": "323 Port Harcourt - Aba Expy, Rumueme 500101, Port Harcourt",
+    "landmark": "FCMB Portharcourt Main Branch",
+    "year_commissioned": null,
+    "valuation": null,
+    "coordinates": {
+      "lat": 5.2914028,
+      "lng": 8.2972844
+    },
+    "image": {
+      "filename": "asset_9c1146f002.jpg",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/5/5e/Census_Bureau_2000%2C_Filipinos_in_the_United_States.png",
+      "width": 696,
+      "height": 506,
+      "scraped_at": "2026-06-27T14:39:05.176434Z"
+    },
+    "metadata": {
+      "scraped_at": "2026-06-27T14:38:59.089725Z",
+      "geocoded": true,
+      "image_found": true
+    }
+  },
+  {
+    "_id": "asset_5267e3eb5c",
+    "sn": 109,
+    "mda": "Post Health Services (PHS)",
+    "purpose": "Office Building",
+    "state": "Borno",
+    "lga": "Maiduguri",
+    "address": "7849+943, 622003, Bindigi",
+    "landmark": "Bindigi",
+    "year_commissioned": null,
+    "valuation": null,
+    "coordinates": {
+      "lat": 11.8395375,
+      "lng": 13.1536214
+    },
+    "image": {
+      "filename": "asset_5267e3eb5c.jpg",
+      "source_url": "https://upload.wikimedia.org/wikipedia/commons/2/2c/Marines_feel_the_burn_during_OC_spray_training_150306-M-RH401-038.jpg",
+      "width": 1200,
+      "height": 799,
+      "scraped_at": "2026-06-27T14:39:20.661687Z"
+    },
+    "metadata": {
+      "scraped_at": "2026-06-27T14:39:05.984904Z",
+      "geocoded": true,
+      "image_found": true
+    }
+  },
+  {
+    "_id": "asset_467f7727cd",
+    "sn": 110,
+    "mda": "Post Health Services (PHS)",
+    "purpose": "Office Building",
+    "state": "Lagos",
+    "lga": "(Ikeja,Tincan,Apapa, Idiroko",
+    "address": "34 Kudirat Abiola Way, Onigbongbo 101233, Ikeja",
+    "landmark": "Oregun Busstop",
+    "year_commissioned": null,
+    "valuation": null,
+    "coordinates": {
+      "lat": 6.4550575,
+      "lng": 3.3941795
+    },
+    "image": {
+      "filename": null,
+      "source_url": null,
+      "width": null,
+      "height": null,
+      "scraped_at": null
+    },
+    "metadata": {
+      "scraped_at": "2026-06-27T14:39:21.469235Z",
+      "geocoded": true,
+      "image_found": false
+    }
+  },
+  {
+    "_id": "asset_2ad83e1539",
+    "sn": 111,
+    "mda": "Post Health Services (PHS)",
+    "purpose": "Office Building",
+    "state": "Kastina",
+    "lga": "Kastina",
+    "address": "XHRM+2QC, 820101, Katsina",
+    "landmark": "WAEC Office",
+    "year_commissioned": null,
+    "valuation": null,
+    "coordinates": {
+      "lat": null,
+      "lng": null
+    },
+    "image": {
+      "filename": null,
+      "source_url": null,
+      "width": null,
+      "height": null,
+      "scraped_at": null
+    },
+    "metadata": {
+      "scraped_at": "2026-06-27T14:39:27.761628Z",
+      "geocoded": false,
+      "image_found": false
+    }
+  },
+  {
+    "_id": "asset_1d4ee425d0",
+    "sn": 112,
+    "mda": "Post Health Services (PHS)",
+    "purpose": "Office Building",
+    "state": "Kano",
+    "lga": "Kano",
+    "address": "2GH2+HCR, Kano City 700211, Kano",
+    "landmark": "Army Day Boys Sec. School",
+    "year_commissioned": null,
+    "valuation": null,
+    "coordinates": {
+      "lat": 11.9939978,
+      "lng": 8.5219738
+    },
+    "image": {
+      "filename": null,
+      "source_url": null,
+      "width": null,
+      "height": null,
+      "scraped_at": null
+    },
+    "metadata": {
+      "scraped_at": "2026-06-27T14:39:41.046051Z",
+      "geocoded": true,
+      "image_found": false
+    }
+  },
+  {
+    "_id": "asset_98540fa366",
+    "sn": 113,
+    "mda": "Post Health Services (PHS)",
+    "purpose": "Office Building",
+    "state": "Taraba",
+    "lga": "Jalingo",
+    "address": "V9JF+4GV, 660213, Jalingo",
+    "landmark": "Anur Academy",
+    "year_commissioned": null,
+    "valuation": null,
+    "coordinates": {
+      "lat": 8.894985,
+      "lng": 11.360042
+    },
+    "image": {
+      "filename": null,
+      "source_url": null,
+      "width": null,
+      "height": null,
+      "scraped_at": null
+    },
+    "metadata": {
+      "scraped_at": "2026-06-27T14:39:52.423914Z",
+      "geocoded": true,
+      "image_found": false
+    }
+  },
+  {
+    "_id": "asset_190ef38486",
+    "sn": 114,
+    "mda": "Post Health Services (PHS)",
+    "purpose": "Office Building",
+    "state": "Kwara",
+    "lga": "Ilorin",
+    "address": "GGQQ+6MC, Old winners, Kilanko, OFFA GARAGE RAILWAY LINE, Ilorin",
+    "landmark": "MichConsult",
+    "year_commissioned": null,
+    "valuation": null,
+    "coordinates": {
+      "lat": 8.4963657,
+      "lng": 4.5480484
+    },
+    "image": {
+      "filename": null,
+      "source_url": null,
+      "width": null,
+      "height": null,
+      "scraped_at": null
+    },
+    "metadata": {
+      "scraped_at": "2026-06-27T14:40:02.715382Z",
+      "geocoded": true,
+      "image_found": false
+    }
+  },
+  {
+    "_id": "asset_d5a6dd0b73",
+    "sn": 115,
+    "mda": "Post Health Services (PHS)",
+    "purpose": "Office Building",
+    "state": "Oyo",
+    "lga": "Ibadan",
+    "address": "Governor's Office, Secretariat-Agodi Road, behind Oyo State, 201103, Ibadan",
+    "landmark": "Olaiya Food Canteen",
+    "year_commissioned": null,
+    "valuation": null,
+    "coordinates": {
+      "lat": 7.3786064,
+      "lng": 3.8969928
+    },
+    "image": {
+      "filename": null,
+      "source_url": null,
+      "width": null,
+      "height": null,
+      "scraped_at": null
+    },
+    "metadata": {
+      "scraped_at": "2026-06-27T14:40:10.369593Z",
+      "geocoded": true,
+      "image_found": false
+    }
+  },
+  {
+    "_id": "asset_bfaa7e146e",
+    "sn": 116,
+    "mda": "Post Health Services (PHS)",
+    "purpose": "Office Building",
+    "state": "Jigawa",
+    "lga": "Dutse",
+    "address": "P972+5FX, Azare-Dutse Rd, 720101, Dutse",
+    "landmark": "NYSC Secretairiat",
+    "year_commissioned": null,
+    "valuation": null,
+    "coordinates": {
+      "lat": 11.6909859,
+      "lng": 9.3390747
+    },
+    "image": {
+      "filename": null,
+      "source_url": null,
+      "width": null,
+      "height": null,
+      "scraped_at": null
+    },
+    "metadata": {
+      "scraped_at": "2026-06-27T14:40:17.869130Z",
+      "geocoded": true,
+      "image_found": false
+    }
+  },
+  {
+    "_id": "asset_2a7ba1cfaa",
+    "sn": 117,
+    "mda": "Post Health Services (PHS)",
+    "purpose": "Office Building",
+    "state": "Yobe",
+    "lga": "Damaturu",
+    "address": "PXG4+V9X, 620101, Damaturu",
+    "landmark": "Rufaidah Yoghurt and Fura",
+    "year_commissioned": null,
+    "valuation": null,
+    "coordinates": {
+      "lat": 11.747,
+      "lng": 11.9608
+    },
+    "image": {
+      "filename": null,
+      "source_url": null,
+      "width": null,
+      "height": null,
+      "scraped_at": null
+    },
+    "metadata": {
+      "scraped_at": "2026-06-27T14:40:28.959893Z",
+      "geocoded": true,
+      "image_found": false
+    }
+  },
+  {
+    "_id": "asset_bc7a67cae0",
+    "sn": 118,
+    "mda": "Post Health Services (PHS)",
+    "purpose": "Office Building",
+    "state": "Cross River",
+    "lga": "Calabar",
+    "address": null,
+    "landmark": null,
+    "year_commissioned": null,
+    "valuation": null,
+    "coordinates": {
+      "lat": 4.9795999,
+      "lng": 8.3373597
+    },
+    "image": {
+      "filename": null,
+      "source_url": null,
+      "width": null,
+      "height": null,
+      "scraped_at": null
+    },
+    "metadata": {
+      "scraped_at": "2026-06-27T14:40:40.666892Z",
+      "geocoded": true,
+      "image_found": false
+    }
+  },
+  {
+    "_id": "asset_0c0dc9e762",
+    "sn": 121,
+    "mda": "PHC Tutors Programme UCH",
+    "purpose": "Office Building",
+    "state": "Oyo",
+    "lga": "Ibadan",
+    "address": "Queen Elizabeth II Road, Agodi",
+    "landmark": "UCH Bus Stop",
+    "year_commissioned": null,
+    "valuation": null,
+    "coordinates": {
+      "lat": 7.3786064,
+      "lng": 3.8969928
+    },
+    "image": {
+      "filename": null,
+      "source_url": null,
+      "width": null,
+      "height": null,
+      "scraped_at": null
+    },
+    "metadata": {
+      "scraped_at": "2026-06-27T14:40:49.554510Z",
+      "geocoded": true,
+      "image_found": false
+    }
+  },
+  {
+    "_id": "asset_77b3f7a263",
+    "sn": 122,
+    "mda": "PHC Tutors Programme KADUNA Polytechnic",
+    "purpose": "Office Building",
+    "state": "Kaduna",
+    "lga": "Kaduna",
+    "address": "Kaduna Polytechnic",
+    "landmark": "Elegance Boutique",
+    "year_commissioned": null,
+    "valuation": null,
+    "coordinates": {
+      "lat": 10.5223452,
+      "lng": 7.44098
+    },
+    "image": {
+      "filename": null,
+      "source_url": null,
+      "width": null,
+      "height": null,
+      "scraped_at": null
+    },
+    "metadata": {
+      "scraped_at": "2026-06-27T14:41:00.017589Z",
+      "geocoded": true,
+      "image_found": false
+    }
   }
 ]
