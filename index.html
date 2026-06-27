@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>FPAM &#8212; Federal Public Asset Maintenance </title>
+<title>FPAM &#8212; Federal Public Assets Maintenance</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -167,20 +167,103 @@ img{display:block;max-width:100%}
 .mc-b{font-family:var(--ff-b);font-size:12.5px;color:var(--text3);line-height:1.7;font-weight:300}
 
 @media(max-width:960px){
-  .nav-links,.nav-actions{display:none}.nav-burger{display:block}.nav-inner{padding:0 20px}
-  #hero{flex-direction:column;height:auto}
-  #slideshow{height:56vh;min-height:360px}
-  #panel{width:100%;border-left:none;border-top:1px solid rgba(255,255,255,.07)}
-  .hero-text{padding:0 28px}.slide-label{left:28px}
+  /* ── NAV ── */
+  .nav-links,.nav-actions{display:none}
+  .nav-burger{display:block}
+  .nav-inner{padding:0 20px}
+
+  /* ── HERO: stack vertically, slide on top, panel below ── */
+  #hero{
+    flex-direction:column;
+    height:auto;
+    /* push below ticker+nav — recalc for smaller screens */
+    margin-top:var(--top-offset);
+  }
+
+  /* Slideshow tall enough to show all hero content comfortably */
+  #slideshow{
+    height:auto;
+    min-height:520px;
+  }
+
+  /* Hero text: reduce padding, give bottom room for buttons */
+  .hero-text{
+    padding:36px 24px 52px;
+    max-width:100%;
+    justify-content:flex-end;
+  }
+
+  /* Smaller heading on mobile */
+  .hero-h1{
+    font-size:clamp(26px,6vw,40px);
+    margin-bottom:8px;
+  }
+
+  /* Hide the sub-tagline to save space */
+  .hero-sub{ display:none }
+
+  /* Shorter body text */
+  .hero-p{
+    font-size:13px;
+    line-height:1.65;
+    margin-bottom:20px;
+    max-width:100%;
+  }
+
+  /* Buttons side by side, enough bottom gap */
+  .hero-btns{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    padding-bottom:0;
+  }
+  .hero-btns .btn{
+    font-size:12.5px;
+    padding:10px 18px;
+  }
+
+  /* Slide label and dots */
+  .slide-label{left:24px;bottom:16px}
+  .hero-dots{bottom:16px;right:12px}
+
+  /* Panel below the slideshow */
+  #panel{
+    width:100%;
+    border-left:none;
+    border-top:1px solid rgba(255,255,255,.07);
+    min-height:260px;
+  }
+
+  /* Other layout fixes */
   .about-grid{grid-template-columns:1fr}
   .svc-grid,.mandate-grid{grid-template-columns:1fr 1fr}
   .stats-grid{grid-template-columns:repeat(2,1fr)}
   .ap-accent{display:none}
-  #services-logo-bg{width:340px;height:340px}
+  #services-logo-bg{width:280px;height:280px}
+  .container{padding:0 20px}
+  .section{padding:64px 0}
 }
 @media(max-width:560px){
   .svc-grid,.mandate-grid,.stats-grid{grid-template-columns:1fr}
   .stat-item{border:none;border-bottom:1px solid rgba(255,255,255,.06)}
+
+  /* Even smaller screens — more compact hero text */
+  #slideshow{min-height:480px}
+  .hero-text{padding:28px 20px 44px}
+  .hero-badge{font-size:7.5px;padding:4px 10px;margin-bottom:14px}
+  .hero-h1{font-size:clamp(22px,7vw,34px)}
+  .hero-p{font-size:12.5px;margin-bottom:16px}
+  .hero-btns .btn{font-size:12px;padding:9px 16px}
+  .hero-dots{right:8px}
+
+  /* Mandate grid single col */
+  .mandate-grid{grid-template-columns:1fr}
+
+  /* Stats */
+  .stats-grid{grid-template-columns:1fr 1fr}
+
+  .section{padding:52px 0}
+  .container{padding:0 16px}
 }
 </style>
 </head>
@@ -204,7 +287,7 @@ img{display:block;max-width:100%}
     <span class="tt-item">FPAM Targets 250+ Housing Estates for Comprehensive Upkeep Under &#8358;12B 2025 Programme <span class="tt-sep">&#9670;</span></span>
   </div></div>
 </div>
-<nav id="nav"><div class="nav-inner"><a class="nav-logo" href="index.html"><img src="images/logo_ministry.png" alt="Federal Ministry"><div class="nav-logo-div"></div><img src="images/logo_fpam.png" alt="FPAM"><div style="margin-left:10px;display:flex;flex-direction:column;justify-content:center"><div style="font-family:'Cormorant Garamond',Georgia,serif;font-size:22px;font-weight:700;color:#fff;letter-spacing:3px;line-height:1">FPAM</div><div style="font-family:'JetBrains Mono',monospace;font-size:7px;color:rgba(255,255,255,.4);letter-spacing:1.5px;text-transform:uppercase;margin-top:2px">Federal Public Asset Maintenance</div></div></a><div class="nav-links"><a href="index.html" class="active">Home</a><a href="about.html">About</a><a href="contact.html">Contact</a><a href="gallery.html">Gallery</a><a href="assets.html">Asset</a></div><div class="nav-actions"><a href="complaint.html" class="nav-cta"><i class="fa-solid fa-file-pen"></i> Log a Complaint</a><a href="login.html" class="nav-login"><i class="fa-solid fa-right-to-bracket"></i> Login</a></div><button class="nav-burger" onclick="toggleMenu()"><i class="fa-solid fa-bars"></i></button></div><div class="nav-mob" id="nav-mob"><a href="index.html" onclick="toggleMenu()">Home</a><a href="about.html" onclick="toggleMenu()">About</a><a href="contact.html" onclick="toggleMenu()">Contact</a><a href="gallery.html" onclick="toggleMenu()">Gallery</a><a href="assets.html" onclick="toggleMenu()">Asset</a><a href="complaint.html" onclick="toggleMenu()">Log a Complaint</a><a href="login.html" onclick="toggleMenu()" style="color:var(--blue-lt)"><i class="fa-solid fa-right-to-bracket"></i> Login</a></div></nav><script>function toggleMenu(){document.getElementById('nav-mob').classList.toggle('open')}</script>
+<nav id="nav"><div class="nav-inner"><a class="nav-logo" href="index.html"><img src="images/logo_ministry.png" alt="Federal Ministry"><div class="nav-logo-div"></div><img src="images/logo_fpam.png" alt="FPAM"><div style="margin-left:10px;display:flex;flex-direction:column;justify-content:center"><div style="font-family:'Cormorant Garamond',Georgia,serif;font-size:22px;font-weight:700;color:#fff;letter-spacing:3px;line-height:1">FPAM</div><div style="font-family:'JetBrains Mono',monospace;font-size:7px;color:rgba(255,255,255,.4);letter-spacing:1.5px;text-transform:uppercase;margin-top:2px">Federal Public Assets</div></div></a><div class="nav-links"><a href="index.html" class="active">Home</a><a href="about.html">About</a><a href="contact.html">Contact</a><a href="gallery.html">Gallery</a><a href="assets.html">Asset</a></div><div class="nav-actions"><a href="complaint.html" class="nav-cta"><i class="fa-solid fa-file-pen"></i> Log a Complaint</a><a href="login.html" class="nav-login"><i class="fa-solid fa-right-to-bracket"></i> Login</a></div><button class="nav-burger" onclick="toggleMenu()"><i class="fa-solid fa-bars"></i></button></div><div class="nav-mob" id="nav-mob"><a href="index.html" onclick="toggleMenu()">Home</a><a href="about.html" onclick="toggleMenu()">About</a><a href="contact.html" onclick="toggleMenu()">Contact</a><a href="gallery.html" onclick="toggleMenu()">Gallery</a><a href="assets.html" onclick="toggleMenu()">Asset</a><a href="complaint.html" onclick="toggleMenu()">Log a Complaint</a><a href="login.html" onclick="toggleMenu()" style="color:var(--blue-lt)"><i class="fa-solid fa-right-to-bracket"></i> Login</a></div></nav><script>function toggleMenu(){document.getElementById('nav-mob').classList.toggle('open')}</script>
 
 <!-- HERO -->
 <section id="hero">
@@ -212,9 +295,9 @@ img{display:block;max-width:100%}
     <div class="slide-overlay"></div>
     <div class="hero-text">
       <div class="hero-badge"><i class="fa-solid fa-building-columns"></i>&nbsp; Federal Ministry of Housing &amp; Urban Development</div>
-      <h1 class="hero-h1">Federal Public Asset Maintenance<br>Maintenance</h1>
+      <h1 class="hero-h1">Federal Public Assets<br>Maintenance</h1>
       <div class="hero-sub">Maintaining Today &nbsp;&#183;&nbsp; Preserving Tomorrow &nbsp;&#183;&nbsp; Building for Generations</div>
-      <p class="hero-p">Ensuring the efficiency, safety and sustainability of Federal Public Asset Maintenance and housing infrastructures across Nigeria's 36 states and the FCT.</p>
+      <p class="hero-p">Ensuring the efficiency, safety and sustainability of federal public assets and housing infrastructures across Nigeria's 36 states and the FCT.</p>
       <div class="hero-btns">
         <a href="about.html" class="btn btn-blue"><i class="fa-solid fa-circle-info"></i> About FPAM</a>
         <a href="gallery.html" class="btn btn-ghost"><i class="fa-solid fa-images"></i> View Gallery</a>
@@ -242,7 +325,7 @@ img{display:block;max-width:100%}
     <div style="text-align:center">
       <div class="eyebrow reveal" style="justify-content:center"><span>What We Do</span></div>
       <h2 class="s-title reveal rd1" style="text-align:center">Our Core Services</h2>
-      <p class="s-sub reveal rd2" style="margin:0 auto;text-align:center">End-to-end stewardship of Nigeria's Federal Public Asset Maintenance, housing estates, and government infrastructure.</p>
+      <p class="s-sub reveal rd2" style="margin:0 auto;text-align:center">End-to-end stewardship of Nigeria's federal public assets, housing estates, and government infrastructure.</p>
     </div>
     <div class="svc-grid reveal rd2">
       <div class="svc-card"><div class="sc-ico"><i class="fa-solid fa-building"></i></div><div class="sc-t">Asset Maintenance</div><div class="sc-b">Maintaining government buildings to world-class standards ensuring longevity and operational efficiency.</div></div>
@@ -269,10 +352,10 @@ img{display:block;max-width:100%}
       <div class="reveal rd1">
         <div class="eyebrow"><span>Who We Are</span></div>
         <h2 class="s-title">Nigeria's Federal Asset Management Authority</h2>
-        <p class="s-sub">FPAM is the operational arm of the Federal Ministry of Housing &amp; Urban Development, mandated to manage, maintain and preserve Federal Public Asset Maintenance across Nigeria.</p>
+        <p class="s-sub">FPAM is the operational arm of the Federal Ministry of Housing &amp; Urban Development, mandated to manage, maintain and preserve federal public assets across Nigeria.</p>
         <p style="font-family:var(--ff-b);font-size:13.5px;font-weight:300;color:var(--text3);line-height:1.85;margin-top:16px">Under Presidential Executive Order No. 11, FPAM operates with clear authority to ensure all federal government buildings, housing estates and infrastructure assets are maintained to the highest standards &#8212; maximising value for the Nigerian people.</p>
         <div class="pills"><span class="pill">Asset Stewardship</span><span class="pill">Housing Policy</span><span class="pill">Facility Management</span><span class="pill">Urban Development</span><span class="pill">Revenue Optimisation</span><span class="pill">Compliance</span></div>
-        <div class="director"><div><div class="d-name">Arc. Chioma Wogu-Ogbonna</div><div class="d-title">Director, Federal Public Asset Maintenance </div></div></div>
+        <div class="director"><div><div class="d-name">Arc. Chioma Wogu-Ogbonna</div><div class="d-title">Director, Federal Public Assets Maintenance</div></div></div>
       </div>
     </div>
   </div>
@@ -311,7 +394,7 @@ img{display:block;max-width:100%}
   </div>
 </section>
 
-<style>footer{background:#04080f;padding:56px 0 24px;color:rgba(255,255,255,.5)}.fg-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;margin-bottom:44px}.fb-logo{display:flex;align-items:center;gap:10px;margin-bottom:14px}.fb-logo img{height:44px;width:auto;filter:drop-shadow(0 2px 8px rgba(0,0,0,.4))}.fb-logo-div{width:1px;height:32px;background:rgba(255,255,255,.12)}footer p{font-family:var(--ff-b);font-size:12.5px;font-weight:300;line-height:1.8;max-width:270px}.fc-t{font-family:var(--ff-b);font-size:11px;font-weight:600;color:#fff;margin-bottom:13px;letter-spacing:1px;text-transform:uppercase}footer ul{list-style:none;display:flex;flex-direction:column;gap:8px}footer ul a{font-family:var(--ff-b);font-size:12.5px;font-weight:300;color:rgba(255,255,255,.4);transition:.15s}footer ul a:hover{color:var(--blue-lt)}.f-bottom{border-top:1px solid rgba(255,255,255,.06);padding-top:20px;display:flex;justify-content:space-between;align-items:center}.f-bottom p{font-family:var(--ff-m);font-size:9.5px;letter-spacing:1px;color:rgba(255,255,255,.22)}.f-soc{display:flex;gap:8px}.f-soc a{width:32px;height:32px;border-radius:6px;background:rgba(255,255,255,.04);display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.38);font-size:13px;transition:.2s}.f-soc a:hover{background:var(--blue);color:#fff}@media(max-width:960px){.fg-grid{grid-template-columns:1fr 1fr}}@media(max-width:560px){.fg-grid{grid-template-columns:1fr}}</style><footer><div class="container"><div class="fg-grid"><div><div class="fb-logo"><img src="images/logo_ministry.png" alt="Ministry"><div class="fb-logo-div"></div><img src="images/logo_fpam.png" alt="FPAM"></div><p>Federal Public Asset Maintenance  Department &#8212; agency of the Federal Ministry of Housing &amp; Urban Development.</p><div style="margin-top:14px;font-family:var(--ff-m);font-size:9px;color:rgba(255,255,255,.18);letter-spacing:1.5px">&#169; 2025 FPAM &#183; FEDERAL GOVERNMENT OF NIGERIA</div></div><div><div class="fc-t">Navigate</div><ul><li><a href="index.html">Home</a></li><li><a href="about.html">About</a></li><li><a href="gallery.html">Gallery</a></li><li><a href="assets.html">Asset</a></li><li><a href="contact.html">Contact</a></li></ul></div><div><div class="fc-t">Resources</div><ul><li><a href="#">Asset Directory</a></li><li><a href="#">Compliance Forms</a></li><li><a href="#">Maintenance Reports</a></li><li><a href="#">Housing Policy</a></li><li><a href="complaint.html">Log a Complaint</a></li></ul></div><div><div class="fc-t">Contact</div><ul><li><a href="#">Federal Secretariat Complex</a></li><li><a href="#">Phase III, Shehu Shagari Way, Abuja</a></li><li><a href="mailto:info@fpam.housing.gov.ng">info@fpam.housing.gov.ng</a></li><li><a href="#">+234 800 000 0000</a></li></ul><div style="margin-top:16px;padding:12px 14px;background:rgba(181,74,47,.1);border:1px solid rgba(181,74,47,.22);border-radius:4px"><div style="font-family:var(--ff-m);font-size:8px;color:rgba(255,255,255,.35);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px">Emergency Line</div><div style="font-family:var(--ff-d);font-size:18px;font-weight:600;color:var(--terra)">0800-FPAM-911</div></div></div></div><div class="f-bottom"><p>FEDERAL MINISTRY OF HOUSING &amp; URBAN DEVELOPMENT &#183; ALL RIGHTS RESERVED</p><div class="f-soc"><a href="#"><i class="fa-brands fa-twitter"></i></a><a href="#"><i class="fa-brands fa-facebook-f"></i></a><a href="#"><i class="fa-brands fa-instagram"></i></a><a href="#"><i class="fa-brands fa-youtube"></i></a><a href="#"><i class="fa-brands fa-linkedin-in"></i></a></div></div></div></footer>
+<style>footer{background:#04080f;padding:56px 0 24px;color:rgba(255,255,255,.5)}.fg-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;margin-bottom:44px}.fb-logo{display:flex;align-items:center;gap:10px;margin-bottom:14px}.fb-logo img{height:44px;width:auto;filter:drop-shadow(0 2px 8px rgba(0,0,0,.4))}.fb-logo-div{width:1px;height:32px;background:rgba(255,255,255,.12)}footer p{font-family:var(--ff-b);font-size:12.5px;font-weight:300;line-height:1.8;max-width:270px}.fc-t{font-family:var(--ff-b);font-size:11px;font-weight:600;color:#fff;margin-bottom:13px;letter-spacing:1px;text-transform:uppercase}footer ul{list-style:none;display:flex;flex-direction:column;gap:8px}footer ul a{font-family:var(--ff-b);font-size:12.5px;font-weight:300;color:rgba(255,255,255,.4);transition:.15s}footer ul a:hover{color:var(--blue-lt)}.f-bottom{border-top:1px solid rgba(255,255,255,.06);padding-top:20px;display:flex;justify-content:space-between;align-items:center}.f-bottom p{font-family:var(--ff-m);font-size:9.5px;letter-spacing:1px;color:rgba(255,255,255,.22)}.f-soc{display:flex;gap:8px}.f-soc a{width:32px;height:32px;border-radius:6px;background:rgba(255,255,255,.04);display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.38);font-size:13px;transition:.2s}.f-soc a:hover{background:var(--blue);color:#fff}@media(max-width:960px){.fg-grid{grid-template-columns:1fr 1fr}}@media(max-width:560px){.fg-grid{grid-template-columns:1fr}}</style><footer><div class="container"><div class="fg-grid"><div><div class="fb-logo"><img src="images/logo_ministry.png" alt="Ministry"><div class="fb-logo-div"></div><img src="images/logo_fpam.png" alt="FPAM"></div><p>Federal Public Assets Maintenance Department &#8212; agency of the Federal Ministry of Housing &amp; Urban Development.</p><div style="margin-top:14px;font-family:var(--ff-m);font-size:9px;color:rgba(255,255,255,.18);letter-spacing:1.5px">&#169; 2025 FPAM &#183; FEDERAL GOVERNMENT OF NIGERIA</div></div><div><div class="fc-t">Navigate</div><ul><li><a href="index.html">Home</a></li><li><a href="about.html">About</a></li><li><a href="gallery.html">Gallery</a></li><li><a href="assets.html">Asset</a></li><li><a href="contact.html">Contact</a></li></ul></div><div><div class="fc-t">Resources</div><ul><li><a href="#">Asset Directory</a></li><li><a href="#">Compliance Forms</a></li><li><a href="#">Maintenance Reports</a></li><li><a href="#">Housing Policy</a></li><li><a href="complaint.html">Log a Complaint</a></li></ul></div><div><div class="fc-t">Contact</div><ul><li><a href="#">Federal Secretariat Complex</a></li><li><a href="#">Phase III, Shehu Shagari Way, Abuja</a></li><li><a href="mailto:info@fpam.housing.gov.ng">info@fpam.housing.gov.ng</a></li><li><a href="#">+234 800 000 0000</a></li></ul><div style="margin-top:16px;padding:12px 14px;background:rgba(181,74,47,.1);border:1px solid rgba(181,74,47,.22);border-radius:4px"><div style="font-family:var(--ff-m);font-size:8px;color:rgba(255,255,255,.35);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px">Emergency Line</div><div style="font-family:var(--ff-d);font-size:18px;font-weight:600;color:var(--terra)">0800-FPAM-911</div></div></div></div><div class="f-bottom"><p>FEDERAL MINISTRY OF HOUSING &amp; URBAN DEVELOPMENT &#183; ALL RIGHTS RESERVED</p><div class="f-soc"><a href="#"><i class="fa-brands fa-twitter"></i></a><a href="#"><i class="fa-brands fa-facebook-f"></i></a><a href="#"><i class="fa-brands fa-instagram"></i></a><a href="#"><i class="fa-brands fa-youtube"></i></a><a href="#"><i class="fa-brands fa-linkedin-in"></i></a></div></div></div></footer>
 
 <script>
 const BG=[
