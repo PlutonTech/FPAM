@@ -84,22 +84,38 @@
       </div>
     </div>
 
+    <!-- BULK TOOLBAR -->
+    <div class="bulk-toolbar" id="fdb-bulk-bar" style="display:none">
+      <span class="bulk-count"><span id="fdb-bulk-count">0</span> file(s) selected</span>
+      <button class="btn btn-danger btn-sm" onclick="bulkDeleteFiles()">
+        <i class="fa-solid fa-trash"></i> Delete Selected
+      </button>
+      <button class="btn btn-ghost btn-sm" style="color:#fff;border-color:rgba(255,255,255,.3)" onclick="clearFdbSelection()">
+        <i class="fa-solid fa-xmark"></i> Clear
+      </button>
+    </div>
+
     <!-- FILE TABLE -->
     <div class="table-wrap">
       <table class="data-table">
         <thead>
           <tr>
-            <th>File</th><th>Type</th><th>Size</th><th>Asset</th><th>Uploaded</th><th>Description</th><th>Actions</th>
+            <th style="width:36px"><input type="checkbox" class="cb-all" id="fdb-check-all" onchange="toggleFdbAll(this.checked)" title="Select all"></th><th>File</th><th>Type</th><th>Size</th><th>Asset</th><th>Uploaded</th><th>Description</th><th>Actions</th>
           </tr>
         </thead>
         <tbody id="fdb-tbody">
-          <tr><td colspan="7"><div class="empty-state" style="padding:36px">
+          <tr><td colspan="8"><div class="empty-state" style="padding:36px">
             <div class="empty-icon"><i class="fa-solid fa-folder-open"></i></div>
             <div class="empty-title">No files yet</div>
             <div class="empty-sub">Upload photos or documents from the Asset detail view or here</div>
           </div></td></tr>
         </tbody>
       </table>
+    </div>
+    <!-- FILE PAGINATION -->
+    <div id="fdb-pagination" style="display:flex;align-items:center;justify-content:space-between;padding:12px 4px;font-size:12px;color:var(--text3);flex-wrap:wrap;gap:8px">
+      <span id="fdb-page-info"></span>
+      <div style="display:flex;gap:4px" id="fdb-page-btns"></div>
     </div>
   </div>
 </div>
@@ -120,12 +136,42 @@
 .file-icon.doc{background:rgba(240,180,0,0.12);color:var(--warn);}
 .file-icon.excel{background:rgba(0,200,100,0.12);color:var(--accent);}
 .file-icon.other{background:var(--surface2);color:var(--text3);}
+
+  /* Bulk toolbar */
+  .bulk-toolbar {
+    align-items: center; gap: 10px;
+    background: var(--navy, #0B2545); color: #fff;
+    padding: 10px 16px; border-radius: 8px; margin-bottom: 12px;
+    font-size: 13px; font-weight: 500;
+  }
+  .bulk-toolbar .bulk-count { flex: 1; }
+  .cb-all { width:15px; height:15px; cursor:pointer; accent-color:var(--blue,#4A90D9); }
+  .row-cb  { width:15px; height:15px; cursor:pointer; accent-color:var(--blue,#4A90D9); }
 </style>
 
 
 <script src="js/api.js"></script>
 <script src="js/app.js"></script>
 <script>
+
+// ── Auth-aware image loader ───────────────────────────────────────────────────
+function loadAuthImg(imgEl, url) {
+  const token = localStorage.getItem('as_token');
+  fetch(url, { headers: token ? { Authorization: 'Bearer ' + token } : {} })
+    .then(r => { if (!r.ok) throw new Error(r.status); return r.blob(); })
+    .then(blob => {
+      imgEl.src = URL.createObjectURL(blob);
+      imgEl.style.display = '';
+      const icon = imgEl.nextElementSibling;
+      if (icon && icon.classList.contains('fdb-thumb-icon')) icon.style.display = 'none';
+    })
+    .catch(() => {
+      imgEl.style.display = 'none';
+      const icon = imgEl.nextElementSibling;
+      if (icon && icon.classList.contains('fdb-thumb-icon')) icon.style.display = 'flex';
+    });
+}
+
 function doLogout(){ apiLogout().finally(()=>{ localStorage.removeItem('as_token'); window.location.href='login.html'; }); }
 
 let allFiles = [];
@@ -270,14 +316,107 @@ function updateStats(files) {
   if (vEl) vEl.textContent = files.filter(f=>f._category==='video').length;
 }
 
+let _fdbSelected = new Set();
+
+function updateFdbBulkBar() {
+  const bar = document.getElementById('fdb-bulk-bar');
+  const cnt = document.getElementById('fdb-bulk-count');
+  if (!bar) return;
+  if (_fdbSelected.size > 0) {
+    bar.style.display = 'flex';
+    if (cnt) cnt.textContent = _fdbSelected.size;
+  } else {
+    bar.style.display = 'none';
+  }
+}
+
+function clearFdbSelection() {
+  _fdbSelected.clear();
+  document.querySelectorAll('.row-cb').forEach(c => c.checked = false);
+  const all = document.getElementById('fdb-check-all');
+  if (all) all.checked = false;
+  updateFdbBulkBar();
+}
+
+function onFdbRowCheck() {
+  _fdbSelected = new Set(
+    [...document.querySelectorAll('.row-cb:checked')].map(c => c.dataset.fid)
+  );
+  updateFdbBulkBar();
+}
+
+function toggleFdbAll(checked) {
+  document.querySelectorAll('.row-cb').forEach(c => {
+    c.checked = checked;
+  });
+  _fdbSelected = checked
+    ? new Set([...document.querySelectorAll('.row-cb')].map(c => c.dataset.fid))
+    : new Set();
+  updateFdbBulkBar();
+}
+
+
+
+async function bulkDeleteFiles() {
+  if (!_fdbSelected.size) return;
+  if (!confirm(`Delete ${_fdbSelected.size} file(s)? This cannot be undone.`)) return;
+
+  const segMap = { photo:'photos', video:'documents', pdf:'documents', excel:'excel', document:'documents' };
+  let done = 0, failed = 0;
+
+  for (const fid of _fdbSelected) {
+    const row = document.querySelector(`tr[data-fid="${fid}"]`);
+    const assetId = row?.dataset.assetId;
+    const cat     = row?.dataset.cat;
+    const seg     = segMap[cat] || 'documents';
+    try {
+      await apiFetch(`/assets/${assetId}/${seg}/${fid}`, { method: 'DELETE' });
+      row?.remove();
+      allFiles = allFiles.filter(f => (f._id || f.fileId) !== fid);
+      done++;
+    } catch(e) {
+      failed++;
+    }
+  }
+
+  _fdbSelected.clear();
+  updateFdbBulkBar();
+  toast(failed ? `Deleted ${done}, failed ${failed}` : `Deleted ${done} file(s)`);
+  // Refresh counts
+  const photos = allFiles.filter(f => f._category === 'photo').length;
+  const docs   = allFiles.filter(f => ['document','pdf'].includes(f._category)).length;
+  const excels = allFiles.filter(f => f._category === 'excel').length;
+  const all    = allFiles.length;
+  const setEl  = (id, v) => { const e = document.getElementById(id); if(e) e.textContent = v; };
+  setEl('fdb-photos', photos); setEl('fdb-docs', docs);
+  setEl('fdb-excel', excels);  setEl('fdb-total', all);
+}
+
+const FDB_PAGE_SIZE = 50;
+let _fdbPage = 0;
+let _fdbDisplayFiles = [];
+
 function renderFileDB(files) {
+  _fdbDisplayFiles = files;
+  _fdbPage = 0;
+  clearFdbSelection();
+  renderFdbPage();
+}
+
+function renderFdbPage() {
+  const files = _fdbDisplayFiles;
   const tbody = document.getElementById('fdb-tbody');
   if (!files.length) {
-    tbody.innerHTML = '<tr><td colspan="7"><div class="empty-state" style="padding:36px"><div class="empty-icon"><i class="fa-solid fa-folder-open"></i></div><div class="empty-title">No files found</div><div class="empty-sub">Upload files from the Asset detail view or click Upload File above</div></div></td></tr>';
+    tbody.innerHTML = '<tr><td colspan="8"><div class="empty-state" style="padding:36px"><div class="empty-icon"><i class="fa-solid fa-folder-open"></i></div><div class="empty-title">No files found</div><div class="empty-sub">Upload files from the Asset detail view or click Upload File above</div></div></td></tr>';
+    renderFdbPagination(0, 0, 0);
     return;
   }
 
-  tbody.innerHTML = files.map(f => {
+  const total = files.length;
+  const start = _fdbPage * FDB_PAGE_SIZE;
+  const pageItems = files.slice(start, start + FDB_PAGE_SIZE);
+
+  tbody.innerHTML = pageItems.map(f => {
     const fid  = f._id || f.id || f.fileId || f.gridfsId || '';
     const cat  = f._category || detectCategory(f);
     const name = f.originalname || f.filename || f.name || 'Unnamed';
@@ -297,13 +436,19 @@ function renderFileDB(files) {
       <button class="btn btn-ghost btn-xs" title="Download" onclick="downloadFile('${apiUrl}','${escHtml(name)}')"><i class="fa-solid fa-download"></i></button>
       <button class="btn btn-danger btn-xs" title="Delete" onclick="deleteFile('${f._assetId}','${fid}','${cat}',this)"><i class="fa-solid fa-trash"></i></button>`;
 
-    return `<tr>
+    return `<tr data-fid="${fid}" data-asset-id="${f._assetId}" data-cat="${cat}">
+      <td style="width:36px"><input type="checkbox" class="row-cb" onchange="onFdbRowCheck()" data-fid="${fid}"></td>
       <td>
         <div style="display:flex;align-items:center;gap:10px">
-          ${categoryIcon(cat)}
+          ${cat === 'photo'
+            ? `<img data-auth-src="${apiUrl}" alt=""
+                style="width:44px;height:44px;border-radius:6px;object-fit:cover;border:1px solid var(--border);flex-shrink:0;cursor:pointer;display:none"
+                onclick="viewPhoto('${apiUrl}','${escHtml(name)}')">`
+            : ''}
+          ${cat !== 'photo' ? categoryIcon(cat) : `<div class="fdb-thumb-icon" style="display:flex">${categoryIcon(cat)}</div>`}
           <div>
             <div style="font-weight:500;font-size:13px;max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${escHtml(name)}">${escHtml(name)}</div>
-            <div style="font-size:10px;color:var(--text3);font-family:'Space Mono',monospace">${escHtml(f.contentType||f.mimetype||'')}</div>
+            <div style="font-size:10px;color:var(--text3);font-family:'Space Mono',monospace">${escHtml(f._assetId||'')} · ${escHtml(f.contentType||f.mimetype||'')}</div>
           </div>
         </div>
       </td>
@@ -315,6 +460,36 @@ function renderFileDB(files) {
       <td><div style="display:flex;gap:4px">${actions}</div></td>
     </tr>`;
   }).join('');
+
+  // Load all auth-protected thumbnails
+  tbody.querySelectorAll('img[data-auth-src]').forEach(img => {
+    loadAuthImg(img, img.dataset.authSrc);
+  });
+
+  renderFdbPagination(start + 1, Math.min(start + FDB_PAGE_SIZE, total), total);
+}
+
+function renderFdbPagination(from, to, total) {
+  const info = document.getElementById('fdb-page-info');
+  const btns = document.getElementById('fdb-page-btns');
+  if (!info || !btns) return;
+  info.textContent = total ? `Showing ${from}–${to} of ${total} files` : '';
+  const pages = Math.ceil(total / FDB_PAGE_SIZE);
+  if (pages <= 1) { btns.innerHTML = ''; return; }
+  let html2 = '';
+  for (let i = 0; i < pages; i++) {
+    const active = i === _fdbPage
+      ? 'background:var(--blue,#4A90D9);color:#fff;border-color:var(--blue,#4A90D9)'
+      : 'background:var(--white,#fff);color:var(--text2);border-color:var(--border)';
+    html2 += `<button onclick="goFdbPage(${i})" style="min-width:30px;padding:4px 8px;border-radius:5px;border:1px solid;cursor:pointer;font-size:11px;${active}">${i+1}</button>`;
+  }
+  btns.innerHTML = html2;
+}
+
+function goFdbPage(p) {
+  _fdbPage = p;
+  clearFdbSelection();
+  renderFdbPage();
 }
 
 // ── BULK UPLOAD SYSTEM ───────────────────────────────────────────────────────
@@ -626,6 +801,8 @@ async function doUpload() { doUploadQueue(); }
 
 document.addEventListener('DOMContentLoaded', async () => {
   if (!localStorage.getItem('as_token')) { window.location.href='login.html'; return; }
+// ── BULK DELETE ───────────────────────────────────────────────────────────────
+
   initTheme(); renderUserBadge(); checkApiHealth();
   
   document.getElementById('modal-overlay')?.addEventListener('click',e=>{ if(e.target===e.currentTarget) closeModal(); });

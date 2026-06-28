@@ -215,6 +215,8 @@ function clearFilters() {
   });
   const photosFirst = document.getElementById('filter-photos-first');
   if (photosFirst) photosFirst.checked = false;
+  const sortSel = document.getElementById('filter-sort');
+  if (sortSel) sortSel.value = 'oldest';
   renderAssets();
 }
 
@@ -336,8 +338,8 @@ function bulkExportCSV() {
 const loadAssets = renderAssets;
 
 // sortBy — click table headers to sort
-let _sortField = 'ts';
-let _sortDir   = -1;
+let _sortField = 'createdAt';
+let _sortDir   = 1;  // 1 = ascending (oldest first)
 
 function sortBy(field) {
   if (_sortField === field) { _sortDir *= -1; } else { _sortField = field; _sortDir = -1; }
