@@ -81,6 +81,7 @@ img{display:block;max-width:100%}
 .slide{position:absolute;inset:0;opacity:0;transition:opacity 1.4s ease;background-size:cover;background-position:center}
 .slide.active{opacity:1}
 .slide-overlay{position:absolute;inset:0;z-index:1;background:linear-gradient(108deg,rgba(11,37,69,.88) 0%,rgba(11,37,69,.72) 55%,rgba(0,0,0,.55) 100%)}
+.slide::after{content:"";position:absolute;inset:0;z-index:2;background:linear-gradient(to top,rgba(11,37,69,.7) 0%,transparent 40%);pointer-events:none}
 .hero-text{position:absolute;z-index:5;inset:0;display:flex;flex-direction:column;justify-content:center;padding:0 64px;max-width:720px}
 .hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.08);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.14);border-radius:4px;padding:5px 14px;font-family:var(--ff-m);font-size:8.5px;color:rgba(255,255,255,.8);letter-spacing:2px;text-transform:uppercase;margin-bottom:20px;width:fit-content}
 .hero-h1{font-family:var(--ff-d);font-size:clamp(28px,3.6vw,58px);font-weight:600;color:#fff;line-height:1.08;letter-spacing:.5px;text-transform:uppercase;margin-bottom:10px}
