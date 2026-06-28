@@ -4,7 +4,7 @@
  * Falls back gracefully to localStorage when backend is unreachable.
  */
 
-const API_BASE = window.API_BASE || 'https://fpambacend.onrender.com/api';
+const API_BASE = window.API_BASE || 'http://localhost:3001/api';
 
 let _token = localStorage.getItem('as_token') || null;
 let _apiOnline = false;
@@ -51,6 +51,24 @@ async function apiUpdateAsset(id, data) {
 
 async function apiDeleteAsset(id) {
   return apiFetch(`/assets/${id}`, { method: 'DELETE' });
+}
+
+// ── Approvals ─────────────────────────────────────────────────────────────────
+async function apiGetPendingApprovals(params = {}) {
+  const qs = new URLSearchParams(params).toString();
+  return apiFetch(`/assets/approvals${qs ? '?' + qs : ''}`);
+}
+
+async function apiApprovalsSummary() {
+  return apiFetch('/assets/approvals/summary');
+}
+
+async function apiApproveAsset(id) {
+  return apiFetch(`/assets/${id}/approve`, { method: 'POST' });
+}
+
+async function apiRejectAsset(id, reason = '') {
+  return apiFetch(`/assets/${id}/reject`, { method: 'POST', body: { reason } });
 }
 
 async function apiSearchAssets(q) {
@@ -318,7 +336,7 @@ function updateConnIndicator(online) {
 // Check API health on load
 async function checkApiHealth() {
   try {
-    const r = await fetch(`${window.API_BASE || 'https://fpambacend.onrender.com'}/health`);
+    const r = await fetch(`${window.API_BASE || 'http://localhost:3001'}/health`);
     if (r.ok) { _apiOnline = true; updateConnIndicator(true); }
   } catch { _apiOnline = false; updateConnIndicator(false); }
 }
