@@ -1,28 +1,84 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Contact &#8212; FPAM</title><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"><style>*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{--navy:#0B2545;--navy2:#0e2d57;--blue:#4A90D9;--blue-lt:#6AAEE8;--terra:#B54A2F;--gold:#D4A017;--white:#fff;--bg:#F4F6F9;--text:#0B1829;--text3:#5A6A7A;--border:#dde3ec;--ff-d:"Cormorant Garamond",Georgia,serif;--ff-b:"Inter",system-ui,sans-serif;--ff-m:"JetBrains Mono",monospace;--ticker-h:34px;--nav-h:70px;--top-offset:calc(var(--ticker-h) + var(--nav-h))}
-html{scroll-behavior:smooth}body{font-family:var(--ff-b);color:var(--text);background:#fff;overflow-x:hidden}::-webkit-scrollbar{width:4px}::-webkit-scrollbar-thumb{background:var(--blue);border-radius:4px}a{text-decoration:none;color:inherit}img{display:block;max-width:100%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Contact &#8212; FPAMD</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#0B2545;--navy2:#0e2d57;--blue:#4A90D9;--blue-lt:#6AAEE8;
+  --terra:#B54A2F;--gold:#D4A017;
+  --white:#fff;--bg:#F4F6F9;--text:#0B1829;--text2:#2C3E50;--text3:#5A6A7A;--border:#dde3ec;
+  --ff-d:"Cormorant Garamond",Georgia,serif;
+  --ff-b:"Inter",system-ui,sans-serif;
+  --ff-m:"JetBrains Mono",monospace;
+  --ticker-h:34px;--nav-h:70px;--top-offset:calc(var(--ticker-h) + var(--nav-h));
+}
+html{scroll-behavior:smooth;overflow-x:hidden;width:100%}
+body{font-family:var(--ff-b);color:var(--text);background:#fff;overflow-x:hidden;width:100%;max-width:100%}
+a{text-decoration:none;color:inherit}
+img{display:block;max-width:100%}
+
+/* TICKER */
 #top-ticker{position:fixed;top:0;left:0;right:0;z-index:600;height:var(--ticker-h);background:var(--navy);border-bottom:1px solid rgba(74,144,217,.3);overflow:hidden;display:flex;align-items:center}
 .tt-label{flex-shrink:0;background:var(--blue);height:100%;display:flex;align-items:center;padding:0 16px;font-family:var(--ff-m);font-size:8.5px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:#fff;gap:7px;white-space:nowrap;border-right:1px solid rgba(255,255,255,.12)}
-.tt-track-wrap{flex:1;overflow:hidden;position:relative}.tt-track-wrap::before,.tt-track-wrap::after{content:"";position:absolute;top:0;bottom:0;width:36px;z-index:2}.tt-track-wrap::before{left:0;background:linear-gradient(to right,var(--navy),transparent)}.tt-track-wrap::after{right:0;background:linear-gradient(to left,var(--navy),transparent)}
-.tt-track{display:flex;white-space:nowrap;animation:tt-scroll 55s linear infinite}.tt-item{display:inline-flex;align-items:center;gap:10px;padding:0 34px;font-family:var(--ff-b);font-size:11px;color:rgba(255,255,255,.62)}.tt-sep{color:var(--blue);font-size:8px;opacity:.6}@keyframes tt-scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.tt-track-wrap{flex:1;overflow:hidden;position:relative}
+.tt-track-wrap::before,.tt-track-wrap::after{content:"";position:absolute;top:0;bottom:0;width:36px;z-index:2}
+.tt-track-wrap::before{left:0;background:linear-gradient(to right,var(--navy),transparent)}
+.tt-track-wrap::after{right:0;background:linear-gradient(to left,var(--navy),transparent)}
+.tt-track{display:flex;white-space:nowrap;animation:tt-scroll 55s linear infinite}
+.tt-item{display:inline-flex;align-items:center;gap:10px;padding:0 34px;font-family:var(--ff-b);font-size:11px;color:rgba(255,255,255,.62)}
+.tt-sep{color:var(--blue);font-size:8px;opacity:.6}
+@keyframes tt-scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* NAV */
 #nav{position:fixed;top:var(--ticker-h);left:0;right:0;z-index:500;background:rgba(11,37,69,.97);backdrop-filter:blur(20px);box-shadow:0 1px 0 rgba(255,255,255,.07)}
 .nav-inner{display:flex;align-items:center;justify-content:space-between;padding:0 44px;height:var(--nav-h);max-width:1400px;margin:0 auto}
-.nav-logo{display:flex;align-items:center;gap:8px;flex-shrink:0}.nav-logo img{height:46px;width:auto;filter:drop-shadow(0 1px 6px rgba(0,0,0,.4));transition:transform .2s}.nav-logo img:hover{transform:scale(1.05)}.nav-logo-div{width:1px;height:34px;background:rgba(255,255,255,.25);margin:0 4px;flex-shrink:0}
-.nav-links{display:flex;align-items:center;gap:26px}.nav-links a{font-family:var(--ff-b);font-size:12.5px;font-weight:500;color:rgba(255,255,255,.78);transition:.15s;letter-spacing:.3px;padding:4px 0;border-bottom:1.5px solid transparent}.nav-links a:hover,.nav-links a.active{color:#fff;border-bottom-color:var(--blue)}
-.nav-actions{display:flex;align-items:center;gap:10px;flex-shrink:0}.nav-cta{background:var(--terra);color:#fff;padding:8px 18px;border-radius:6px;font-family:var(--ff-b);font-size:12px;font-weight:600;display:flex;align-items:center;gap:7px;transition:.2s;white-space:nowrap}.nav-cta:hover{background:#c55535;transform:translateY(-1px)}
-.nav-login{background:transparent;color:#fff;padding:8px 18px;border-radius:6px;font-family:var(--ff-b);font-size:12px;font-weight:600;display:flex;align-items:center;gap:7px;border:1.5px solid rgba(255,255,255,.35);transition:.2s;white-space:nowrap}.nav-login:hover{background:rgba(255,255,255,.1);border-color:#fff}
-.nav-burger{display:none;background:none;border:none;color:#fff;font-size:21px;cursor:pointer}.nav-mob{display:none;position:fixed;top:var(--top-offset);left:0;right:0;background:rgba(11,37,69,.98);backdrop-filter:blur(20px);padding:20px 32px;flex-direction:column;gap:12px;z-index:499;border-top:1px solid rgba(255,255,255,.07)}.nav-mob.open{display:flex}.nav-mob a{font-family:var(--ff-b);color:rgba(255,255,255,.8);font-size:14.5px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.06)}
-.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 26px;border-radius:6px;font-family:var(--ff-b);font-size:13px;font-weight:600;cursor:pointer;border:none;transition:.22s;white-space:nowrap}.btn-blue{background:var(--blue);color:#fff}.btn-blue:hover{background:var(--blue-lt);transform:translateY(-2px)}.btn-terra{background:var(--terra);color:#fff}.btn-terra:hover{background:#c55535}.btn-outline{background:transparent;color:var(--blue);border:1.5px solid var(--blue)}.btn-outline:hover{background:var(--blue);color:#fff}
-.section{padding:90px 0}.section.alt{background:var(--bg)}.container{max-width:1180px;margin:0 auto;padding:0 36px}
-.eyebrow{font-family:var(--ff-m);font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--blue);margin-bottom:12px;display:flex;align-items:center;gap:8px}.eyebrow::after{content:"";flex:0 0 28px;height:1px;background:var(--blue);border-radius:2px}
-.s-title{font-family:var(--ff-d);font-size:clamp(26px,3vw,46px);font-weight:600;color:var(--navy);line-height:1.1;margin-bottom:14px;letter-spacing:.3px}.s-title.white{color:#fff}
-.s-sub{font-family:var(--ff-b);font-size:15px;font-weight:300;color:var(--text3);line-height:1.8;max-width:540px}.s-sub.white{color:rgba(255,255,255,.6)}
-.page-hero{position:relative;height:300px;overflow:hidden;background:var(--navy);display:flex;align-items:center;margin-top:var(--top-offset)}.page-hero-bg{position:absolute;inset:0;background-size:cover;background-position:center;opacity:.22}.page-hero-overlay{position:absolute;inset:0;background:linear-gradient(to right,rgba(11,37,69,.96) 40%,rgba(11,37,69,.5) 100%)}.page-hero-content{position:relative;z-index:1;padding:0 60px}.page-hero h1{font-family:var(--ff-d);font-size:clamp(30px,4vw,52px);font-weight:600;color:#fff;letter-spacing:.5px;margin-bottom:10px}.page-hero p{font-family:var(--ff-b);font-size:14.5px;font-weight:300;color:rgba(255,255,255,.6);max-width:480px;line-height:1.75}
+.nav-logo{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.nav-logo img{height:46px;width:auto;filter:drop-shadow(0 1px 6px rgba(0,0,0,.4));transition:transform .2s}
+.nav-logo img:hover{transform:scale(1.05)}
+.nav-logo-div{width:1px;height:34px;background:rgba(255,255,255,.25);margin:0 4px;flex-shrink:0}
+.nav-links{display:flex;align-items:center;gap:26px}
+.nav-links a{font-family:var(--ff-b);font-size:12.5px;font-weight:500;color:rgba(255,255,255,.78);transition:.15s;letter-spacing:.3px;padding:4px 0;border-bottom:1.5px solid transparent}
+.nav-links a:hover,.nav-links a.active{color:#fff;border-bottom-color:var(--blue)}
+.nav-actions{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.nav-cta{background:var(--terra);color:#fff;padding:8px 18px;border-radius:6px;font-family:var(--ff-b);font-size:12px;font-weight:600;display:flex;align-items:center;gap:7px;transition:.2s;white-space:nowrap}
+.nav-cta:hover{background:#c55535;transform:translateY(-1px)}
+.nav-login{background:transparent;color:#fff;padding:8px 18px;border-radius:6px;font-family:var(--ff-b);font-size:12px;font-weight:600;display:flex;align-items:center;gap:7px;border:1.5px solid rgba(255,255,255,.35);transition:.2s;white-space:nowrap}
+.nav-login:hover{background:rgba(255,255,255,.1);border-color:#fff}
+.nav-burger{display:none;background:none;border:none;color:#fff;font-size:21px;cursor:pointer}
+.nav-mob{display:none;position:fixed;top:var(--top-offset);left:0;right:0;background:rgba(11,37,69,.98);backdrop-filter:blur(20px);padding:20px 32px;flex-direction:column;gap:12px;z-index:499;border-top:1px solid rgba(255,255,255,.07)}
+.nav-mob.open{display:flex}
+.nav-mob a{font-family:var(--ff-b);color:rgba(255,255,255,.8);font-size:14.5px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.06)}
+
+/* SHARED */
+.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 26px;border-radius:6px;font-family:var(--ff-b);font-size:13px;font-weight:600;cursor:pointer;border:none;transition:.22s;white-space:nowrap}
+.btn-blue{background:var(--blue);color:#fff}.btn-blue:hover{background:var(--blue-lt);transform:translateY(-2px)}
+.section{padding:90px 0}.section.alt{background:var(--bg)}
+.container{max-width:1180px;margin:0 auto;padding:0 36px}
+.eyebrow{font-family:var(--ff-m);font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--blue);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.eyebrow::after{content:"";flex:0 0 28px;height:1px;background:var(--blue);border-radius:2px}
+.s-title{font-family:var(--ff-d);font-size:clamp(26px,3vw,46px);font-weight:600;color:var(--navy);line-height:1.1;margin-bottom:14px;letter-spacing:.3px}
+.s-sub{font-family:var(--ff-b);font-size:15px;font-weight:300;color:var(--text3);line-height:1.8;max-width:540px}
+.page-hero{position:relative;height:300px;overflow:hidden;background:var(--navy);display:flex;align-items:center;margin-top:var(--top-offset)}
+.page-hero-bg{position:absolute;inset:0;background-size:cover;background-position:center;opacity:.22}
+.page-hero-overlay{position:absolute;inset:0;background:linear-gradient(to right,rgba(11,37,69,.96) 40%,rgba(11,37,69,.5) 100%)}
+.page-hero-content{position:relative;z-index:1;padding:0 60px}
+.page-hero h1{font-family:var(--ff-d);font-size:clamp(30px,4vw,52px);font-weight:600;color:#fff;letter-spacing:.5px;margin-bottom:10px}
+.page-hero p{font-family:var(--ff-b);font-size:14.5px;font-weight:300;color:rgba(255,255,255,.6);max-width:480px;line-height:1.75}
 .breadcrumb{font-family:var(--ff-m);font-size:8.5px;letter-spacing:2px;text-transform:uppercase;color:var(--blue-lt);margin-bottom:14px;display:flex;align-items:center;gap:8px}
-.reveal{opacity:0;transform:translateY(24px);transition:opacity .7s ease,transform .7s ease}.reveal.visible{opacity:1;transform:none}.rd1{transition-delay:.1s}.rd2{transition-delay:.2s}.rd3{transition-delay:.32s}
-@media(max-width:960px){.nav-links,.nav-actions{display:none}.nav-burger{display:block}.nav-inner{padding:0 20px}.container{padding:0 24px}.page-hero-content{padding:0 28px}}
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .7s ease,transform .7s ease}
+.reveal.visible{opacity:1;transform:none}
+.rd1{transition-delay:.1s}.rd2{transition-delay:.2s}
+
+/* CONTACT SPECIFIC */
 .contact-grid{display:grid;grid-template-columns:1fr 1.2fr;gap:56px;align-items:start}
-.ci-list{display:flex;flex-direction:column;gap:20px}.ci-item{display:flex;align-items:flex-start;gap:14px}
+.ci-list{display:flex;flex-direction:column;gap:20px}
+.ci-item{display:flex;align-items:flex-start;gap:14px}
 .ci-ico{width:44px;height:44px;background:var(--navy);border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--blue);font-size:16px;flex-shrink:0}
 .ci-l{font-family:var(--ff-m);font-size:8.5px;color:var(--text3);letter-spacing:1px;text-transform:uppercase;margin-bottom:4px}
 .ci-v{font-family:var(--ff-b);font-size:14px;font-weight:400;color:var(--navy);line-height:1.55}
@@ -31,9 +87,43 @@ html{scroll-behavior:smooth}body{font-family:var(--ff-b);color:var(--text);backg
 .fg label{font-family:var(--ff-m);font-size:8.5px;color:var(--text3);letter-spacing:1px;text-transform:uppercase}
 .fg input,.fg textarea,.fg select{border:1px solid var(--border);border-radius:5px;padding:11px 13px;font-family:var(--ff-b);font-size:13.5px;color:var(--text);outline:none;transition:.2s;background:#fff;width:100%}
 .fg input:focus,.fg textarea:focus,.fg select:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(74,144,217,.1)}
-.fg textarea{resize:vertical;min-height:100px}.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-@media(max-width:960px){.contact-grid{grid-template-columns:1fr}.form-row{grid-template-columns:1fr}}
-</style></head><body>
+.fg textarea{resize:vertical;min-height:100px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+
+/* FOOTER */
+footer{background:#04080f;padding:56px 0 24px;color:rgba(255,255,255,.5)}
+.fg-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;margin-bottom:44px}
+.fb-logo{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.fb-logo img{height:44px;width:auto;filter:drop-shadow(0 2px 8px rgba(0,0,0,.4))}
+.fb-logo-div{width:1px;height:32px;background:rgba(255,255,255,.12)}
+footer p{font-family:var(--ff-b);font-size:12.5px;font-weight:300;line-height:1.8;max-width:270px}
+.fc-t{font-family:var(--ff-b);font-size:11px;font-weight:600;color:#fff;margin-bottom:13px;letter-spacing:1px;text-transform:uppercase}
+footer ul{list-style:none;display:flex;flex-direction:column;gap:8px}
+footer ul a{font-family:var(--ff-b);font-size:12.5px;font-weight:300;color:rgba(255,255,255,.4);transition:.15s}
+footer ul a:hover{color:var(--blue-lt)}
+.f-bottom{border-top:1px solid rgba(255,255,255,.06);padding-top:20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+.f-bottom p{font-family:var(--ff-m);font-size:9.5px;letter-spacing:1px;color:rgba(255,255,255,.22)}
+.f-soc{display:flex;gap:8px}
+.f-soc a{width:32px;height:32px;border-radius:6px;background:rgba(255,255,255,.04);display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.38);font-size:13px;transition:.2s}
+.f-soc a:hover{background:var(--blue);color:#fff}
+
+@media(max-width:960px){
+  .nav-links,.nav-actions{display:none}.nav-burger{display:block}.nav-inner{padding:0 20px}
+  .contact-grid{grid-template-columns:1fr}
+  .form-row{grid-template-columns:1fr}
+  .container{padding:0 24px}
+  .page-hero-content{padding:0 28px}
+  .fg-grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:560px){
+  .fg-grid{grid-template-columns:1fr}
+  .f-bottom{flex-direction:column;align-items:flex-start}
+  .cfbox{padding:24px}
+}
+</style>
+</head>
+<body>
+
 <div id="top-ticker">
   <div class="tt-label"><i class="fa-solid fa-satellite-dish"></i>Latest News</div>
   <div class="tt-track-wrap"><div class="tt-track">
@@ -53,36 +143,34 @@ html{scroll-behavior:smooth}body{font-family:var(--ff-b);color:var(--text);backg
     <span class="tt-item">FPAM Targets 250+ Housing Estates for Comprehensive Upkeep Under &#8358;12B 2025 Programme <span class="tt-sep">&#9670;</span></span>
   </div></div>
 </div>
-<nav id="nav"><div class="nav-inner"><a class="nav-logo" href="index.html"><img src="images/logo_ministry.png" alt="Ministry"><div class="nav-logo-div"></div><img src="images/logo_fpam.png" alt="FPAM"><div style="margin-left:10px;display:flex;flex-direction:column;justify-content:center"><div style="font-family:'Cormorant Garamond',Georgia,serif;font-size:22px;font-weight:700;color:#fff;letter-spacing:3px;line-height:1">FPAM</div><div style="font-family:'JetBrains Mono',monospace;font-size:7px;color:rgba(255,255,255,.4);letter-spacing:1.5px;text-transform:uppercase;margin-top:2px">Federal Public Asset Maintenance</div></div></a><div class="nav-links"><a href="index.html">Home</a>
-      <a href="about.html">About</a>
-      <a href="contact.html" class="active">Contact</a>
-      <a href="gallery.html">Gallery</a>
-      <a href="assets.html">Asset</a></div><div class="nav-actions"><a href="complaint.html" class="nav-cta"><i class="fa-solid fa-file-pen"></i> Log a Complaint</a><a href="login.html" class="nav-login"><i class="fa-solid fa-right-to-bracket"></i> Login</a></div><button class="nav-burger" onclick="toggleMenu()"><i class="fa-solid fa-bars"></i></button></div><div class="nav-mob" id="nav-mob"><a href="index.html" onclick="toggleMenu()">Home</a><a href="about.html" onclick="toggleMenu()">About</a><a href="contact.html" onclick="toggleMenu()">Contact</a><a href="gallery.html" onclick="toggleMenu()">Gallery</a><a href="assets.html" onclick="toggleMenu()">Asset</a><a href="complaint.html" onclick="toggleMenu()">Log a Complaint</a><a href="login.html" onclick="toggleMenu()" style="color:var(--blue-lt)"><i class="fa-solid fa-right-to-bracket"></i> Login</a></div></nav><script>function toggleMenu(){document.getElementById('nav-mob').classList.toggle('open')}</script>
+<nav id="nav"><div class="nav-inner"><a class="nav-logo" href="index.html"><img src="images/logo_ministry.png" alt="Federal Ministry"><div class="nav-logo-div"></div><img src="images/logo_fpam.png" alt="FPAM"><div style="margin-left:10px;display:flex;flex-direction:column;justify-content:center"><div style="font-family:'Cormorant Garamond',Georgia,serif;font-size:22px;font-weight:700;color:#fff;letter-spacing:3px;line-height:1">FPAM</div><div style="font-family:'JetBrains Mono',monospace;font-size:7px;color:rgba(255,255,255,.4);letter-spacing:1.5px;text-transform:uppercase;margin-top:2px">Federal Public Assets</div></div></a><div class="nav-links"><a href="index.html" >Home</a><a href="about.html">About</a><a href="contact.html" class="active">Contact</a><a href="gallery.html">Gallery</a><a href="assets.html">Asset</a></div><div class="nav-actions"><a href="complaint.html" class="nav-cta"><i class="fa-solid fa-file-pen"></i> Log a Complaint</a><a href="login.html" class="nav-login"><i class="fa-solid fa-right-to-bracket"></i> Login</a></div><button class="nav-burger" onclick="toggleMenu()"><i class="fa-solid fa-bars"></i></button></div><div class="nav-mob" id="nav-mob"><a href="index.html" onclick="toggleMenu()">Home</a><a href="about.html" onclick="toggleMenu()">About</a><a href="contact.html" class="active" onclick="toggleMenu()">Contact</a><a href="gallery.html" onclick="toggleMenu()">Gallery</a><a href="assets.html" onclick="toggleMenu()">Asset</a><a href="complaint.html" onclick="toggleMenu()">Log a Complaint</a><a href="login.html" onclick="toggleMenu()" style="color:var(--blue-lt)"><i class="fa-solid fa-right-to-bracket"></i> Login</a></div></nav><script>function toggleMenu(){document.getElementById('nav-mob').classList.toggle('open')}</script>
+
 <div class="page-hero">
   <div class="page-hero-bg" style="background-image:url('images/photo_ground.jpg')"></div>
   <div class="page-hero-overlay"></div>
   <div class="page-hero-content">
     <div class="breadcrumb"><a href="index.html">Home</a><i class="fa-solid fa-chevron-right"></i>Contact</div>
-    <h1>Contact Us</h1>
-    <p>Reach FPAM for asset maintenance reports, housing enquiries, or official correspondence.</p>
+    <h1>Contact FPAMD</h1>
+    <p>Reach the Federal Public Assets Maintenance Department for asset maintenance reports, facility enquiries, or official correspondence.</p>
   </div>
 </div>
+
 <section class="section">
   <div class="container">
     <div class="contact-grid">
       <div class="reveal">
         <div class="eyebrow"><span>Get In Touch</span></div>
-        <h2 class="s-title">We're Here<br>to Help</h2>
+        <h2 class="s-title">We&#8217;re Here<br>to Help</h2>
         <div class="ci-list" style="margin-top:24px">
-          <div class="ci-item"><div class="ci-ico"><i class="fa-solid fa-location-dot"></i></div><div><div class="ci-l">Headquarters</div><div class="ci-v">Federal Secretariat Complex, Phase III,<br>Shehu Shagari Way, Central Business District,<br>Abuja, FCT &#8212; Nigeria</div></div></div>
-          <div class="ci-item"><div class="ci-ico"><i class="fa-solid fa-phone"></i></div><div><div class="ci-l">Phone</div><div class="ci-v">+234 800 000 0000</div></div></div>
-          <div class="ci-item"><div class="ci-ico"><i class="fa-solid fa-envelope"></i></div><div><div class="ci-l">Email</div><div class="ci-v">info@fpam.housing.gov.ng</div></div></div>
+          <div class="ci-item"><div class="ci-ico"><i class="fa-solid fa-location-dot"></i></div><div><div class="ci-l">Headquarters</div><div class="ci-v">Mabushi, Abuja,<br>F.C.T 900108, Nigeria</div></div></div>
+          <div class="ci-item"><div class="ci-ico"><i class="fa-solid fa-phone"></i></div><div><div class="ci-l">Phone</div><div class="ci-v">474 &#8211; 937-8270</div></div></div>
+          <div class="ci-item"><div class="ci-ico"><i class="fa-solid fa-envelope"></i></div><div><div class="ci-l">Email</div><div class="ci-v">fpam@assets-fpamd.org</div></div></div>
           <div class="ci-item"><div class="ci-ico"><i class="fa-solid fa-clock"></i></div><div><div class="ci-l">Office Hours</div><div class="ci-v">Monday &#8211; Friday: 8:00am &#8211; 5:00pm WAT</div></div></div>
         </div>
         <div style="margin-top:28px;padding:20px;background:rgba(181,74,47,.06);border:1px solid rgba(181,74,47,.2);border-radius:6px">
           <div style="font-family:var(--ff-b);font-size:13px;font-weight:600;color:var(--navy);margin-bottom:6px">Emergency Maintenance Line</div>
           <div style="font-family:var(--ff-b);font-size:13px;font-weight:300;color:var(--text3);margin-bottom:8px">24/7 for urgent structural or safety concerns.</div>
-          <div style="font-family:var(--ff-d);font-size:22px;font-weight:600;color:var(--terra)">0800-FPAM-911</div>
+          <div style="font-family:var(--ff-d);font-size:22px;font-weight:600;color:var(--terra)">474 &#8211; 937-8270</div>
         </div>
         <div style="margin-top:20px;padding:16px 20px;background:var(--bg);border-radius:6px;border-left:3px solid var(--blue)">
           <div style="font-family:var(--ff-b);font-size:13px;font-weight:600;color:var(--navy);margin-bottom:4px">Want to log a formal complaint?</div>
@@ -92,9 +180,9 @@ html{scroll-behavior:smooth}body{font-family:var(--ff-b);color:var(--text);backg
       </div>
       <div class="cfbox reveal rd1">
         <div style="font-family:var(--ff-d);font-size:22px;font-weight:600;color:var(--navy);margin-bottom:4px">Send an Enquiry</div>
-        <div style="font-family:var(--ff-b);font-size:13px;font-weight:300;color:var(--text3);margin-bottom:24px">We'll respond within 5 working days.</div>
+        <div style="font-family:var(--ff-b);font-size:13px;font-weight:300;color:var(--text3);margin-bottom:24px">We&#8217;ll respond within 5 working days.</div>
         <div class="form-row"><div class="fg"><label>Full Name</label><input type="text" id="c-name" placeholder="Your full name"></div><div class="fg"><label>Email Address</label><input type="email" id="c-email" placeholder="your@email.com"></div></div>
-        <div class="fg"><label>Phone Number</label><input type="tel" placeholder="+234 800 000 0000"></div>
+        <div class="fg"><label>Phone Number</label><input type="tel" placeholder="474-937-8270"></div>
         <div class="fg"><label>Subject</label><select id="c-subject"><option value="">Select a subject...</option><option>General Enquiry</option><option>Asset Maintenance</option><option>Housing Estate</option><option>Media &amp; Press</option><option>Partnership &amp; Procurement</option></select></div>
         <div class="fg"><label>Message</label><textarea id="c-msg" placeholder="How can we help you?"></textarea></div>
         <button class="btn btn-blue" style="width:100%;justify-content:center" onclick="sendEnquiry()"><i class="fa-solid fa-paper-plane"></i> Send Enquiry</button>
@@ -103,8 +191,50 @@ html{scroll-behavior:smooth}body{font-family:var(--ff-b);color:var(--text);backg
     </div>
   </div>
 </section>
-<style>footer{background:#04080f;padding:56px 0 24px;color:rgba(255,255,255,.5)}.fg-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;margin-bottom:44px}.fb-logo{display:flex;align-items:center;gap:10px;margin-bottom:14px}.fb-logo img{height:44px;width:auto;filter:drop-shadow(0 2px 8px rgba(0,0,0,.4))}.fb-logo-div{width:1px;height:32px;background:rgba(255,255,255,.12)}footer p{font-family:var(--ff-b);font-size:12.5px;font-weight:300;line-height:1.8;max-width:270px}.fc-t{font-family:var(--ff-b);font-size:11px;font-weight:600;color:#fff;margin-bottom:13px;letter-spacing:1px;text-transform:uppercase}footer ul{list-style:none;display:flex;flex-direction:column;gap:8px}footer ul a{font-family:var(--ff-b);font-size:12.5px;font-weight:300;color:rgba(255,255,255,.4);transition:.15s}footer ul a:hover{color:var(--blue-lt)}.f-bottom{border-top:1px solid rgba(255,255,255,.06);padding-top:20px;display:flex;justify-content:space-between;align-items:center}.f-bottom p{font-family:var(--ff-m);font-size:9.5px;letter-spacing:1px;color:rgba(255,255,255,.22)}.f-soc{display:flex;gap:8px}.f-soc a{width:32px;height:32px;border-radius:6px;background:rgba(255,255,255,.04);display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.38);font-size:13px;transition:.2s}.f-soc a:hover{background:var(--blue);color:#fff}@media(max-width:960px){.fg-grid{grid-template-columns:1fr 1fr}}@media(max-width:560px){.fg-grid{grid-template-columns:1fr}}</style><footer><div class="container"><div class="fg-grid"><div><div class="fb-logo"><img src="images/logo_ministry.png" alt="Ministry"><div class="fb-logo-div"></div><img src="images/logo_fpam.png" alt="FPAM"></div><p>Federal Public Asset Maintenance  Department &#8212; agency of the Federal Ministry of Housing &amp; Urban Development.</p><div style="margin-top:14px;font-family:var(--ff-m);font-size:9px;color:rgba(255,255,255,.18);letter-spacing:1.5px">&#169; 2025 FPAM &#183; FEDERAL GOVERNMENT OF NIGERIA</div></div><div><div class="fc-t">Navigate</div><ul><li><a href="index.html">Home</a></li><li><a href="about.html">About</a></li><li><a href="gallery.html">Gallery</a></li><li><a href="assets.html">Asset</a></li><li><a href="contact.html">Contact</a></li></ul></div><div><div class="fc-t">Resources</div><ul><li><a href="#">Asset Directory</a></li><li><a href="#">Compliance Forms</a></li><li><a href="#">Maintenance Reports</a></li><li><a href="#">Housing Policy</a></li><li><a href="complaint.html">Log a Complaint</a></li></ul></div><div><div class="fc-t">Contact</div><ul><li><a href="#">Federal Secretariat Complex, Phase III</a></li><li><a href="#">Shehu Shagari Way, Abuja</a></li><li><a href="mailto:info@fpam.housing.gov.ng">info@fpam.housing.gov.ng</a></li><li><a href="#">+234 800 000 0000</a></li></ul><div style="margin-top:16px;padding:12px 14px;background:rgba(181,74,47,.1);border:1px solid rgba(181,74,47,.22);border-radius:4px"><div style="font-family:var(--ff-m);font-size:8px;color:rgba(255,255,255,.35);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px">Emergency Line</div><div style="font-family:var(--ff-d);font-size:18px;font-weight:600;color:var(--terra)">0800-FPAM-911</div></div></div></div><div class="f-bottom"><p>FEDERAL MINISTRY OF HOUSING &amp; URBAN DEVELOPMENT &#183; ALL RIGHTS RESERVED</p><div class="f-soc"><a href="#"><i class="fa-brands fa-twitter"></i></a><a href="#"><i class="fa-brands fa-facebook-f"></i></a><a href="#"><i class="fa-brands fa-instagram"></i></a><a href="#"><i class="fa-brands fa-youtube"></i></a><a href="#"><i class="fa-brands fa-linkedin-in"></i></a></div></div></div></footer><script>document.querySelectorAll(".reveal").forEach(el=>{new IntersectionObserver(([e])=>{if(e.isIntersecting)el.classList.add("visible");},{threshold:.1}).observe(el);});</script>
+
+<footer><div class="container">
+  <div class="fg-grid">
+    <div>
+      <div class="fb-logo">
+        <img src="images/logo_ministry.png" alt="Ministry">
+        <div class="fb-logo-div"></div>
+        <img src="images/logo_fpam.png" alt="FPAMD">
+      </div>
+      <p>Federal Public Assets Maintenance Department &#8212; ensuring the longevity, safety, and optimal functionality of Nigeria&#8217;s public infrastructure.</p>
+      <div style="margin-top:14px;font-family:var(--ff-m);font-size:9px;color:rgba(255,255,255,.18);letter-spacing:1.5px">&#169; 2025 FPAMD &#183; FEDERAL GOVERNMENT OF NIGERIA</div>
+    </div>
+    <div><div class="fc-t">Navigate</div><ul>
+      <li><a href="index.html">Home</a></li><li><a href="about.html">About</a></li>
+      <li><a href="gallery.html">Gallery</a></li><li><a href="assets.html">Asset</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul></div>
+    <div><div class="fc-t">Resources</div><ul>
+      <li><a href="#">Asset Directory</a></li><li><a href="#">Compliance Forms</a></li>
+      <li><a href="#">Maintenance Reports</a></li><li><a href="#">Housing Policy</a></li>
+      <li><a href="complaint.html">Log a Complaint</a></li>
+    </ul></div>
+    <div><div class="fc-t">Contact</div><ul>
+      <li><a href="#">Mabushi, Abuja</a></li>
+      <li><a href="#">F.C.T 900108, Nigeria</a></li>
+      <li><a href="mailto:fpam@assets-fpamd.org">fpam@assets-fpamd.org</a></li>
+      <li><a href="#">474 &#8211; 937-8270</a></li>
+    </ul></div>
+  </div>
+  <div class="f-bottom">
+    <p>FEDERAL PUBLIC ASSETS MAINTENANCE DEPARTMENT &#183; ALL RIGHTS RESERVED</p>
+    <div class="f-soc">
+      <a href="#"><i class="fa-brands fa-facebook-f"></i></a>
+      <a href="#"><i class="fa-brands fa-youtube"></i></a>
+      <a href="#"><i class="fa-brands fa-x-twitter"></i></a>
+      <a href="#"><i class="fa-brands fa-linkedin-in"></i></a>
+    </div>
+  </div>
+</div></footer>
+
 <script>
+document.querySelectorAll('.reveal').forEach(el=>{
+  new IntersectionObserver(([e])=>{if(e.isIntersecting)el.classList.add('visible');},{threshold:.1}).observe(el);
+});
 function sendEnquiry(){
   const name=document.getElementById('c-name').value.trim();
   const email=document.getElementById('c-email').value.trim();
@@ -112,12 +242,9 @@ function sendEnquiry(){
   const msg=document.getElementById('c-msg').value.trim();
   const fb=document.getElementById('c-feedback');
   if(!name||!email||!subject||!msg){fb.style.display='block';fb.style.color='var(--terra)';fb.textContent='Please fill in all required fields.';return;}
-  const body=encodeURIComponent('Name: '+name+'
-Email: '+email+'
-
-Message:
-'+msg);
-  window.location.href='mailto:info@fpam.housing.gov.ng?subject='+encodeURIComponent('[FPAM Enquiry] '+subject)+'&body='+body;
+  const body=encodeURIComponent('Name: '+name+'\nEmail: '+email+'\n\nMessage:\n'+msg);
+  window.location.href='mailto:fpam@assets-fpamd.org?subject='+encodeURIComponent('[FPAMD Enquiry] '+subject)+'&body='+body;
   fb.style.display='block';fb.style.color='#1a6b3c';fb.textContent='Thank you! Your email client should open.';
 }
-</script></body></html>
+</script>
+</body></html>
