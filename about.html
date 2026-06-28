@@ -184,34 +184,34 @@ img{display:block;max-width:100%}
   #hero{flex-direction:column;height:auto;margin-top:var(--top-offset)}
   #slideshow{height:auto;min-height:440px}
 
-  /* Hero text: vertically centred, padded away from dots at bottom */
+  /* Hero text: sits in upper portion, clears dots at bottom */
   .hero-text{
     position:absolute;
     top:0; left:0; right:0;
-    bottom:60px;          /* clear the dots/label row */
+    bottom:56px;
     display:flex;
     flex-direction:column;
     justify-content:center;
     align-items:flex-start;
-    padding:0 22px;
+    padding:0 20px;
     max-width:100%;
   }
 
-  .hero-badge{font-size:8px;padding:4px 12px;margin-bottom:12px}
-  .hero-h1{font-size:clamp(22px,6vw,36px);margin-bottom:8px;line-height:1.18}
+  .hero-badge{font-size:7.5px;padding:4px 10px;margin-bottom:10px;letter-spacing:1.5px}
+  .hero-h1{font-size:clamp(20px,5.5vw,30px);margin-bottom:0;line-height:1.15}
   .hero-sub{display:none}
 
-  /* paragraph */
-  .hero-p{font-size:13px;line-height:1.75;margin-bottom:0;max-width:100%}
+  /* hide paragraph on mobile — heading + buttons is enough */
+  .hero-p{display:none}
 
-  /* buttons */
+  /* buttons sit directly under heading */
   .hero-btns{margin-top:14px;gap:8px;flex-wrap:wrap}
   .hero-btns .btn{font-size:12px;padding:9px 16px}
 
-  /* dots and label fixed at bottom */
-  .slide-label{left:22px;bottom:14px;font-size:7.5px}
-  .hero-dots{bottom:14px;right:12px}
-  .hdot{width:20px}.hdot.active{width:32px}
+  /* dots and label at very bottom */
+  .slide-label{left:20px;bottom:12px;font-size:7px}
+  .hero-dots{bottom:12px;right:10px}
+  .hdot{width:18px}.hdot.active{width:28px}
 
   /* PANEL */
   #panel{width:100%;border-left:none;border-top:1px solid rgba(255,255,255,.07);min-height:240px}
@@ -231,13 +231,13 @@ img{display:block;max-width:100%}
    MOBILE — 560px (small phones)
 ══════════════════════════════════════════ */
 @media(max-width:560px){
-  #slideshow{min-height:400px}
-  .hero-text{top:20%;bottom:auto;padding:0 18px 0}
-  .hero-badge{font-size:7.5px;padding:4px 10px;margin-bottom:10px}
-  .hero-h1{font-size:clamp(20px,7vw,32px)}
-  .hero-p{font-size:12.5px}
-  .hero-btns{margin-top:14px}
-  .hero-btns .btn{font-size:12px;padding:9px 14px}
+  #slideshow{min-height:380px}
+  .hero-text{top:0;bottom:52px;padding:0 16px;justify-content:center}
+  .hero-badge{font-size:7px;padding:3px 10px;margin-bottom:8px}
+  .hero-h1{font-size:clamp(18px,6.5vw,26px);line-height:1.12}
+  .hero-p{display:none}
+  .hero-btns{margin-top:12px}
+  .hero-btns .btn{font-size:11.5px;padding:8px 14px}
   .svc-grid,.mandate-grid{grid-template-columns:1fr}
   .stats-grid{grid-template-columns:1fr 1fr}
   .stat-item{border:none;border-bottom:1px solid rgba(255,255,255,.06)}
