@@ -1,5 +1,6 @@
 // ── ASSET REGISTRY ──────────────────────────────────────────────────────────
-let allAssets = [];        // full result set for the current filter (across all backend pages)
+let allAssets = [];
+let _lastAssessed = '';        // full result set for the current filter (across all backend pages)
 let filteredAssets = [];   // allAssets after client-side search/geom/mda filtering
 let selectedAssetIds = new Set();
 
@@ -50,52 +51,17 @@ async function fetchAllAssets(baseParams = {}) {
 async function renderAssets() {
   currentPage = 1;
   try {
-    const q = document.getElementById('search-input')?.value.trim() || '';
-    const type = document.getElementById('filter-type')?.value || '';
-    const cond = document.getElementById('filter-cond')?.value || '';
-    const geom = document.getElementById('filter-geom')?.value || '';
-    const mda  = document.getElementById('filter-mda')?.value   || '';
-    const params = {};
-    if (type) params.type      = type;
-    if (cond) params.condition = cond;
+    // Pass assessed as a backend filter — avoids fetching 2600+ assets when filtering
+    const assessed = document.getElementById('filter-assessed')?.value || '';
+    const params   = {};
+    if (assessed) params.assessed = assessed;
     allAssets = await fetchAllAssets(params);
     filteredAssets = [...allAssets];
-    if (q) filteredAssets = filteredAssets.filter(a =>
-      (a.name||'').toLowerCase().includes(q.toLowerCase()) ||
-      (a.assetId||'').toLowerCase().includes(q.toLowerCase()) ||
-      (a.state||'').toLowerCase().includes(q.toLowerCase())
-    );
-    if (geom) filteredAssets = filteredAssets.filter(a => (a.geomType||a.geom) === geom);
-    if (mda)  filteredAssets = filteredAssets.filter(a => a.mda === mda);
   } catch {
-    // Offline fallback
     allAssets = [...assets];
     filteredAssets = [...allAssets];
-    const q = document.getElementById('search-input')?.value.trim().toLowerCase() || '';
-    const type = document.getElementById('filter-type')?.value || '';
-    const cond = document.getElementById('filter-cond')?.value || '';
-    const geom = document.getElementById('filter-geom')?.value || '';
-    const mda  = document.getElementById('filter-mda')?.value   || '';
-    if (q) filteredAssets = filteredAssets.filter(a =>
-      (a.name||'').toLowerCase().includes(q) || (a.id||'').toLowerCase().includes(q) ||
-      (a.state||'').toLowerCase().includes(q)
-    );
-    if (type) filteredAssets = filteredAssets.filter(a => a.type === type);
-    if (cond) filteredAssets = filteredAssets.filter(a => a.condition === cond);
-    if (geom) filteredAssets = filteredAssets.filter(a => (a.geomType||a.geom) === geom);
-    if (mda)  filteredAssets = filteredAssets.filter(a => a.mda === mda);
   }
-
-  // ── PHOTOS FIRST ─────────────────────────────────────────────────────────
-  // Stable sort (guaranteed since ES2019) — orders by actual photo count
-  // descending, so assets with the most photos lead, down to zero-photo
-  // assets at the bottom, rather than hiding anything.
-  if (document.getElementById('filter-photos-first')?.checked) {
-    const photoCount = a => a.photos?.length || a.photoCount || 0;
-    filteredAssets.sort((a, b) => photoCount(b) - photoCount(a));
-  }
-
-  renderAssetsTable(filteredAssets);
+  applyFiltersAndRender();
 }
 
 function renderAssetsTable(list) {
@@ -207,7 +173,71 @@ function goToAssetsPage(p) {
   renderAssetsTable(filteredAssets);
 }
 
-function filterAssets() { renderAssets(); }
+function applyFiltersAndRender() {
+  currentPage = 1;
+  const q        = (document.getElementById('search-input')?.value || '').trim().toLowerCase();
+  const type     = document.getElementById('filter-type')?.value     || '';
+  const cond     = document.getElementById('filter-cond')?.value     || '';
+  const assessed = document.getElementById('filter-assessed')?.value || '';
+  const geom     = document.getElementById('filter-geom')?.value     || '';
+  const state    = document.getElementById('filter-state')?.value    || '';
+  const mda      = document.getElementById('filter-mda')?.value      || '';
+  const sort     = document.getElementById('filter-sort')?.value     || 'newest';
+  const photosFirst = document.getElementById('filter-photos-first')?.checked;
+
+  filteredAssets = allAssets.filter(a => {
+    if (q && !(
+      (a.name    ||'').toLowerCase().includes(q) ||
+      (a.assetId ||'').toLowerCase().includes(q) ||
+      (a.assetCode||'').toLowerCase().includes(q) ||
+      (a.mda     ||'').toLowerCase().includes(q) ||
+      (a.address ||'').toLowerCase().includes(q) ||
+      (a.state   ||'').toLowerCase().includes(q) ||
+      (a.notes   ||'').toLowerCase().includes(q)
+    )) return false;
+    if (type     && a.type                           !== type)     return false;
+    if (cond     && a.condition                      !== cond)     return false;
+    if (assessed && (a.assessed||'Unassessed')       !== assessed) return false;
+    if (geom     && (a.geomType||a.geom)             !== geom)     return false;
+    if (state    && (a.state||'').toLowerCase()      !== state.toLowerCase()) return false;
+    if (mda      && a.mda                            !== mda)      return false;
+    return true;
+  });
+
+  const COND_RANK = { Good:0, Fair:1, Poor:2, Critical:3, Unknown:4 };
+  const photoCount = a => a.photos?.length || a.photoCount || 0;
+  if (photosFirst) {
+    filteredAssets.sort((a, b) => photoCount(b) - photoCount(a));
+  } else {
+    filteredAssets.sort((a, b) => {
+      const ta = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+      const tb = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+      switch (sort) {
+        case 'oldest':      return ta - tb;
+        case 'newest':      return tb - ta;
+        case 'name_az':     return (a.name||'').localeCompare(b.name||'');
+        case 'name_za':     return (b.name||'').localeCompare(a.name||'');
+        case 'state_az':    return (a.state||'').localeCompare(b.state||'');
+        case 'cond_best':   return (COND_RANK[a.condition]??4) - (COND_RANK[b.condition]??4);
+        case 'cond_worst':  return (COND_RANK[b.condition]??4) - (COND_RANK[a.condition]??4);
+        case 'photos_most': return photoCount(b) - photoCount(a);
+        default:            return tb - ta;
+      }
+    });
+  }
+  renderAssetsTable(filteredAssets);
+}
+
+function filterAssets() {
+  // assessed changes need a backend re-fetch; other filters work client-side
+  const assessed = document.getElementById('filter-assessed')?.value || '';
+  if (assessed !== (_lastAssessed || '')) {
+    _lastAssessed = assessed;
+    renderAssets();
+  } else {
+    applyFiltersAndRender();
+  }
+}
 function clearFilters() {
   ['search-input','filter-type','filter-cond','filter-geom','filter-state','filter-mda'].forEach(id => {
     const el = document.getElementById(id);
