@@ -398,45 +398,6 @@ async function doImportMdaCsv() {
 .toggle.on{background:var(--accent);}
 .toggle::after{content:'';position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:#fff;transition:left .2s;box-shadow:0 1px 3px rgba(0,0,0,.2);}
 .toggle.on::after{left:21px;}
-@media (max-width: 900px) {
-  /* Sidebar slides in from left — safe area padding for notch/status bar */
-  #sidebar {
-    position: fixed;
-    top: 0; left: 0; bottom: 0;
-    transform: translateX(-100%);
-    z-index: 200;
-    padding-top: env(safe-area-inset-top, 0px);
-    padding-bottom: env(safe-area-inset-bottom, 0px);
-    overflow-y: auto;
-  }
-  #sidebar.open { transform: translateX(0); }
-  .menu-toggle-btn { display: flex; align-items: center; }
-  .stats-row { grid-template-columns: repeat(2,1fr); }
-  .dash-split-row {
-    display: flex; grid-template-columns: none;
-    overflow-x: auto; scroll-snap-type: x mandatory;
-    -webkit-overflow-scrolling: touch; gap: 16px; margin-bottom: 24px; padding-bottom: 4px;
-  }
-  .dash-split-row > .wcard { flex: 0 0 100%; min-width: 0; scroll-snap-align: center; }
-  .dash-split-row::-webkit-scrollbar { height: 0; }
-  .dash-charts-row { grid-template-columns: 1fr; }
-  /* Tables scroll horizontally on mobile */
-  .table-wrap, .data-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-  .data-table { min-width: 600px; }
-}
-@media (max-width: 600px) {
-  .stats-row { grid-template-columns: 1fr 1fr; }
-  /* Extra bottom padding so pagination is always reachable above nav/browser chrome */
-  #content {
-    padding: 16px;
-    padding-bottom: calc(80px + env(safe-area-inset-bottom, 16px));
-  }
-  .global-search-wrap { display: none; }
-  /* Header safe area at top */
-  #header {
-    padding-top: env(safe-area-inset-top, 0px);
-  }
-}
 </style>
 
 

@@ -406,16 +406,7 @@ table.rt tbody tr:hover { background: rgba(74,144,217,.04); }
 
 /* Responsive */
 @media (max-width: 900px) {
-  /* Sidebar slides in from left — safe area padding for notch/status bar */
-  #sidebar {
-    position: fixed;
-    top: 0; left: 0; bottom: 0;
-    transform: translateX(-100%);
-    z-index: 200;
-    padding-top: env(safe-area-inset-top, 0px);
-    padding-bottom: env(safe-area-inset-bottom, 0px);
-    overflow-y: auto;
-  }
+  #sidebar { position: fixed; top:0; left:0; bottom:0; transform: translateX(-100%); z-index: 200; }
   #sidebar.open { transform: translateX(0); }
   .menu-toggle-btn { display: flex; align-items: center; }
   .stats-row { grid-template-columns: repeat(2,1fr); }
@@ -427,22 +418,11 @@ table.rt tbody tr:hover { background: rgba(74,144,217,.04); }
   .dash-split-row > .wcard { flex: 0 0 100%; min-width: 0; scroll-snap-align: center; }
   .dash-split-row::-webkit-scrollbar { height: 0; }
   .dash-charts-row { grid-template-columns: 1fr; }
-  /* Tables scroll horizontally on mobile */
-  .table-wrap, .data-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-  .data-table { min-width: 600px; }
 }
 @media (max-width: 600px) {
   .stats-row { grid-template-columns: 1fr 1fr; }
-  /* Extra bottom padding so pagination is always reachable above nav/browser chrome */
-  #content {
-    padding: 16px;
-    padding-bottom: calc(80px + env(safe-area-inset-bottom, 16px));
-  }
+  #content { padding: 16px; }
   .global-search-wrap { display: none; }
-  /* Header safe area at top */
-  #header {
-    padding-top: env(safe-area-inset-top, 0px);
-  }
 }
 </style>
 </head>

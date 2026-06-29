@@ -287,21 +287,6 @@ table.data-table tbody tr:hover { background: var(--blue-bg); }
   #content { padding: 16px; }
   .filter-bar { gap: 8px; }
 }
-
-/* ── MOBILE LAYOUT FIXES ─────────────────────────────────────────────────── */
-@media (max-width: 900px) {
-  #sidebar {
-    padding-top: env(safe-area-inset-top, 0px);
-    padding-bottom: env(safe-area-inset-bottom, 0px);
-    overflow-y: auto;
-  }
-  .table-wrap, .data-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-  .data-table { min-width: 600px; }
-}
-@media (max-width: 600px) {
-  #content { padding-bottom: calc(80px + env(safe-area-inset-bottom, 16px)) !important; }
-  #header  { padding-top: env(safe-area-inset-top, 0px); }
-}
 </style>
 </head>
 <body>
