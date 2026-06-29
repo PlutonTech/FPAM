@@ -49,12 +49,34 @@ async function renderMap() {
   const typeFilter = document.getElementById('map-filter-type')?.value || '';
   const condFilter = document.getElementById('map-filter-cond')?.value || '';
 
-  // Load assets
-  let mapAssets = assets;
+  // Load ALL assets with pagination, keep only those with valid coordinates
+  let mapAssets = [];
   try {
-    const r = await apiGetAssets({ limit:1000 });
-    if (r.assets?.length) mapAssets = r.assets;
-  } catch {}
+    const PAGE = 200;
+    const first = await apiGetAssets({ limit: PAGE, page: 1 });
+    mapAssets = first.assets || [];
+    const totalPages = Math.min(Math.ceil((first.total || mapAssets.length) / PAGE), 50);
+    if (totalPages > 1) {
+      const rest = await Promise.all(
+        Array.from({ length: totalPages - 1 }, (_, i) =>
+          apiGetAssets({ limit: PAGE, page: i + 2 }).catch(() => ({ assets: [] }))
+        )
+      );
+      rest.forEach(r2 => { mapAssets = mapAssets.concat(r2.assets || []); });
+    }
+    mapAssets = mapAssets.filter(a => {
+      const lat = a.lat || a.location?.coordinates?.[1];
+      const lng = a.lng || a.location?.coordinates?.[0];
+      return lat && lng && !isNaN(lat) && !isNaN(lng) && lat !== 0 && lng !== 0;
+    });
+  } catch(e) {
+    console.warn('[Map] asset fetch failed:', e.message);
+    mapAssets = (assets||[]).filter(a => {
+      const lat = a.lat || a.location?.coordinates?.[1];
+      const lng = a.lng || a.location?.coordinates?.[0];
+      return lat && lng && !isNaN(lat) && !isNaN(lng) && lat !== 0 && lng !== 0;
+    });
+  }
 
   // Apply filters
   if (typeFilter) mapAssets = mapAssets.filter(a => a.type === typeFilter);

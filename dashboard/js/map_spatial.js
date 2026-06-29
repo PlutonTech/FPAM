@@ -47,10 +47,29 @@ function initSpatialTools() {
 
 async function _loadAllAssetsForSpatial() {
   try {
-    const r = await apiGetAssets({ limit: 5000 });
-    _mapAllAssets = r.assets || [];
+    const PAGE = 200;
+    const first = await apiGetAssets({ limit: PAGE, page: 1 });
+    let all = first.assets || [];
+    const totalPages = Math.min(Math.ceil((first.total || all.length) / PAGE), 50);
+    if (totalPages > 1) {
+      const rest = await Promise.all(
+        Array.from({ length: totalPages - 1 }, (_, i) =>
+          apiGetAssets({ limit: PAGE, page: i + 2 }).catch(() => ({ assets: [] }))
+        )
+      );
+      rest.forEach(r2 => { all = all.concat(r2.assets || []); });
+    }
+    _mapAllAssets = all.filter(a => {
+      const lat = a.lat || a.location?.coordinates?.[1];
+      const lng = a.lng || a.location?.coordinates?.[0];
+      return lat && lng && !isNaN(lat) && !isNaN(lng) && lat !== 0 && lng !== 0;
+    });
   } catch {
-    _mapAllAssets = assets || [];
+    _mapAllAssets = (assets||[]).filter(a => {
+      const lat = a.lat || a.location?.coordinates?.[1];
+      const lng = a.lng || a.location?.coordinates?.[0];
+      return lat && lng && !isNaN(lat) && !isNaN(lng) && lat !== 0 && lng !== 0;
+    });
   }
 }
 
