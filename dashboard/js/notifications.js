@@ -6,37 +6,58 @@ if (typeof window._AS_NOTIF_LOADED !== 'undefined') {
 window._AS_NOTIF_LOADED = true;
 
 
-const NOTIF_KEY = 'as_notifications';
-const NOTIF_READ_KEY = 'as_notif_read';
+// Per-user storage keys
+function _userId() {
+  try { const u = JSON.parse(localStorage.getItem('as_user') || '{}'); return u._id || u.id || 'guest'; } catch { return 'guest'; }
+}
+function _userRole() {
+  try { const u = JSON.parse(localStorage.getItem('as_user') || '{}'); return u.role || ''; } catch { return ''; }
+}
+function _notifKey()        { return 'as_notifications_'  + _userId(); }
+function _notifReadKey()    { return 'as_notif_read_'     + _userId(); }
+function _notifClearedKey() { return 'as_notif_cleared_'  + _userId(); }
+
+function _getClearedKeys() {
+  try { return new Set(JSON.parse(localStorage.getItem(_notifClearedKey())) || []); } catch { return new Set(); }
+}
+function _addClearedKeys(notifs) {
+  const cleared = _getClearedKeys();
+  notifs.forEach(n => cleared.add((n.type||'') + '|' + (n.assetId||'')));
+  localStorage.setItem(_notifClearedKey(), JSON.stringify([...cleared]));
+}
+function _wasManuallyClearedKey(type, assetId) {
+  return _getClearedKeys().has((type||'') + '|' + (assetId||''));
+}
 
 function _getNotifications() {
-  try { return JSON.parse(localStorage.getItem(NOTIF_KEY)) || []; } catch { return []; }
+  try { return JSON.parse(localStorage.getItem(_notifKey())) || []; } catch { return []; }
 }
 function _saveNotifications(list) {
-  localStorage.setItem(NOTIF_KEY, JSON.stringify(list.slice(0, 200))); // cap at 200
+  localStorage.setItem(_notifKey(), JSON.stringify(list.slice(0, 200)));
 }
 function _getReadIds() {
-  try { return new Set(JSON.parse(localStorage.getItem(NOTIF_READ_KEY)) || []); } catch { return new Set(); }
+  try { return new Set(JSON.parse(localStorage.getItem(_notifReadKey())) || []); } catch { return new Set(); }
 }
 function _markRead(id) {
   const ids = _getReadIds();
   ids.add(id);
-  localStorage.setItem(NOTIF_READ_KEY, JSON.stringify([...ids]));
+  localStorage.setItem(_notifReadKey(), JSON.stringify([...ids]));
 }
 function _markAllRead() {
   const notifs = _getNotifications();
-  const ids = notifs.map(n => n.id);
-  localStorage.setItem(NOTIF_READ_KEY, JSON.stringify(ids));
+  localStorage.setItem(_notifReadKey(), JSON.stringify(notifs.map(n => n.id)));
   updateNotifBadge();
 }
 
 function _newNotifId() { return 'N-' + Date.now() + '-' + Math.random().toString(36).slice(2,6); }
 
 function pushNotification({ type, title, body, assetId, icon, color }) {
+  // Never re-push something the user explicitly cleared
+  if (_wasManuallyClearedKey(type, assetId || '')) return;
   const notifs = _getNotifications();
   // Deduplicate: don't push same type+assetId within 24h
   const recent = Date.now() - 86400000;
-  if (assetId && notifs.some(n => n.type === type && n.assetId === assetId && n.ts > recent)) return;
+  if (notifs.some(n => n.type === type && n.assetId === (assetId||null) && n.ts > recent)) return;
 
   notifs.unshift({
     id:      _newNotifId(),
@@ -176,8 +197,10 @@ function renderNotifPanel(panel) {
 }
 
 function clearAllNotifications() {
+  // Record every current notification so scan won't re-push them
+  _addClearedKeys(_getNotifications());
   _saveNotifications([]);
-  localStorage.removeItem(NOTIF_READ_KEY);
+  localStorage.removeItem(_notifReadKey());
   updateNotifBadge();
   const panel = document.getElementById('notif-panel');
   if (panel) renderNotifPanel(panel);
@@ -192,7 +215,21 @@ function _timeAgo(ts) {
   return new Date(ts).toLocaleDateString('en-NG');
 }
 
-// ── AUTO-GENERATE ALERTS ──────────────────────────────────────────────────────
+// ── AUTO-GENERATE ALERTS (role-filtered) ─────────────────────────────────────
+const NOTIF_ROLE_FILTER = {
+  INSPECTION_OVERDUE:  ['System Admin','Supervisor','Sub-Head'],
+  INSPECTION_DUE:      ['System Admin','Supervisor','Sub-Head','GIS Analyst'],
+  CRITICAL_CONDITION:  ['System Admin','Supervisor','Sub-Head','GIS Analyst','Field Agent'],
+  MISSING_COORDS:      ['System Admin','GIS Analyst','Field Agent'],
+  PENDING_APPROVALS:   ['System Admin','Supervisor','Sub-Head'],
+};
+function _roleCanSee(type) {
+  const allowed = NOTIF_ROLE_FILTER[type];
+  if (!allowed) return true;
+  const role = _userRole();
+  return !role || allowed.includes(role);
+}
+
 async function runAlertScan() {
   let list = [];
   try {
@@ -207,7 +244,7 @@ async function runAlertScan() {
     const id = a.assetId || a.id;
 
     // Overdue inspections
-    if (a.nextInspection && new Date(a.nextInspection) < today) {
+    if (_roleCanSee('INSPECTION_OVERDUE') && a.nextInspection && new Date(a.nextInspection) < today) {
       const daysOver = Math.round((today - new Date(a.nextInspection)) / 86400000);
       pushNotification({
         type: 'INSPECTION_OVERDUE', assetId: id,
@@ -217,7 +254,7 @@ async function runAlertScan() {
       });
     }
     // Upcoming within 7 days
-    else if (a.nextInspection && new Date(a.nextInspection) <= soon) {
+    else if (_roleCanSee('INSPECTION_DUE') && a.nextInspection && new Date(a.nextInspection) <= soon) {
       pushNotification({
         type: 'INSPECTION_DUE', assetId: id,
         title: 'Inspection Due Soon',
@@ -227,7 +264,7 @@ async function runAlertScan() {
     }
 
     // Critical condition
-    if (a.condition === 'Critical') {
+    if (_roleCanSee('CRITICAL_CONDITION') && a.condition === 'Critical') {
       pushNotification({
         type: 'CRITICAL_CONDITION', assetId: id,
         title: 'Critical Asset',
@@ -237,7 +274,7 @@ async function runAlertScan() {
     }
 
     // No coordinates
-    if (!a.lat && !a.location?.coordinates?.[1]) {
+    if (_roleCanSee('MISSING_COORDS') && !a.lat && !a.location?.coordinates?.[1]) {
       pushNotification({
         type: 'MISSING_COORDS', assetId: id,
         title: 'Missing GPS Coordinates',
@@ -246,6 +283,21 @@ async function runAlertScan() {
       });
     }
   });
+
+  // Pending approvals — only for approvers
+  if (_roleCanSee('PENDING_APPROVALS')) {
+    try {
+      const s = await apiApprovalsSummary();
+      if (s.pending > 0) {
+        pushNotification({
+          type: 'PENDING_APPROVALS', assetId: null,
+          title: 'Pending Approvals',
+          body: s.pending + ' asset capture' + (s.pending !== 1 ? 's' : '') + ' awaiting your review',
+          icon: 'fa-stamp', color: '#f0a500',
+        });
+      }
+    } catch {}
+  }
 
   updateNotifBadge();
 }

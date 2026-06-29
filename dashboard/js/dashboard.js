@@ -89,24 +89,24 @@ async function renderDashboard() {
     if (ub) ub.textContent = ur.total || '';
   } catch {}
 
-  // ── Pending approvals — silently hides for roles without canApproveAssets,
-  // since the backend route itself 403s and the catch just leaves the panel
-  // hidden (its default display:none).
-  try {
-    const s = await apiApprovalsSummary();
-    const panel = document.getElementById('approval-alerts-panel');
-    const countEl = document.getElementById('approval-alert-count');
-    if (panel) {
-      if (s.pending > 0) {
-        panel.style.display = 'block';
+  // ── Pending approvals — only shown to roles with canApprove permission ───────
+  const _approvalPerms = (window.ROLE_PERMS || {})[
+    (() => { try { return JSON.parse(localStorage.getItem('as_user')||'{}').role || ''; } catch { return ''; } })()
+  ] || {};
+  const _canApprove = _approvalPerms.canApprove === true;
+
+  const _approvalPanel = document.getElementById('approval-alerts-panel');
+  if (_approvalPanel) _approvalPanel.style.display = 'none'; // hidden by default
+
+  if (_canApprove) {
+    try {
+      const s = await apiApprovalsSummary();
+      const countEl = document.getElementById('approval-alert-count');
+      if (_approvalPanel && s.pending > 0) {
+        _approvalPanel.style.display = 'block';
         if (countEl) countEl.textContent = s.pending;
-      } else {
-        panel.style.display = 'none';
       }
-    }
-  } catch {
-    const panel = document.getElementById('approval-alerts-panel');
-    if (panel) panel.style.display = 'none';
+    } catch {} // silently ignore — panel stays hidden
   }
 
   // ── Activity feed — fetch from audit API, fall back to local ───────────────

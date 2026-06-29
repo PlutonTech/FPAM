@@ -53,6 +53,24 @@ async function apiDeleteAsset(id) {
   return apiFetch(`/assets/${id}`, { method: 'DELETE' });
 }
 
+// ── Inspections ───────────────────────────────────────────────────────────────
+async function apiGetInspections(params = {}) {
+  const qs = new URLSearchParams(params).toString();
+  return apiFetch(`/inspections${qs ? '?' + qs : ''}`);
+}
+async function apiCreateInspection(data) {
+  return apiFetch('/inspections', { method: 'POST', body: data });
+}
+async function apiSubmitInspectionReport(id, data) {
+  return apiFetch(`/inspections/${id}/submit`, { method: 'POST', body: data });
+}
+async function apiApproveInspection(id) {
+  return apiFetch(`/inspections/${id}/approve`, { method: 'POST' });
+}
+async function apiRejectInspection(id, reason) {
+  return apiFetch(`/inspections/${id}/reject`, { method: 'POST', body: { reason } });
+}
+
 // ── Approvals ─────────────────────────────────────────────────────────────────
 async function apiGetPendingApprovals(params = {}) {
   const qs = new URLSearchParams(params).toString();

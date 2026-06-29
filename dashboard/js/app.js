@@ -160,6 +160,7 @@ const ROLE_DEFAULTS = {
   'GIS Analyst':   { canCreate:false, canEdit:false, canDelete:false, canExport:true,  canViewAll:true,  canManageUsers:false, canViewAudit:true,  canManageSettings:false, canApprove:false },
   'Field Agent':   { canCreate:false, canEdit:false, canDelete:false, canExport:false, canViewAll:false, canManageUsers:false, canViewAudit:false, canManageSettings:false, canApprove:false },
 };
+window.ROLE_PERMS = ROLE_DEFAULTS; // expose for dashboard.js and notifications.js
 
 function getUserPerms() {
   const u = getCurrentUser();

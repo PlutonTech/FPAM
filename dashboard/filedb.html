@@ -265,30 +265,23 @@ async function loadFileDB() {
   const typeFilter  = document.getElementById('f-type')?.value;
 
   try {
-    const r = await apiGetAssets({ limit: 200 });
-    const assetList = r.assets || assets;
+    // Single aggregated call — returns all files across all assets
     allFiles = [];
-
-    // Fetch files for all assets in parallel (batched to avoid overwhelming the server)
-    const batch = assetList.slice(0, 100);
-    await Promise.all(batch.map(async a => {
-      const id = a.assetId || a.id;
-      try {
-        const [photos, docs, excels] = await Promise.all([
-          apiFetch(`/assets/${id}/photos`).catch(() => ({})),
-          apiFetch(`/assets/${id}/documents`).catch(() => ({})),
-          apiFetch(`/assets/${id}/excel`).catch(() => ({})),
-        ]);
-        const push = (arr, rawCat) => (arr || []).forEach(f => {
-          const cat = detectCategory({ ...f, _fileType: rawCat });
-          allFiles.push({ ...f, _assetId: id, _assetName: a.name, _fileType: rawCat, _category: cat });
-        });
-        push(photos.files || photos.photos || [], 'photo');
-        push(docs.files   || docs.documents || [], 'document');
-        push(excels.files || excels.excel   || [], 'excel');
-      } catch {}
-    }));
-  } catch {
+    let page = 1;
+    const LIMIT = 500;
+    while (true) {
+      const r = await apiFetch(`/assets/files?limit=${LIMIT}&page=${page}`);
+      const batch = r.files || [];
+      batch.forEach(f => {
+        const cat = detectCategory({ ...f, _fileType: f._fileType });
+        allFiles.push({ ...f, _category: cat });
+      });
+      if (batch.length < LIMIT) break; // last page
+      page++;
+      if (page > 20) break; // safety cap
+    }
+  } catch(e) {
+    console.error('[FileDB] load error:', e);
     try { allFiles = JSON.parse(localStorage.getItem('asdm_filedb')||'[]'); } catch { allFiles=[]; }
   }
 

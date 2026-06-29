@@ -225,6 +225,60 @@ function handleExcelFiles(files) {
   });
 }
 
+// ── FORM VALIDATION ───────────────────────────────────────────────────────────
+function clearFieldErrors() {
+  document.querySelectorAll('.form-control.field-error').forEach(el => {
+    el.classList.remove('field-error');
+  });
+  document.querySelectorAll('.field-error-msg').forEach(el => el.remove());
+}
+
+function markFieldError(id, msg) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.classList.add('field-error');
+  // Remove existing error msg if any
+  el.parentElement.querySelectorAll('.field-error-msg').forEach(e => e.remove());
+  const errEl = document.createElement('div');
+  errEl.className = 'field-error-msg';
+  errEl.innerHTML = `<i class="fa-solid fa-circle-exclamation"></i> ${msg}`;
+  el.insertAdjacentElement('afterend', errEl);
+  el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+function validateCaptureForm(name, type, lat, lng, mda) {
+  clearFieldErrors();
+  let valid = true;
+
+  if (!name) {
+    markFieldError('cap-name', 'Asset name is required');
+    valid = false;
+  }
+  if (!type) {
+    markFieldError('cap-type', 'Please select an asset type');
+    valid = false;
+  }
+  if (!mda) {
+    markFieldError('cap-mda', 'Please select the MDA / Agency');
+    valid = false;
+  }
+  if (isNaN(lat) || isNaN(lng)) {
+    // GPS is a hidden field — mark the GPS button area instead
+    const gpsBtn = document.getElementById('gps-btn');
+    if (gpsBtn) {
+      gpsBtn.style.boxShadow = '0 0 0 3px rgba(220,53,69,.35)';
+      gpsBtn.style.borderColor = 'var(--danger)';
+      const hint = gpsBtn.closest('.form-group')?.querySelector('.form-hint');
+      if (hint) {
+        hint.style.color = 'var(--danger)';
+        hint.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> GPS coordinates required — tap Capture GPS first';
+      }
+    }
+    valid = false;
+  }
+  return valid;
+}
+
 async function submitCapture() {
   const name     = document.getElementById('cap-name')?.value.trim();
   const type     = document.getElementById('cap-type')?.value;
@@ -233,9 +287,8 @@ async function submitCapture() {
   const cond     = document.getElementById('cap-cond')?.value || 'Good';
   const geomType = document.getElementById('cap-geom')?.value || 'Point';
 
-  if (!name) { toast('Asset name is required', 'fa-triangle-exclamation', true); document.getElementById('cap-name')?.focus(); return; }
-  if (!type) { toast('Asset type is required', 'fa-triangle-exclamation', true); document.getElementById('cap-type')?.focus(); return; }
-  if (isNaN(lat) || isNaN(lng)) { toast('Please capture GPS coordinates first', 'fa-satellite-dish', true); return; }
+  const mda = document.getElementById('cap-mda')?.value || '';
+  if (!validateCaptureForm(name, type, lat, lng, mda)) return;
 
   const typeData = getTypeSpecificValues();
   const payload = {
@@ -278,22 +331,39 @@ async function submitCapture() {
 
     // Upload pending photos
     if (_pendingPhotoFiles.length && savedId) {
+      let photoFails = 0;
       for (const f of _pendingPhotoFiles) {
-        try { await apiUploadPhoto(savedId, f); } catch {}
+        try {
+          await apiUploadPhoto(savedId, f);
+        } catch (e) {
+          photoFails++;
+          console.error('[capture] photo upload failed:', e.message, f.name);
+        }
       }
+      if (photoFails) toast(`${photoFails} photo(s) failed to upload — open the asset to retry`, 'fa-triangle-exclamation', true);
     }
 
     // Upload pending supporting documents (PDF / Word)
     if (_pendingDocFiles.length && savedId) {
       for (const f of _pendingDocFiles) {
-        try { await apiUploadDocument(savedId, f); } catch {}
+        try {
+          await apiUploadDocument(savedId, f);
+        } catch (e) {
+          console.error('[capture] doc upload failed:', e.message, f.name);
+          toast(`Document "${f.name}" failed to upload`, 'fa-triangle-exclamation', true);
+        }
       }
     }
 
     // Upload pending spreadsheets (Excel / CSV)
     if (_pendingExcelFiles.length && savedId) {
       for (const f of _pendingExcelFiles) {
-        try { await apiUploadExcel(savedId, f); } catch {}
+        try {
+          await apiUploadExcel(savedId, f);
+        } catch (e) {
+          console.error('[capture] excel upload failed:', e.message, f.name);
+          toast(`Spreadsheet "${f.name}" failed to upload`, 'fa-triangle-exclamation', true);
+        }
       }
     }
 
@@ -303,14 +373,23 @@ async function submitCapture() {
     // save (the catch branch below) would land on an error page instead.
     window.location.href = `asset-view.html?id=${encodeURIComponent(savedId)}`;
     return;
-  } catch {
-    assetCounter++;
-    const a = { id:'AST-'+assetCounter, assetId:'AST-'+assetCounter, name, type, geomType, lat, lng, condition:cond, typeData, ts:Date.now(), ...payload };
-    assets.unshift(a);
-    saveLocal();
-    addAudit('ASSET_CREATED', a.id, null, name+' saved locally');
-    toast('Asset saved locally — will sync when online');
-    savedId = a.id;
+  } catch (err) {
+    console.error('[capture] asset creation failed:', err);
+    const msg = err.message || 'Unknown error';
+    toast(`Save failed: ${msg}`, 'fa-triangle-exclamation', true);
+    if (btn) { btn.disabled=false; btn.innerHTML='<i class="fa-solid fa-floppy-disk"></i> Submit Capture'; }
+    // Only fall back to local save if it was a network error (offline)
+    if (msg === 'Failed to fetch' || !navigator.onLine) {
+      assetCounter++;
+      const a = { id:'AST-'+assetCounter, assetId:'AST-'+assetCounter, name, type, geomType, lat, lng, condition:cond, typeData, ts:Date.now(), ...payload };
+      assets.unshift(a);
+      saveLocal();
+      addAudit('ASSET_CREATED', a.id, null, name+' saved locally (offline)');
+      toast('Saved locally — will sync when back online', 'fa-wifi', false);
+      savedId = a.id;
+    } else {
+      return; // Don't redirect or clear form on server errors
+    }
   }
 
   clearForm();
@@ -322,6 +401,12 @@ async function submitCapture() {
 const captureAsset = submitCapture;
 
 function clearForm() {
+  clearFieldErrors();
+  // Reset GPS button styles
+  const gpsBtn = document.getElementById('gps-btn');
+  if (gpsBtn) { gpsBtn.style.boxShadow=''; gpsBtn.style.borderColor=''; }
+  const hint = gpsBtn?.closest('.form-group')?.querySelector('.form-hint');
+  if (hint) { hint.style.color=''; hint.innerHTML='Captures real GPS from your device'; }
   ['cap-name','cap-material','cap-state','cap-lga','cap-address','cap-notes','cap-lat','cap-lng'].forEach(id=>{
     const el=document.getElementById(id); if(el) el.value='';
   });

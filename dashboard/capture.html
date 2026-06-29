@@ -102,6 +102,8 @@ body { font-family: var(--font); background: var(--bg); color: var(--text);
   text-transform: uppercase; letter-spacing: .5px; display: flex; align-items: center; gap: 5px;
 }
 .form-label .req { color: var(--danger); font-size: 13px; line-height: 1; }
+.form-control.field-error { border-color: var(--danger) !important; background: rgba(220,53,69,.06) !important; box-shadow: 0 0 0 3px rgba(220,53,69,.15) !important; }
+.field-error-msg { color: var(--danger); font-size: 11px; margin-top: 4px; display: flex; align-items: center; gap: 4px; }
 .form-control {
   background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
   padding: 9px 13px; font-family: var(--font); font-size: 13px; color: var(--text);
@@ -337,12 +339,9 @@ textarea.form-control { resize: vertical; }
 
           <div class="form-group">
             <label class="form-label">Asset Name <span class="req">*</span></label>
-            <input class="form-control" id="cap-name" placeholder="e.g. Federal Secretariat Complex, Abuja">
+            <input class="form-control" id="cap-name" placeholder="e.g. Federal Secretariat Complex, Abuja" oninput="this.classList.remove('field-error');this.nextElementSibling?.classList.contains('field-error-msg')&&this.nextElementSibling.remove()">
           </div>
-          <div class="form-group">
-            <label class="form-label">Asset ID</label>
-            <input class="form-control" id="cap-id" placeholder="Auto-generated" readonly>
-          </div>
+
 
           <!-- ASSET CODE PREVIEW -->
           <div class="form-group full">
@@ -368,7 +367,7 @@ textarea.form-control { resize: vertical; }
 
           <div class="form-group">
             <label class="form-label">Asset Type <span class="req">*</span></label>
-            <select class="form-control" id="cap-type" onchange="renderTypeFields()">
+            <select class="form-control" id="cap-type" onchange="renderTypeFields();this.classList.remove('field-error');this.nextElementSibling?.classList.contains('field-error-msg')&&this.nextElementSibling.remove()">
               <option value="">Select type…</option>
               <option>Infrastructure</option>
               <option>Land / Property</option>
@@ -414,7 +413,7 @@ textarea.form-control { resize: vertical; }
 
           <div class="form-group">
             <label class="form-label">MDA / Agency <span class="req">*</span></label>
-            <select class="form-control" id="cap-mda">
+            <select class="form-control" id="cap-mda" onchange="this.classList.remove('field-error');this.nextElementSibling?.classList.contains('field-error-msg')&&this.nextElementSibling.remove()">
               <option value="">Select MDA…</option>
             </select>
           </div>

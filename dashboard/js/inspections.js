@@ -214,6 +214,7 @@ function renderInspectionsTable(filter = '') {
   }
 
   tbody.innerHTML = list.map(insp => {
+    const isVirtual = insp._virtual;
     const color = INSP_STATUS_COLOR[insp.status] || '#5A6A7A';
     const today = new Date().toISOString().slice(0,10);
     const overdue = insp.scheduledDate < today && !['Submitted','Approved','Rejected'].includes(insp.status);
@@ -386,7 +387,7 @@ const _origSchedule = scheduleInspection;
 window.scheduleInspection = async function(assetId, assetName) {
   // Try backend
   try {
-    if (typeof apiCreateInspection === 'function' && window.AS_BACKEND?.inspections) {
+    if (typeof apiCreateInspection === 'function') {
       const date   = document.getElementById('insp-date')?.value;
       const type   = document.getElementById('insp-type')?.value;
       const agent  = document.getElementById('insp-agent')?.value.trim();
@@ -413,7 +414,7 @@ window.submitInspectionReport = async function(inspId) {
   const reco      = document.getElementById('sub-reco')?.value.trim();
   if (!condition || !findings) { if(typeof toast==='function') toast('Condition and findings required','fa-triangle-exclamation',true); return; }
   try {
-    if (typeof apiSubmitInspectionReport === 'function' && window.AS_BACKEND?.inspections) {
+    if (typeof apiSubmitInspectionReport === 'function') {
       await apiSubmitInspectionReport(inspId, { condition, date, findings, recommendations: reco });
       if(typeof toast==='function') toast('Report submitted for review','fa-paper-plane');
       _inspModalClose();
@@ -427,7 +428,7 @@ window.submitInspectionReport = async function(inspId) {
 const _origApprove = approveInspection;
 window.approveInspection = async function(inspId) {
   try {
-    if (typeof apiApproveInspection === 'function' && window.AS_BACKEND?.inspections) {
+    if (typeof apiApproveInspection === 'function') {
       await apiApproveInspection(inspId);
       if(typeof toast==='function') toast('Inspection approved — asset condition updated','fa-circle-check');
       renderInspectionsTable();
@@ -440,7 +441,7 @@ window.approveInspection = async function(inspId) {
 const _origReject = rejectInspection;
 window.rejectInspection = async function(inspId, reason) {
   try {
-    if (typeof apiRejectInspection === 'function' && window.AS_BACKEND?.inspections) {
+    if (typeof apiRejectInspection === 'function') {
       await apiRejectInspection(inspId, reason);
       if(typeof toast==='function') toast('Inspection rejected','fa-circle-xmark',true);
       renderInspectionsTable();
@@ -450,22 +451,112 @@ window.rejectInspection = async function(inspId, reason) {
   _origReject(inspId, reason);
 };
 
-// Override renderInspectionsTable to try backend first
+// Override renderInspectionsTable — merge real inspection records with
+// asset-derived overdue/upcoming entries from nextInspection field
 const _origRenderTable = renderInspectionsTable;
 window.renderInspectionsTable = async function(filter) {
   try {
-    if (typeof apiGetInspections === 'function' && window.AS_BACKEND?.inspections) {
-      const params = filter ? { status: filter } : {};
-      const r = await apiGetInspections(params);
-      const list = r.inspections || [];
-      if (list.length || filter) {
-        _renderInspTableFromData(list);
-        return;
+    // Fetch real inspection records + ALL assets (paginated)
+    const params = filter ? { status: filter } : {};
+
+    const inspRes = await apiGetInspections(params).catch(() => ({ inspections: [] }));
+    const realInspections = inspRes.inspections || [];
+
+    // Paginate through all assets to find ones with nextInspection
+    let allAssets = [];
+    try {
+      const PAGE = 200;
+      const first = await apiGetAssets({ limit: PAGE, page: 1 });
+      allAssets = first.assets || [];
+      const totalPages = Math.ceil((first.total || allAssets.length) / PAGE);
+      if (totalPages > 1) {
+        const rest = await Promise.all(
+          Array.from({ length: totalPages - 1 }, (_, i) =>
+            apiGetAssets({ limit: PAGE, page: i + 2 }).catch(() => ({ assets: [] }))
+          )
+        );
+        rest.forEach(r => { allAssets = allAssets.concat(r.assets || []); });
       }
+    } catch(e) {
+      console.warn('[Inspections] asset fetch failed:', e.message);
     }
-  } catch {}
+
+    const coveredAssetIds = new Set(realInspections.map(i => i.assetId));
+    const today = new Date().toISOString().slice(0, 10);
+    const soon  = new Date(Date.now() + 30 * 86400000).toISOString().slice(0, 10);
+
+    let virtualInspections = [];
+    {
+      const assets = allAssets;
+      assets.forEach(a => {
+        const aid  = a.assetId || a._id;
+        const date = a.nextInspection ? a.nextInspection.slice(0, 10) : null;
+        if (!date) return;
+        if (coveredAssetIds.has(aid)) return; // already has a real record
+        if (date > soon) return; // too far in future
+
+        const overdue = date < today;
+        const status  = overdue ? 'Overdue' : 'Scheduled';
+
+        // Apply status filter
+        if (filter && filter !== status) return;
+
+        virtualInspections.push({
+          _id:           'virtual-' + aid,
+          inspectionId:  'INSP-AUTO-' + aid,
+          assetId:       aid,
+          assetName:     a.name || aid,
+          type:          'Routine',
+          scheduledDate: date,
+          assignedTo:    null,
+          status,
+          _virtual:      true, // flag so we can style differently
+        });
+      });
+    }
+
+    const combined = [...realInspections, ...virtualInspections];
+
+    // Apply filter to combined list
+    const filtered = filter
+      ? combined.filter(i => i.status === filter)
+      : combined;
+
+    _renderInspTableFromData(filtered);
+    _renderInspKpisFromData(combined);
+    return;
+  } catch(e) {
+    console.warn('[Inspections] backend failed, using localStorage:', e.message);
+  }
   _origRenderTable(filter || '');
 };
+
+// KPI builder that works from combined data
+function _renderInspKpisFromData(list) {
+  const today = new Date().toISOString().slice(0, 10);
+  const in7d  = new Date(Date.now() + 7 * 86400000).toISOString().slice(0, 10);
+  const stats = [
+    { label:'Total',        val: list.length,
+      icon:'fa-clipboard-list', color:'var(--accent)' },
+    { label:'Overdue',      val: list.filter(i => (i.scheduledDate||'') < today && !['Submitted','Approved','Rejected'].includes(i.status)).length,
+      icon:'fa-circle-exclamation', color:'var(--danger)' },
+    { label:'Pending Review', val: list.filter(i => i.status === 'Submitted').length,
+      icon:'fa-paper-plane', color:'#9b59b6' },
+    { label:'Approved',     val: list.filter(i => i.status === 'Approved').length,
+      icon:'fa-circle-check', color:'var(--accent2,#2ecc71)' },
+    { label:'Upcoming 7d',  val: list.filter(i => (i.scheduledDate||'') >= today && (i.scheduledDate||'') <= in7d && !['Approved','Rejected'].includes(i.status)).length,
+      icon:'fa-calendar-days', color:'var(--info,#4A90D9)' },
+  ];
+  const row = document.getElementById('insp-kpi-row');
+  if (!row) return;
+  row.innerHTML = stats.map(s => `
+    <div class="stat-card">
+      <div class="stat-card-accent" style="background:${s.color}"></div>
+      <div class="stat-icon" style="background:${s.color}22"><i class="fa-solid ${s.icon}" style="color:${s.color}"></i></div>
+      <div class="stat-label">${s.label}</div>
+      <div class="stat-value" style="color:${s.color}">${s.val}</div>
+    </div>`).join('');
+}
 
 function _renderInspTableFromData(list) {
   const tbody = document.getElementById('inspections-table');
@@ -478,6 +569,7 @@ function _renderInspTableFromData(list) {
   }
   const today = new Date().toISOString().slice(0,10);
   tbody.innerHTML = list.map(insp => {
+    const isVirtual = insp._virtual;
     const color   = INSP_STATUS_COLOR[insp.status] || '#5A6A7A';
     const id      = insp.inspectionId || insp._id;
     const overdue = insp.scheduledDate?.slice(0,10) < today && !['Submitted','Approved','Rejected'].includes(insp.status);
