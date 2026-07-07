@@ -483,13 +483,26 @@ async function _renderMaintenanceTab(assetId, a) {
         <thead><tr><th>Date</th><th>Description</th><th>Technician</th><th>Cost (₦)</th><th></th></tr></thead>
         <tbody id="maint-tbody-${assetId}">
           ${logs.length
-            ? logs.map((l, i) => `<tr>
-                <td style="font-family:'Space Mono',monospace;font-size:10px">${escHtml(l.date||l.performedAt?.slice(0,10)||'—')}</td>
-                <td>${escHtml(l.desc||l.description||'—')}</td>
-                <td>${escHtml(l.tech||l.technician||'—')}</td>
-                <td style="font-family:'Space Mono',monospace;font-size:11px;color:var(--accent)">₦${Number(l.cost||l.amount||0).toLocaleString()}</td>
-                <td><button class="btn btn-danger btn-xs" onclick="deleteMaintenanceEntry('${assetId}',${i})"><i class="fa-solid fa-trash"></i></button></td>
-              </tr>`).join('')
+            ? logs.map((l, i) => {
+                const desc  = l.desc || l.description || '';
+                const isME  = !!(l.meReportId || l.meReportLink || desc.startsWith('M&E Clearance'));
+                const link  = l.meReportLink || (isME ? `me.html?asset=${encodeURIComponent(assetId)}` : null);
+                const rawDate = l.date || l.performedAt;
+                const dateStr = rawDate
+                  ? (typeof rawDate === 'string' ? rawDate.slice(0,10) : new Date(rawDate).toISOString().slice(0,10))
+                  : '—';
+                return `<tr style="${isME ? 'background:rgba(45,184,123,.04)' : ''}">
+                  <td style="font-family:'Space Mono',monospace;font-size:10px">${escHtml(dateStr)}</td>
+                  <td>
+                    ${isME ? '<i class="fa-solid fa-certificate" style="color:var(--success);margin-right:5px;font-size:11px"></i>' : ''}
+                    ${escHtml(desc)}
+                    ${link ? `<a href="${link}" style="margin-left:8px;font-size:10px;color:var(--blue);text-decoration:none" title="View M&E Report"><i class="fa-solid fa-arrow-up-right-from-square"></i> View Report</a>` : ''}
+                  </td>
+                  <td>${escHtml(l.tech||l.technician||'—')}</td>
+                  <td style="font-family:'Space Mono',monospace;font-size:11px;color:var(--accent)">₦${Number(l.cost||l.amount||0).toLocaleString()}</td>
+                  <td>${isME ? '' : `<button class="btn btn-danger btn-xs" onclick="deleteMaintenanceEntry('${assetId}',${i})"><i class="fa-solid fa-trash"></i></button>`}</td>
+                </tr>`;
+              }).join('')
             : '<tr><td colspan="5" style="text-align:center;padding:20px;color:var(--text3)">No maintenance records yet</td></tr>'
           }
         </tbody>

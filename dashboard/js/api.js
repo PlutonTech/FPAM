@@ -241,6 +241,27 @@ async function apiUpdateSettings(data) {
   return apiFetch('/settings', { method: 'PUT', body: data });
 }
 
+// ── M&E Reports ───────────────────────────────────────────────────────────────
+async function apiGetAllMeReports() {
+  return apiFetch('/assets/me-reports/all');
+}
+
+async function apiGetMeReports(assetId) {
+  return apiFetch(`/assets/${encodeURIComponent(assetId)}/me-reports`);
+}
+
+async function apiCreateMeReport(assetId, data) {
+  return apiFetch(`/assets/${encodeURIComponent(assetId)}/me-reports`, { method: 'POST', body: data });
+}
+
+async function apiUpdateMeReport(assetId, reportId, data) {
+  return apiFetch(`/assets/${encodeURIComponent(assetId)}/me-reports/${reportId}`, { method: 'PATCH', body: data });
+}
+
+async function apiDeleteMeReport(assetId, reportId) {
+  return apiFetch(`/assets/${encodeURIComponent(assetId)}/me-reports/${reportId}`, { method: 'DELETE' });
+}
+
 // ── MDAs ─────────────────────────────────────────────────────────────────────
 async function apiGetMdas(params = {}) {
   const qs = new URLSearchParams(params).toString();

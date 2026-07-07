@@ -1,5 +1,22 @@
 // ── USER MANAGEMENT ───────────────────────────────────────────────────────────
 
+const DIVISIONS = [
+  'Assets & Condition',
+  'Monitoring & Evaluation',
+  'Planning & Design',
+  'Rehabilitation & Restoration',
+  'Building Training & Maintenance',
+];
+
+const DIVISION_ICONS = {
+  'Assets & Condition':               'fa-database',
+  'Monitoring & Evaluation':          'fa-chart-line',
+  'Planning & Design':                'fa-drafting-compass',
+  'Rehabilitation & Restoration':     'fa-helmet-safety',
+  'Building Training & Maintenance':  'fa-chalkboard-user',
+  'All':                              'fa-globe',
+};
+
 // Role → avatar background colour (used when backend doesn't supply u.color)
 function roleColor(role) {
   const map = {
@@ -12,19 +29,22 @@ function roleColor(role) {
 }
 
 async function loadUsers() {
-  const roleFilter = document.getElementById('filter-role')?.value || '';
+  const roleFilter     = document.getElementById('filter-role')?.value || '';
+  const divisionFilter = document.getElementById('filter-division')?.value || '';
   let list = users;
 
   try {
     const params = {};
-    if (roleFilter) params.role = roleFilter;
+    if (roleFilter)     params.role     = roleFilter;
+    if (divisionFilter) params.division = divisionFilter;
     const r = await apiGetUsers(params);
     list = r.users || list;
     // Update badge
     const badge = document.getElementById('nb-users');
     if (badge) badge.textContent = r.total || list.length;
   } catch {
-    if (roleFilter) list = list.filter(u => u.role === roleFilter);
+    if (roleFilter)     list = list.filter(u => u.role === roleFilter);
+    if (divisionFilter) list = list.filter(u => (u.division || 'Assets & Condition') === divisionFilter);
   }
 
   renderUsersGrid(list);
@@ -48,12 +68,17 @@ function renderUsersGrid(list) {
     const assetCount  = u.assets ?? u.stats?.assetsCreated ?? 0;
     const actionCount = auditLog.filter(l=>(l.user||l.performedBy?.name||l.performedBy)===u.name).length;
     const isActive = u.isActive !== false;
+    const division = u.division || 'Assets & Condition';
+    const divIcon  = DIVISION_ICONS[division] || 'fa-circle';
     return `<div class="user-tile">
       <div class="user-tile-top">
         <div class="user-avatar-lg" style="background:${color}">${initials}</div>
         <div style="flex:1;min-width:0">
           <div class="user-tile-name">${escHtml(u.name)}</div>
           <div class="user-tile-role" style="font-size:10px;color:var(--text3);font-family:'Space Mono',monospace;text-transform:uppercase;margin-top:2px">${escHtml(u.role)}</div>
+          <div style="font-size:10px;color:var(--blue,#4A90D9);margin-top:3px;display:flex;align-items:center;gap:4px">
+            <i class="fa-solid ${divIcon}" style="font-size:9px"></i>${escHtml(division)}
+          </div>
         </div>
         <span class="tag ${isActive?'tag-green':'tag-red'}" style="font-size:8px">${isActive?'ACTIVE':'INACTIVE'}</span>
       </div>
@@ -85,6 +110,15 @@ function renderUsersGrid(list) {
   }).join('');
 }
 
+// Show/hide division selector based on role
+function toggleDivisionField(selectId, role) {
+  const wrap = document.getElementById(selectId + '-wrap');
+  if (!wrap) return;
+  const crossDiv = ['Supervisor', 'System Admin'].includes(role);
+  wrap.style.opacity = crossDiv ? '0.5' : '1';
+  wrap.style.pointerEvents = crossDiv ? 'none' : '';
+}
+
 function openCreateUser() {
   openModal('Add New User',
     `<div class="form-grid">
@@ -97,9 +131,16 @@ function openCreateUser() {
       </div>
       <div class="form-group">
         <label class="form-label">Role *</label>
-        <select class="form-control" id="nu-role">
+        <select class="form-control" id="nu-role" onchange="toggleDivisionField('nu-division', this.value)">
           <option>Field Agent</option><option>Supervisor</option><option>GIS Analyst</option><option>System Admin</option>
         </select>
+      </div>
+      <div class="form-group" id="nu-division-wrap">
+        <label class="form-label">Division *</label>
+        <select class="form-control" id="nu-division">
+          ${DIVISIONS.map(d=>`<option>${d}</option>`).join('')}
+        </select>
+        <div style="font-size:11px;color:var(--text3);margin-top:4px">Supervisors & Admins have access to all divisions</div>
       </div>
       <div class="form-group full">
         <label class="form-label">Email Address *</label>
@@ -145,6 +186,9 @@ async function doCreateUser() {
 
   const data = {
     name, email, password: pass, role,
+    division: (['Supervisor','System Admin'].includes(role))
+      ? 'All'
+      : (document.getElementById('nu-division')?.value || 'Assets & Condition'),
     zone:   document.getElementById('nu-zone')?.value,
     states: (document.getElementById('nu-states')?.value||'').split(',').map(s=>s.trim()).filter(Boolean),
   };
@@ -166,12 +210,19 @@ async function doCreateUser() {
 const addUser = doCreateUser;
 
 function openEditUser(u) {
+  const crossDiv = ['Supervisor','System Admin'].includes(u.role);
   openModal('Edit User',
     `<div class="form-grid">
       <div class="form-group full"><label class="form-label">Name</label><input class="form-control" id="eu-name" value="${escHtml(u.name)}"></div>
       <div class="form-group"><label class="form-label">Role</label>
-        <select class="form-control" id="eu-role">
+        <select class="form-control" id="eu-role" onchange="toggleDivisionField('eu-division', this.value)">
           ${['Field Agent','Supervisor','GIS Analyst','System Admin'].map(r=>`<option ${u.role===r?'selected':''}>${r}</option>`).join('')}
+        </select>
+      </div>
+      <div class="form-group" id="eu-division-wrap" ${crossDiv?'style="opacity:.5;pointer-events:none"':''}>
+        <label class="form-label">Division</label>
+        <select class="form-control" id="eu-division">
+          ${DIVISIONS.map(d=>`<option ${(u.division||'Assets & Condition')===d?'selected':''}>${d}</option>`).join('')}
         </select>
       </div>
       <div class="form-group"><label class="form-label">Zone</label>
@@ -187,9 +238,13 @@ function openEditUser(u) {
 }
 
 async function doEditUser(id) {
+  const role = document.getElementById('eu-role')?.value;
   const data = {
     name: document.getElementById('eu-name')?.value.trim(),
-    role: document.getElementById('eu-role')?.value,
+    role,
+    division: (['Supervisor','System Admin'].includes(role))
+      ? 'All'
+      : (document.getElementById('eu-division')?.value || 'Assets & Condition'),
     zone: document.getElementById('eu-zone')?.value,
   };
   try {

@@ -345,6 +345,20 @@ table.maint-table td {
 table.maint-table tbody tr:last-child td { border-bottom: none; }
 table.maint-table tbody tr:hover { background: var(--blue-bg); }
 
+/* ── MAINTENANCE ENTRY CARDS ── */
+.maint-entry {
+  background: var(--card); border: 1px solid var(--border); border-radius: 10px;
+  padding: 14px 16px; margin-bottom: 10px; cursor: pointer; transition: box-shadow .15s;
+}
+.maint-entry:hover { box-shadow: 0 4px 16px rgba(0,0,0,.08); }
+.maint-entry-me { border-left: 3px solid var(--success); }
+.maint-entry-main { display: flex; align-items: center; gap: 12px; }
+.maint-entry-icon {
+  width: 36px; height: 36px; border-radius: 9px; background: var(--blue-bg);
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 14px;
+}
+.maint-entry-me .maint-entry-icon { background: rgba(45,184,123,.1); }
+
 /* ── BUTTONS ── */
 .btn {
   display: inline-flex; align-items: center; gap: 7px;
@@ -458,16 +472,24 @@ table.maint-table tbody tr:hover { background: var(--blue-bg); }
       <div class="logo-sub">Federal Registry</div>
     </div>
   </div>
-  <nav class="sidebar-nav">
+    <nav class="sidebar-nav">
     <div class="nav-section">Platform</div>
-    <a class="nav-item" href="dashboard.html"><i class="fa-solid fa-gauge-high"></i>Dashboard</a>
+    <a class="nav-item" href="dashboard.html"><i class="fa-solid fa-gauge-high"></i>Dashboard<span class="nav-badge" id="nb-assets">0</span></a>
     <a class="nav-item" href="map.html"><i class="fa-solid fa-map"></i>Live Map</a>
-    <a class="nav-item active" href="assets.html"><i class="fa-solid fa-database"></i>Asset Registry</a>
+    <a class="nav-item active" href="assets.html" data-division="Assets &amp; Condition"><i class="fa-solid fa-database"></i>Asset Registry</a>
     <div class="nav-section">Management</div>
-    <a class="nav-item" href="capture.html"><i class="fa-solid fa-location-crosshairs"></i>Field Capture</a>
-    <a class="nav-item" href="inspections.html"><i class="fa-solid fa-clipboard-check"></i>Inspections</a>
+    <a class="nav-item" href="capture.html" data-division="Assets &amp; Condition"><i class="fa-solid fa-location-crosshairs"></i>Field Capture</a>
+    <a class="nav-item" href="approvals.html" data-require-role="Sub-Head,Supervisor,System Admin"><i class="fa-solid fa-stamp"></i>Approvals</a>
+    <a class="nav-item" href="inspections.html" data-division="Assets &amp; Condition"><i class="fa-solid fa-clipboard-check"></i>Inspections</a>
+    <!-- <a class="nav-item" href="me.html" data-division="Monitoring &amp; Evaluation"><i class="fa-solid fa-chart-line"></i>M&amp;E Reports</a> -->
     <a class="nav-item" href="analytics.html"><i class="fa-solid fa-chart-bar"></i>Analytics</a>
-    <a class="nav-item" href="users.html"><i class="fa-solid fa-users"></i>Users</a>
+    <a class="nav-item" href="users.html"><i class="fa-solid fa-users"></i>Users<span class="nav-badge" id="nb-users">0</span></a>
+    <div class="nav-section">Divisions</div>
+    <a class="nav-item active" href="assets.html" data-division="Assets &amp; Condition"><i class="fa-solid fa-database"></i>Assets &amp; Condition</a>
+    <a class="nav-item" href="me.html" data-division="Monitoring &amp; Evaluation"><i class="fa-solid fa-chart-line"></i>Monitoring &amp; Evaluation</a>
+    <a class="nav-item" href="#" data-division="Planning &amp; Design" style="opacity:.45;pointer-events:none;cursor:default" title="Coming Soon"><i class="fa-solid fa-drafting-compass"></i>Planning &amp; Design<span style="font-size:9px;background:rgba(255,255,255,.12);padding:1px 6px;border-radius:4px;margin-left:auto">Soon</span></a>
+    <a class="nav-item" href="#" data-division="Rehabilitation &amp; Restoration" style="opacity:.45;pointer-events:none;cursor:default" title="Coming Soon"><i class="fa-solid fa-helmet-safety"></i>Rehabilitation &amp; Restoration<span style="font-size:9px;background:rgba(255,255,255,.12);padding:1px 6px;border-radius:4px;margin-left:auto">Soon</span></a>
+    <a class="nav-item" href="#" data-division="Building Training &amp; Maintenance" style="opacity:.45;pointer-events:none;cursor:default" title="Coming Soon"><i class="fa-solid fa-chalkboard-user"></i>Training &amp; Maintenance<span style="font-size:9px;background:rgba(255,255,255,.12);padding:1px 6px;border-radius:4px;margin-left:auto">Soon</span></a>
     <div class="nav-section">Data Tools</div>
     <a class="nav-item" href="ocr.html"><i class="fa-solid fa-file-magnifying-glass"></i>OCR Scanner</a>
     <a class="nav-item" href="excel.html"><i class="fa-solid fa-file-excel"></i>Excel Import</a>
@@ -475,6 +497,7 @@ table.maint-table tbody tr:hover { background: var(--blue-bg); }
     <div class="nav-section">System</div>
     <a class="nav-item" href="audit.html"><i class="fa-solid fa-clock-rotate-left"></i>Audit Log</a>
     <a class="nav-item" href="settings.html"><i class="fa-solid fa-sliders"></i>Settings</a>
+    <a class="nav-item" href="guidelines.html"><i class="fa-solid fa-book-open"></i>Guidelines</a>
   </nav>
   <div class="sidebar-bottom">
     <div class="user-card-sb">
@@ -482,8 +505,10 @@ table.maint-table tbody tr:hover { background: var(--blue-bg); }
       <div style="flex:1;min-width:0">
         <div class="user-nm" id="sb-user-name">Loading…</div>
         <div class="user-rl" id="sb-user-role">—</div>
+        <div id="sb-user-division" style="font-size:9px;color:rgba(255,255,255,.35);margin-top:2px;letter-spacing:.3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis"></div>
       </div>
       <div style="display:flex;gap:4px">
+        <button class="icon-btn" onclick="toggleTheme()" title="Toggle theme"><i class="fa-solid fa-circle-half-stroke"></i></button>
         <button class="icon-btn" onclick="doLogout()" title="Logout"><i class="fa-solid fa-right-from-bracket"></i></button>
       </div>
     </div>
@@ -794,9 +819,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     const ini = document.getElementById('sb-user-initials');
     const nm  = document.getElementById('sb-user-name');
     const rl  = document.getElementById('sb-user-role');
+    const dv  = document.getElementById('sb-user-division');
     if (ini) ini.textContent = (u.name || u.username || 'A').slice(0, 2).toUpperCase();
     if (nm)  nm.textContent  = u.name || u.username || 'User';
-    if (rl)  rl.textContent  = u.role || '—';
+    if (rl)  rl.textContent  = (u.role || '—').toUpperCase();
+    if (dv)  dv.textContent  = (u.division === 'All' || !u.division) ? 'All Divisions' : u.division;
   }
 
   document.getElementById('photo-upload-hero')?.addEventListener('change', e => {
@@ -1037,7 +1064,7 @@ async function loadTabContent(name) {
   if (!a || !id) return;
   if (name === 'photos')      renderPhotosTab(id, _photos);
   if (name === 'location')    renderLocationTab(a);
-  if (name === 'maintenance') renderMaintenanceTab(a);
+  if (name === 'maintenance') renderMaintenanceTab(_asset);
   if (name === 'documents')   await renderDocumentsTab(id);
   if (name === 'valuation')   renderValuationTab(a);
   if (name === 'history')       renderHistoryTab(a);
@@ -1161,94 +1188,298 @@ function renderLocationTab(a) {
 }
 
 // ── MAINTENANCE TAB ───────────────────────────────────────────────────────────
-function renderMaintenanceTab(a) {
-  const el   = document.getElementById('maintenance-panel-content');
-  const list = a.maintenanceLog || a.maintenance || [];
+async function renderMaintenanceTab(a) {
+  const el = document.getElementById('maintenance-panel-content');
+  if (!el) return;
+  el.innerHTML = '<div style="text-align:center;padding:40px"><div class="spinner"></div></div>';
+
+  // Always re-fetch fresh data
+  let list = a?.maintenanceLogs || [];
+  try {
+    const r = await apiFetch(`/assets/${_assetId}`);
+    const fresh = r.asset?.maintenanceLogs ?? r.maintenanceLogs ?? null;
+    if (fresh) { list = fresh; if (_asset) _asset.maintenanceLogs = fresh; }
+  } catch {}
+
+  const total = list.reduce((s, l) => s + Number(l.cost || l.amount || 0), 0);
 
   el.innerHTML = `
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
-      <div style="font-size:15px;font-weight:700;color:var(--text)">Maintenance Log</div>
-      <button class="btn btn-primary btn-sm" onclick="openAddMaintenance()"><i class="fa-solid fa-plus"></i> Log Entry</button>
+      <div>
+        <div style="font-size:15px;font-weight:700;color:var(--text)">Maintenance Log</div>
+        <div style="font-size:11px;color:var(--text3);margin-top:2px">${list.length} entries · Total spend: ₦${total.toLocaleString()}</div>
+      </div>
+      <button class="btn btn-primary btn-sm" onclick="openAddMaintenanceModal()">
+        <i class="fa-solid fa-plus"></i> Log Entry
+      </button>
     </div>
+
     ${!list.length ? `
       <div class="empty-state">
         <div class="empty-icon"><i class="fa-solid fa-wrench"></i></div>
         <div class="empty-title">No maintenance recorded</div>
         <div class="empty-sub">Log maintenance activities to track asset upkeep</div>
       </div>` :
-    `<div style="overflow-x:auto">
-      <table class="maint-table">
-        <thead><tr><th>Date</th><th>Type</th><th>Description</th><th>Cost (₦)</th><th>Contractor</th></tr></thead>
-        <tbody>
-          ${list.map((m, i) => `<tr>
-            <td style="font-family:'Courier New',monospace;font-size:11px">${escStr(String(m.date||m.performedAt||'—').slice(0,10))}</td>
-            <td><span class="tag tag-blue">${escStr(m.type||m.maintenanceType||'—')}</span></td>
-            <td>${escStr(m.description||m.notes||'—')}</td>
-            <td>${m.cost ? '₦' + Number(m.cost).toLocaleString() : '—'}</td>
-            <td>${escStr(m.contractor||m.performedBy||'—')}</td>
-          </tr>`).join('')}
-        </tbody>
-      </table>
-    </div>`}
-    <div id="add-maint-form" style="display:none;margin-top:20px;padding:18px;background:var(--bg);border:1px solid var(--border);border-radius:10px">
-      <div style="font-size:14px;font-weight:700;margin-bottom:14px">New Maintenance Entry</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-        <div>
-          <label style="font-size:11px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:4px">Date</label>
-          <input type="date" id="maint-date" style="width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:8px;font-family:var(--font);font-size:13px;background:var(--white);color:var(--text);outline:none">
+    list.map((m, i) => {
+      const desc    = m.desc || m.description || m.notes || '—';
+      const tech    = m.tech || m.technician || m.contractor || m.performedBy || '—';
+      const rawDate = m.date || m.performedAt;
+      const dateStr = rawDate ? (typeof rawDate === 'string' ? rawDate.slice(0,10) : new Date(rawDate).toISOString().slice(0,10)) : '—';
+      const cost    = Number(m.cost || m.amount || 0);
+      const isME    = !!(m.meReportId || m.meReportLink || desc.startsWith('M&E Clearance'));
+      const link    = m.meReportLink || (isME ? `me.html?asset=${encodeURIComponent(_assetId)}` : null);
+      return `
+      <div class="maint-entry ${isME ? 'maint-entry-me' : ''}" onclick="toggleMaintEntry(${i})">
+        <div class="maint-entry-main">
+          <div class="maint-entry-icon">
+            <i class="fa-solid ${isME ? 'fa-certificate' : 'fa-wrench'}" style="color:${isME ? 'var(--success)' : 'var(--blue)'}"></i>
+          </div>
+          <div style="flex:1;min-width:0">
+            <div style="font-size:13px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${escStr(desc)}</div>
+            <div style="font-size:11px;color:var(--text3);margin-top:2px;display:flex;gap:10px;flex-wrap:wrap">
+              <span><i class="fa-solid fa-calendar" style="font-size:9px;margin-right:3px"></i>${escStr(dateStr)}</span>
+              <span><i class="fa-solid fa-user" style="font-size:9px;margin-right:3px"></i>${escStr(tech)}</span>
+              ${cost ? `<span><i class="fa-solid fa-naira-sign" style="font-size:9px;margin-right:2px"></i>${cost.toLocaleString()}</span>` : ''}
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;flex-shrink:0">
+            ${isME ? '<span class="tag tag-green" style="font-size:10px">M&amp;E</span>' : ''}
+            <i class="fa-solid fa-chevron-down maint-chevron" id="mchev-${i}" style="color:var(--text3);font-size:11px;transition:transform .2s"></i>
+          </div>
         </div>
-        <div>
-          <label style="font-size:11px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:4px">Type</label>
-          <select id="maint-type" style="width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:8px;font-family:var(--font);font-size:13px;background:var(--white);color:var(--text);outline:none">
-            <option>Routine Inspection</option><option>Repair</option><option>Replacement</option><option>Cleaning</option><option>Other</option>
-          </select>
+        <div class="maint-entry-detail" id="mdetail-${i}" style="display:none">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:12px;padding-top:12px;border-top:1px solid var(--border);margin-top:10px">
+            <div><span style="color:var(--text3);font-weight:600;text-transform:uppercase;font-size:10px;letter-spacing:.5px">Date</span><div style="margin-top:3px;font-family:monospace">${escStr(dateStr)}</div></div>
+            <div><span style="color:var(--text3);font-weight:600;text-transform:uppercase;font-size:10px;letter-spacing:.5px">Technician</span><div style="margin-top:3px">${escStr(tech)}</div></div>
+            <div style="grid-column:1/-1"><span style="color:var(--text3);font-weight:600;text-transform:uppercase;font-size:10px;letter-spacing:.5px">Description</span><div style="margin-top:3px;line-height:1.6">${escStr(desc)}</div></div>
+            ${cost ? `<div><span style="color:var(--text3);font-weight:600;text-transform:uppercase;font-size:10px;letter-spacing:.5px">Cost</span><div style="margin-top:3px;font-weight:700;color:var(--blue)">₦${cost.toLocaleString()}</div></div>` : ''}
+            ${m.otherComments ? `<div style="grid-column:1/-1"><span style="color:var(--text3);font-weight:600;text-transform:uppercase;font-size:10px;letter-spacing:.5px">Comments</span><div style="margin-top:3px">${escStr(m.otherComments)}</div></div>` : ''}
+          </div>
+          <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+            ${isME ? `<button class="btn btn-secondary btn-xs" onclick="event.stopPropagation();viewMEReport('${m.meReportId||''}')"><i class="fa-solid fa-certificate"></i> View M&amp;E Report</button>` : ''}
+            ${!isME ? `<button class="btn btn-danger btn-xs" onclick="event.stopPropagation();deleteMaintEntry(${i})"><i class="fa-solid fa-trash"></i> Delete</button>` : ''}
+          </div>
         </div>
-        <div style="grid-column:1/-1">
-          <label style="font-size:11px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:4px">Description</label>
-          <textarea id="maint-desc" rows="2" style="width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:8px;font-family:var(--font);font-size:13px;background:var(--white);color:var(--text);outline:none;resize:vertical"></textarea>
-        </div>
-        <div>
-          <label style="font-size:11px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:4px">Cost (₦)</label>
-          <input type="number" id="maint-cost" placeholder="0" style="width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:8px;font-family:var(--font);font-size:13px;background:var(--white);color:var(--text);outline:none">
-        </div>
-        <div>
-          <label style="font-size:11px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:4px">Contractor</label>
-          <input type="text" id="maint-contractor" placeholder="Name / Company" style="width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:8px;font-family:var(--font);font-size:13px;background:var(--white);color:var(--text);outline:none">
-        </div>
-      </div>
-      <div style="margin-top:12px;display:flex;gap:8px">
-        <button class="btn btn-primary btn-sm" onclick="saveMaintEntry()"><i class="fa-solid fa-floppy-disk"></i> Save</button>
-        <button class="btn btn-ghost btn-sm" onclick="document.getElementById('add-maint-form').style.display='none'">Cancel</button>
-      </div>
-    </div>`;
+      </div>`;
+    }).join('')}
+  `;
 }
 
-function openAddMaintenance() {
-  const f = document.getElementById('add-maint-form');
-  if (f) {
-    f.style.display = f.style.display === 'none' ? '' : 'none';
-    document.getElementById('maint-date').value = new Date().toISOString().slice(0, 10);
+function toggleMaintEntry(i) {
+  const detail = document.getElementById('mdetail-' + i);
+  const chev   = document.getElementById('mchev-' + i);
+  if (!detail) return;
+  const open = detail.style.display !== 'none';
+  detail.style.display = open ? 'none' : '';
+  if (chev) chev.style.transform = open ? '' : 'rotate(180deg)';
+}
+
+function openAddMaintenanceModal() {
+  // Inject a floating modal for adding maintenance
+  let overlay = document.getElementById('maint-add-overlay');
+  if (!overlay) {
+    overlay = document.createElement('div');
+    overlay.id = 'maint-add-overlay';
+    overlay.style.cssText = 'display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:600;align-items:center;justify-content:center;backdrop-filter:blur(3px)';
+    overlay.innerHTML = `
+      <div style="background:var(--card);border-radius:14px;width:520px;max-width:95vw;box-shadow:0 24px 80px rgba(0,0,0,.2);border:1px solid var(--border)">
+        <div style="padding:18px 22px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">
+          <div style="font-size:16px;font-weight:700;color:var(--text)"><i class="fa-solid fa-wrench" style="color:var(--blue);margin-right:8px"></i>Log Maintenance Entry</div>
+          <button onclick="closeAddMaintenanceModal()" style="background:none;border:none;color:var(--text3);font-size:18px;cursor:pointer;width:30px;height:30px;border-radius:6px;display:flex;align-items:center;justify-content:center"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div style="padding:20px 22px">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+            <div style="grid-column:1/-1">
+              <label style="font-size:11px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:5px">Description *</label>
+              <textarea id="nm-desc" rows="2" class="form-control" placeholder="What was done e.g. Routine inspection, electrical repair…" style="resize:vertical"></textarea>
+            </div>
+            <div>
+              <label style="font-size:11px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:5px">Date</label>
+              <input type="date" id="nm-date" class="form-control" value="${new Date().toISOString().slice(0,10)}">
+            </div>
+            <div>
+              <label style="font-size:11px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:5px">Technician</label>
+              <input type="text" id="nm-tech" class="form-control" placeholder="Name or company">
+            </div>
+            <div>
+              <label style="font-size:11px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:5px">Cost (₦)</label>
+              <input type="number" id="nm-cost" class="form-control" placeholder="0" min="0">
+            </div>
+          </div>
+        </div>
+        <div style="padding:14px 22px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:8px">
+          <button class="btn btn-ghost" onclick="closeAddMaintenanceModal()">Cancel</button>
+          <button class="btn btn-primary" onclick="saveMaintEntry()"><i class="fa-solid fa-floppy-disk"></i> Save Entry</button>
+        </div>
+      </div>`;
+    document.body.appendChild(overlay);
+    overlay.addEventListener('click', e => { if (e.target === overlay) closeAddMaintenanceModal(); });
   }
+  overlay.style.display = 'flex';
+}
+
+function closeAddMaintenanceModal() {
+  const o = document.getElementById('maint-add-overlay');
+  if (o) o.style.display = 'none';
 }
 
 async function saveMaintEntry() {
+  const desc = document.getElementById('nm-desc')?.value.trim();
+  if (!desc) { toast('Description is required', 'fa-triangle-exclamation', true); return; }
+  const cost = parseFloat(document.getElementById('nm-cost')?.value) || 0;
   const data = {
-    date:        document.getElementById('maint-date')?.value,
-    type:        document.getElementById('maint-type')?.value,
-    description: document.getElementById('maint-desc')?.value,
-    cost:        document.getElementById('maint-cost')?.value,
-    contractor:  document.getElementById('maint-contractor')?.value,
+    date:   document.getElementById('nm-date')?.value,
+    desc,
+    tech:   document.getElementById('nm-tech')?.value.trim(),
+    cost,
+    amount: cost,
   };
   try {
     await apiAddMaintenance(_assetId, data);
     toast('Maintenance entry saved');
+    closeAddMaintenanceModal();
     _tabsLoaded['maintenance'] = false;
     const r = await apiGetAsset(_assetId);
     _asset = r.asset || r;
-    renderMaintenanceTab(_asset);
+    await renderMaintenanceTab(_asset);
     _tabsLoaded['maintenance'] = true;
   } catch(e) {
     toast('Save failed: ' + e.message, 'fa-triangle-exclamation', true);
+  }
+}
+
+async function deleteMaintEntry(idx) {
+  if (!confirm('Remove this maintenance entry?')) return;
+  try {
+    await apiFetch(`/assets/${_assetId}/maintenance/${idx}`, { method: 'DELETE' });
+    toast('Entry removed');
+    const r = await apiGetAsset(_assetId);
+    _asset = r.asset || r;
+    await renderMaintenanceTab(_asset);
+  } catch(e) {
+    toast('Delete failed: ' + e.message, 'fa-triangle-exclamation', true);
+  }
+}
+
+// ── M&E REPORT VIEWER ─────────────────────────────────────────────────────────
+// Opens a read-only modal showing the full M&E report — no redirect needed.
+// Works for any user who can see the asset; no division check required.
+const MONTHS_ME = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+async function viewMEReport(reportId) {
+  // Get or inject modal
+  let overlay = document.getElementById('me-report-view-overlay');
+  if (!overlay) {
+    overlay = document.createElement('div');
+    overlay.id = 'me-report-view-overlay';
+    overlay.style.cssText = 'display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:700;align-items:flex-start;justify-content:center;padding:40px 16px;overflow-y:auto;backdrop-filter:blur(3px)';
+    overlay.innerHTML = `
+      <div id="me-report-view-box" style="background:var(--card);border-radius:14px;width:700px;max-width:100%;box-shadow:0 24px 80px rgba(0,0,0,.25);border:1px solid var(--border)">
+        <div style="padding:18px 22px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0">
+          <div style="font-size:16px;font-weight:700;color:var(--text)"><i class="fa-solid fa-certificate" style="color:var(--success);margin-right:8px"></i>M&amp;E Progress Report</div>
+          <button onclick="document.getElementById('me-report-view-overlay').style.display='none'" style="background:none;border:none;color:var(--text3);font-size:18px;cursor:pointer;width:30px;height:30px;border-radius:6px;display:flex;align-items:center;justify-content:center"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div id="me-report-view-body" style="padding:22px"></div>
+      </div>`;
+    overlay.addEventListener('click', e => { if (e.target === overlay) overlay.style.display = 'none'; });
+    document.body.appendChild(overlay);
+  }
+
+  const body = document.getElementById('me-report-view-body');
+  body.innerHTML = '<div style="text-align:center;padding:40px"><div class="spinner"></div></div>';
+  overlay.style.display = 'flex';
+
+  try {
+    // Fetch the asset's meReports and find the matching one
+    const r = await apiFetch(`/assets/${_assetId}/me-reports`);
+    const reports = r.reports || [];
+    const report  = reportId ? reports.find(rp => String(rp._id) === String(reportId)) : reports[reports.length - 1];
+
+    if (!report) { body.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text3)">Report not found</div>'; return; }
+
+    const month  = MONTHS_ME[(report.reportMonth||1)-1] || '—';
+    const type   = report.reportType === 'nhp' ? 'NHP' : 'Secretariat';
+    const pct    = report.overallPercentage ?? 0;
+    const sat    = report.satisfactory !== false;
+    const pctCol = pct >= 75 ? 'var(--success)' : pct >= 50 ? 'var(--warn)' : 'var(--danger)';
+    const ratingBadge = v => ({ 'Very Good':'tag-green','Good':'tag-blue','Fair':'tag-warn','Poor':'tag-red' }[v]||'tag-gray');
+    const statusTag = { 'Draft':'tag-gray','Submitted':'tag-blue','Cleared':'tag-green','Not Cleared':'tag-red' }[report.status] || 'tag-gray';
+
+    body.innerHTML = `
+      <!-- Status strip -->
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px">
+        <div style="background:var(--bg);border-radius:10px;padding:12px;text-align:center">
+          <div style="font-size:26px;font-weight:800;color:${pctCol}">${pct}%</div>
+          <div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px">Overall</div>
+        </div>
+        <div style="background:var(--bg);border-radius:10px;padding:12px;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px">
+          <span class="tag ${statusTag}">${report.status || 'Draft'}</span>
+          <div style="font-size:10px;color:var(--text3)">Status</div>
+        </div>
+        <div style="background:var(--bg);border-radius:10px;padding:12px;text-align:center">
+          <div style="font-size:14px;font-weight:700;color:var(--text)">${month} ${report.reportYear}</div>
+          <div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px">${type}</div>
+        </div>
+      </div>
+
+      <!-- Contract info -->
+      ${report.contractorName || report.contractNo ? `
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text3);margin-bottom:8px">Contract</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:18px;font-size:12px">
+        ${report.contractNo       ? `<div style="background:var(--bg);padding:8px 12px;border-radius:7px"><span style="color:var(--text3)">Contract No</span><div style="font-weight:600;font-family:monospace;margin-top:2px">${escStr(report.contractNo)}</div></div>` : ''}
+        ${report.contractorName   ? `<div style="background:var(--bg);padding:8px 12px;border-radius:7px"><span style="color:var(--text3)">Contractor</span><div style="font-weight:600;margin-top:2px">${escStr(report.contractorName)}</div></div>` : ''}
+        ${report.contractSum      ? `<div style="background:var(--bg);padding:8px 12px;border-radius:7px"><span style="color:var(--text3)">Sum</span><div style="font-weight:600;margin-top:2px">₦${Number(report.contractSum).toLocaleString()}</div></div>` : ''}
+        ${report.contractPeriod   ? `<div style="background:var(--bg);padding:8px 12px;border-radius:7px"><span style="color:var(--text3)">Period</span><div style="font-weight:600;margin-top:2px">${escStr(report.contractPeriod)}</div></div>` : ''}
+      </div>` : ''}
+
+      <!-- Tasks -->
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text3);margin-bottom:8px">Task Progress</div>
+      <div style="margin-bottom:18px">
+        ${(report.tasks||[]).map((t,i) => {
+          const p = t.percentage || 0;
+          const c = p>=75?'var(--success)':p>=50?'var(--warn)':'var(--danger)';
+          return `<div style="display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--border);font-size:12px">
+            <span style="color:var(--text3);width:18px;flex-shrink:0">${i+1}.</span>
+            <span style="flex:1;color:var(--text2)">${escStr(t.label)}</span>
+            <div style="width:100px;flex-shrink:0">
+              <div style="display:flex;justify-content:flex-end;font-size:10px;font-weight:700;color:${c};margin-bottom:2px">${p}%</div>
+              <div style="height:4px;background:var(--border);border-radius:2px">
+                <div style="height:4px;width:${p}%;background:${c};border-radius:2px"></div>
+              </div>
+            </div>
+          </div>`;
+        }).join('')}
+      </div>
+
+      <!-- Ratings -->
+      ${report.labourRating ? `
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text3);margin-bottom:8px">General Remarks</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:18px">
+        ${[['Labour',report.labourRating],['Materials',report.materialsRating],['Rate of Progress',report.progressRating],['Workmanship',report.workmanshipRating]].filter(([,v])=>v).map(([k,v])=>`
+          <div style="background:var(--bg);padding:8px 12px;border-radius:7px;display:flex;justify-content:space-between;align-items:center;font-size:12px">
+            <span style="color:var(--text3)">${k}</span>
+            <span class="tag ${ratingBadge(v)}" style="font-size:10px">${v}</span>
+          </div>`).join('')}
+      </div>` : ''}
+      ${report.otherComments ? `<div style="background:var(--bg);border-radius:8px;padding:12px 14px;font-size:12px;color:var(--text2);margin-bottom:18px"><strong>Comments:</strong> ${escStr(report.otherComments)}</div>` : ''}
+
+      <!-- Clearance -->
+      ${report.clearanceIssued ? `
+      <div style="background:${sat?'rgba(45,184,123,.06)':'rgba(224,85,85,.05)'};border:1px solid ${sat?'rgba(45,184,123,.2)':'rgba(224,85,85,.2)'};border-radius:10px;padding:14px 16px">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;font-size:13px;font-weight:700;color:var(--text)">
+          <i class="fa-solid fa-certificate" style="color:${sat?'var(--success)':'var(--danger)'}"></i>
+          Clearance Certificate — ${sat?'Satisfactory':'Unsatisfactory'}
+          <span style="font-size:11px;font-weight:400;color:var(--text3)">${report.clearanceDate?new Date(report.clearanceDate).toLocaleDateString('en-NG'):''}</span>
+        </div>
+        ${report.unsatisfactoryWorks?`<div style="font-size:12px;color:var(--text2);margin-bottom:8px"><strong>Unsatisfactory works:</strong> ${escStr(report.unsatisfactoryWorks)}</div>`:''}
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:11px;color:var(--text3)">
+          ${report.craName?`<div>CRA: <strong style="color:var(--text2)">${escStr(report.craName)}</strong></div>`:''}
+          ${report.facilityManagerName?`<div>Facility Mgr: <strong style="color:var(--text2)">${escStr(report.facilityManagerName)}</strong></div>`:''}
+        </div>
+      </div>` : ''}
+    `;
+  } catch(e) {
+    body.innerHTML = `<div style="text-align:center;padding:40px;color:var(--danger)">${escStr(e.message)}</div>`;
   }
 }
 
@@ -1760,7 +1991,7 @@ async function saveAssetEdits() {
 }
 
 function doLogout() {
-  apiLogout().finally(() => { localStorage.removeItem('as_token'); window.location.href = '../login.html'; });
+  apiLogout().finally(() => { localStorage.removeItem('as_token'); window.location.href = 'login.html'; });
 }
 
 function showError() {

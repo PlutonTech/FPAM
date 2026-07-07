@@ -1,0 +1,1305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>M&amp;E Reports — AssetSpatial</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800;1,9..40,400;1,9..40,500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="stylesheet" href="css/main.css">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#0B2545;--navy-2:#0D2D57;--blue:#4A90D9;--blue-lt:#6AAEE8;
+  --blue-bg:rgba(74,144,217,.08);--blue-bd:rgba(74,144,217,.18);
+  --white:#ffffff;--bg:#F4F6F9;--card:#ffffff;--border:#E8ECF0;
+  --text:#0B1829;--text2:#2C3E50;--text3:#5A6A7A;
+  --danger:#e05555;--warn:#f0a500;--success:#2DB87B;
+  --sidebar-w:250px;--font:'DM Sans',sans-serif;
+}
+body{font-family:var(--font);background:var(--bg);color:var(--text);display:flex;height:100vh;overflow:hidden;font-size:14px;line-height:1.5}
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:#d0d8e4;border-radius:10px}
+
+/* ── SIDEBAR ── */
+#sidebar{width:var(--sidebar-w);background:var(--navy);color:#fff;display:flex;flex-direction:column;flex-shrink:0;z-index:40;transition:transform 0.3s}
+.logo{padding:22px 20px 18px;border-bottom:1px solid rgba(255,255,255,.08);display:flex;align-items:center;gap:12px}
+.logo-icon{width:38px;height:38px;border-radius:10px;background:var(--blue);display:flex;align-items:center;justify-content:center}
+.logo-icon i{color:#fff;font-size:17px}
+.logo-mark{font-size:17px;font-weight:800;color:#fff;line-height:1.1}
+.logo-sub{font-size:9px;color:rgba(255,255,255,.45);letter-spacing:1.5px;text-transform:uppercase;margin-top:2px}
+.sidebar-nav{flex:1;overflow-y:auto;padding:10px 0}
+.nav-section{font-size:9px;color:rgba(255,255,255,.35);letter-spacing:2px;text-transform:uppercase;padding:14px 20px 5px;font-weight:600}
+.nav-item{display:flex;align-items:center;gap:11px;padding:10px 20px;color:rgba(255,255,255,.62);font-size:13.5px;font-weight:500;border-left:3px solid transparent;transition:all .15s;text-decoration:none;cursor:pointer}
+.nav-item i{width:18px;font-size:13px;text-align:center;flex-shrink:0}
+.nav-item:hover{color:#fff;background:rgba(255,255,255,.06)}
+.nav-item.active{color:#fff;background:rgba(74,144,217,.18);border-left-color:var(--blue)}
+.nav-badge{margin-left:auto;background:var(--blue);color:#fff;font-size:10px;font-weight:700;padding:1px 8px;border-radius:20px;min-width:22px;text-align:center}
+.sidebar-bottom{padding:14px 16px;border-top:1px solid rgba(255,255,255,.08)}
+.user-card-sb{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08)}
+.user-av{width:34px;height:34px;border-radius:50%;background:var(--blue);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;flex-shrink:0}
+.user-nm{font-size:13px;font-weight:600;color:#fff}
+.user-rl{font-size:10px;color:rgba(255,255,255,.45);margin-top:1px}
+.icon-btn{width:28px;height:28px;border-radius:7px;background:rgba(255,255,255,.08);border:none;color:rgba(255,255,255,.55);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:12px;transition:all .15s}
+.icon-btn:hover{background:rgba(255,255,255,.15);color:#fff}
+#sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:39}
+#sidebar-overlay.open{display:block}
+
+/* ── MAIN ── */
+#main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0}
+#header{background:var(--white);border-bottom:1px solid var(--border);padding:0 28px;height:68px;display:flex;align-items:center;gap:16px;flex-shrink:0}
+.menu-toggle-btn{display:none;background:none;border:none;color:var(--text2);font-size:18px;cursor:pointer;padding:4px 6px;border-radius:6px}
+.header-title{flex:1}
+.header-title h2{font-size:20px;font-weight:700;color:var(--text)}
+.header-title p{font-size:12.5px;color:#4A5568;margin-top:1px;font-weight:500}
+.header-right{display:flex;align-items:center;gap:10px}
+.conn-status{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text3)}
+#conn-dot{width:7px;height:7px;border-radius:50%;background:var(--warn);transition:background .3s}
+#conn-dot.live{background:var(--success);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+#conn-label{font-size:10px;color:var(--text3)}
+#content{flex:1;overflow-y:auto;padding:28px;background:var(--bg)}
+
+/* ── BUTTONS ── */
+.btn{display:inline-flex;align-items:center;gap:7px;padding:9px 18px;border-radius:8px;font-family:var(--font);font-size:13px;font-weight:600;cursor:pointer;border:none;transition:all .15s;text-decoration:none;white-space:nowrap}
+.btn i{font-size:12px}
+.btn-primary{background:var(--blue);color:#fff}
+.btn-primary:hover{background:var(--blue-lt);box-shadow:0 4px 16px rgba(74,144,217,.35)}
+.btn-secondary{background:var(--white);color:var(--text2);border:1px solid var(--border)}
+.btn-secondary:hover{border-color:var(--blue);color:var(--blue)}
+.btn-ghost{background:none;border:1px solid var(--border);color:var(--text2);padding:6px 12px;font-size:12px}
+.btn-ghost:hover{background:var(--bg);color:var(--text)}
+.btn-sm{padding:6px 14px;font-size:12px}
+.btn-xs{padding:3px 9px;font-size:11px}
+.btn-danger{background:rgba(224,85,85,.1);color:var(--danger);border:1px solid rgba(224,85,85,.2)}
+.btn-success{background:rgba(45,184,123,.1);color:var(--success);border:1px solid rgba(45,184,123,.2)}
+
+/* ── CARDS ── */
+.wcard{background:var(--card);border-radius:12px;border:1px solid var(--border);box-shadow:0 1px 4px rgba(0,0,0,.05);overflow:hidden}
+.wcard-hd{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.wcard-title{font-size:15px;font-weight:800;color:#0B1829}
+.wcard-sub{font-size:12px;color:#5A6A7A;margin-top:2px;font-weight:500}
+
+/* ── TAGS ── */
+.tag{display:inline-flex;align-items:center;padding:3px 10px;border-radius:6px;font-size:11px;font-weight:600}
+.tag-green{background:rgba(45,184,123,.15);color:#0f7a4d}
+.tag-blue{background:rgba(74,144,217,.15);color:#0d5291}
+.tag-red{background:rgba(224,85,85,.15);color:#a02020}
+.tag-orange{background:rgba(240,165,0,.15);color:#8a5e00}
+.tag-gray{background:rgba(90,106,122,.12);color:#2C3E50}
+.tag-warn{background:rgba(240,165,0,.15);color:#8a5e00}
+.tag-navy{background:rgba(11,37,69,.08);color:var(--navy)}
+
+/* ── FORM ── */
+.form-control{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:9px 13px;font-family:var(--font);font-size:13px;color:var(--text);outline:none;transition:border .15s}
+.form-control:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(74,144,217,.12)}
+.form-label{font-size:11px;font-weight:600;color:var(--text2);margin-bottom:5px;display:block;text-transform:uppercase;letter-spacing:.5px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.form-group{display:flex;flex-direction:column}
+.form-group.full{grid-column:1/-1}
+.form-group.thirds{grid-column:span 1}
+.form-hint{font-size:11px;color:var(--text3);margin-top:4px}
+.form-section{font-size:12px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:1px;margin:20px 0 12px;padding-bottom:6px;border-bottom:1px solid var(--border)}
+
+/* ── TASK ROWS ── */
+.task-row{display:grid;grid-template-columns:1fr 130px;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)}
+.task-row:last-child{border-bottom:none}
+.task-label{font-size:13px;color:var(--text2);font-weight:500}
+.task-num{font-size:11px;color:var(--text3);margin-bottom:2px}
+.pct-input{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:7px 10px;font-family:var(--font);font-size:13px;color:var(--text);outline:none;text-align:right}
+.pct-input:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(74,144,217,.12)}
+.pct-bar-wrap{height:4px;background:var(--border);border-radius:2px;margin-top:4px}
+.pct-bar{height:4px;border-radius:2px;background:var(--blue);transition:width .3s}
+
+/* ── RATING GRID ── */
+.rating-group{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.rating-btn{border:1px solid var(--border);background:var(--bg);border-radius:8px;padding:8px 6px;font-size:11px;font-weight:600;color:var(--text3);cursor:pointer;text-align:center;transition:all .15s;font-family:var(--font)}
+.rating-btn:hover{border-color:var(--blue);color:var(--blue)}
+.rating-btn.sel-vg{background:rgba(45,184,123,.15);border-color:#2DB87B;color:#0f7a4d}
+.rating-btn.sel-g{background:rgba(74,144,217,.15);border-color:var(--blue);color:#0d5291}
+.rating-btn.sel-f{background:rgba(240,165,0,.15);border-color:var(--warn);color:#8a5e00}
+.rating-btn.sel-p{background:rgba(224,85,85,.15);border-color:var(--danger);color:#a02020}
+
+/* ── REPORTS LIST ── */
+.report-card{background:var(--card);border-radius:10px;border:1px solid var(--border);padding:16px 20px;margin-bottom:12px;display:flex;align-items:flex-start;gap:16px;transition:box-shadow .15s;cursor:pointer}
+.report-card:hover{box-shadow:0 4px 16px rgba(0,0,0,.08)}
+.report-icon{width:40px;height:40px;border-radius:10px;background:var(--blue-bg);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.report-icon i{color:var(--blue);font-size:16px}
+.report-meta{flex:1;min-width:0}
+.report-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:3px}
+.report-sub{font-size:12px;color:var(--text3)}
+.report-pct{font-size:22px;font-weight:800;color:var(--blue);flex-shrink:0;text-align:right}
+.report-pct-lbl{font-size:10px;color:var(--text3);font-weight:500}
+
+/* ── ASSET SEARCH ── */
+.asset-search-wrap{position:relative}
+#asset-search-dd{
+  position:fixed; /* fixed so it escapes any overflow:hidden parent */
+  background:var(--card);border:1px solid var(--border);border-radius:10px;
+  box-shadow:0 8px 24px rgba(0,0,0,.15);z-index:300;display:none;
+  max-height:280px;overflow-y:auto;min-width:300px;
+}
+#asset-search-dd.open{display:block}
+.asset-dd-item{padding:10px 16px;cursor:pointer;border-bottom:1px solid var(--border);font-size:13px;transition:background .1s}
+.asset-dd-item:last-child{border-bottom:none}
+.asset-dd-item:hover{background:var(--blue-bg)}
+.asset-dd-name{font-weight:600;color:var(--text)}
+.asset-dd-sub{font-size:11px;color:var(--text3);margin-top:2px}
+
+/* ── SELECTED ASSET BANNER ── */
+.selected-asset-bar{background:var(--blue-bg);border:1px solid var(--blue-bd);border-radius:10px;padding:12px 16px;display:flex;align-items:center;gap:12px;margin-bottom:20px}
+.selected-asset-bar i{color:var(--blue);font-size:16px}
+.sa-name{font-size:14px;font-weight:700;color:var(--text)}
+.sa-id{font-size:11px;color:var(--text3);font-family:monospace;margin-top:1px}
+
+/* ── MODAL ── */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:500;align-items:center;justify-content:center;backdrop-filter:blur(3px)}
+.modal-overlay.open{display:flex}
+.modal{background:var(--card);border-radius:14px;width:760px;max-width:95vw;max-height:90vh;display:flex;flex-direction:column;box-shadow:0 24px 80px rgba(0,0,0,.2);border:1px solid var(--border)}
+.modal-header{padding:18px 22px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.modal-title{font-size:17px;font-weight:700;color:var(--text)}
+.modal-close{background:none;border:none;color:var(--text3);font-size:18px;cursor:pointer;width:30px;height:30px;border-radius:6px;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.modal-close:hover{background:var(--bg);color:var(--text)}
+.modal-body{padding:20px 22px;overflow-y:auto;flex:1}
+.modal-footer{padding:14px 22px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:flex-end;gap:8px;flex-shrink:0}
+
+/* ── TOAST ── */
+#toast{position:fixed;bottom:24px;right:24px;background:var(--navy);color:#fff;padding:12px 18px;border-radius:10px;font-size:13px;display:flex;align-items:center;gap:8px;box-shadow:0 8px 32px rgba(0,0,0,.2);z-index:999;transform:translateY(80px);opacity:0;transition:all .3s}
+#toast.show{transform:translateY(0);opacity:1}
+#toast i{color:var(--success)}
+
+/* ── SPINNER ── */
+.spinner{width:20px;height:20px;border:2px solid var(--border);border-top-color:var(--blue);border-radius:50%;animation:spin .7s linear infinite;display:inline-block}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── EMPTY ── */
+.empty-state{text-align:center;padding:48px 20px;color:var(--text3)}
+.empty-icon{font-size:36px;margin-bottom:12px;color:var(--border)}
+.empty-title{font-size:16px;font-weight:700;color:var(--text2);margin-bottom:6px}
+.empty-sub{font-size:13px}
+
+/* ── STEP TABS ── */
+.step-tabs{display:flex;gap:0;margin-bottom:24px;background:var(--bg);border-radius:10px;padding:4px;border:1px solid var(--border)}
+.step-tab{flex:1;text-align:center;padding:8px 12px;border-radius:7px;font-size:12px;font-weight:600;color:var(--text3);cursor:pointer;transition:all .15s}
+.step-tab.active{background:var(--white);color:var(--blue);box-shadow:0 1px 4px rgba(0,0,0,.08)}
+.step-pane{display:none}
+.step-pane.active{display:block}
+
+/* ── CLEARANCE BANNER ── */
+.clearance-banner{background:rgba(45,184,123,.06);border:1px solid rgba(45,184,123,.2);border-radius:10px;padding:16px 20px;margin-bottom:20px}
+.clearance-banner.not-cleared{background:rgba(224,85,85,.05);border-color:rgba(224,85,85,.2)}
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+  #sidebar{position:fixed;top:0;left:0;bottom:0;transform:translateX(-100%);z-index:200;padding-top:env(safe-area-inset-top,0px);overflow-y:auto}
+  #sidebar.open{transform:translateX(0)}
+  .menu-toggle-btn{display:flex;align-items:center}
+}
+@media(max-width:600px){
+  #content{padding:16px;padding-bottom:calc(80px + env(safe-area-inset-bottom,16px))}
+  .form-grid{grid-template-columns:1fr}
+  .rating-group{grid-template-columns:repeat(2,1fr)}
+}
+</style>
+</head>
+<body>
+<div id="sidebar-overlay" class="sidebar-overlay"></div>
+
+<aside id="sidebar">
+  <div class="logo">
+    <div class="logo-icon"><i class="fa-solid fa-map-location-dot"></i></div>
+    <div>
+      <div class="logo-mark">AssetSpatial</div>
+      <div class="logo-sub">Federal Registry</div>
+    </div>
+  </div>
+    <nav class="sidebar-nav">
+    <div class="nav-section">Platform</div>
+    <a class="nav-item" href="dashboard.html"><i class="fa-solid fa-gauge-high"></i>Dashboard<span class="nav-badge" id="nb-assets">0</span></a>
+    <a class="nav-item" href="map.html"><i class="fa-solid fa-map"></i>Live Map</a>
+    <a class="nav-item" href="assets.html" data-division="Assets &amp; Condition"><i class="fa-solid fa-database"></i>Asset Registry</a>
+    <div class="nav-section">Management</div>
+    <a class="nav-item" href="capture.html" data-division="Assets &amp; Condition"><i class="fa-solid fa-location-crosshairs"></i>Field Capture</a>
+    <a class="nav-item" href="approvals.html" data-require-role="Sub-Head,Supervisor,System Admin"><i class="fa-solid fa-stamp"></i>Approvals</a>
+    <a class="nav-item" href="inspections.html" data-division="Assets &amp; Condition"><i class="fa-solid fa-clipboard-check"></i>Inspections</a>
+    <a class="nav-item active" href="me.html" data-division="Monitoring &amp; Evaluation"><i class="fa-solid fa-chart-line"></i>M&amp;E Reports</a>
+    <a class="nav-item" href="analytics.html"><i class="fa-solid fa-chart-bar"></i>Analytics</a>
+    <a class="nav-item" href="users.html"><i class="fa-solid fa-users"></i>Users<span class="nav-badge" id="nb-users">0</span></a>
+    <div class="nav-section">Divisions</div>
+    <a class="nav-item" href="assets.html" data-division="Assets &amp; Condition"><i class="fa-solid fa-database"></i>Assets &amp; Condition</a>
+    <a class="nav-item active" href="me.html" data-division="Monitoring &amp; Evaluation"><i class="fa-solid fa-chart-line"></i>Monitoring &amp; Evaluation</a>
+    <a class="nav-item" href="#" data-division="Planning &amp; Design" style="opacity:.45;pointer-events:none;cursor:default" title="Coming Soon"><i class="fa-solid fa-drafting-compass"></i>Planning &amp; Design<span style="font-size:9px;background:rgba(255,255,255,.12);padding:1px 6px;border-radius:4px;margin-left:auto">Soon</span></a>
+    <a class="nav-item" href="#" data-division="Rehabilitation &amp; Restoration" style="opacity:.45;pointer-events:none;cursor:default" title="Coming Soon"><i class="fa-solid fa-helmet-safety"></i>Rehabilitation &amp; Restoration<span style="font-size:9px;background:rgba(255,255,255,.12);padding:1px 6px;border-radius:4px;margin-left:auto">Soon</span></a>
+    <a class="nav-item" href="#" data-division="Building Training &amp; Maintenance" style="opacity:.45;pointer-events:none;cursor:default" title="Coming Soon"><i class="fa-solid fa-chalkboard-user"></i>Training &amp; Maintenance<span style="font-size:9px;background:rgba(255,255,255,.12);padding:1px 6px;border-radius:4px;margin-left:auto">Soon</span></a>
+    <div class="nav-section">Data Tools</div>
+    <a class="nav-item" href="ocr.html"><i class="fa-solid fa-file-magnifying-glass"></i>OCR Scanner</a>
+    <a class="nav-item" href="excel.html"><i class="fa-solid fa-file-excel"></i>Excel Import</a>
+    <a class="nav-item" href="filedb.html"><i class="fa-solid fa-folder-open"></i>File Database</a>
+    <div class="nav-section">System</div>
+    <a class="nav-item" href="audit.html"><i class="fa-solid fa-clock-rotate-left"></i>Audit Log</a>
+    <a class="nav-item" href="settings.html"><i class="fa-solid fa-sliders"></i>Settings</a>
+    <a class="nav-item" href="guidelines.html"><i class="fa-solid fa-book-open"></i>Guidelines</a>
+  </nav>
+  <div class="sidebar-bottom">
+    <div class="user-card-sb">
+      <div class="user-av" id="sb-user-initials">A</div>
+      <div style="flex:1;min-width:0">
+        <div class="user-nm" id="sb-user-name">Loading…</div>
+        <div class="user-rl" id="sb-user-role">—</div>
+        <div id="sb-user-division" style="font-size:9px;color:rgba(255,255,255,.35);margin-top:2px;letter-spacing:.3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis"></div>
+      </div>
+      <div style="display:flex;gap:4px">
+        <button class="icon-btn" onclick="toggleTheme()" title="Toggle theme"><i class="fa-solid fa-circle-half-stroke"></i></button>
+        <button class="icon-btn" onclick="doLogout()" title="Logout"><i class="fa-solid fa-right-from-bracket"></i></button>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<div id="main">
+  <header id="header">
+    <button id="menu-toggle" class="menu-toggle-btn"><i class="fa-solid fa-bars"></i></button>
+    <div class="header-title">
+      <h2><i class="fa-solid fa-chart-line" style="color:var(--blue);margin-right:8px;font-size:17px"></i>M&amp;E Reports</h2>
+      <p>Monitoring &amp; Evaluation — Monthly Progress Reports &amp; Clearance Certificates</p>
+    </div>
+    <div class="header-right">
+      <div class="conn-status"><span id="conn-dot"></span><span id="conn-label">Connecting…</span></div>
+      <button class="btn btn-primary btn-sm" onclick="openNewReportModal()"><i class="fa-solid fa-plus"></i> New Report</button>
+    </div>
+  </header>
+
+  <div id="content">
+
+    <!-- ASSET SELECTOR -->
+    <div class="wcard" style="margin-bottom:20px">
+      <div class="wcard-hd">
+        <div>
+          <div class="wcard-title">Select Asset</div>
+          <div class="wcard-sub">Search for the facility you're reporting on</div>
+        </div>
+      </div>
+      <div style="padding:16px 20px">
+        <div class="asset-search-wrap">
+          <div style="position:relative">
+            <i class="fa-solid fa-magnifying-glass" style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--text3);font-size:13px;pointer-events:none"></i>
+            <input class="form-control" id="asset-search-input" placeholder="Search by asset name or ID…"
+              oninput="searchAssets(this.value)" autocomplete="off" style="padding-left:36px">
+          </div>
+          <div id="asset-search-dd"></div>
+        </div>
+        <div id="selected-asset-bar" style="display:none;margin-top:12px" class="selected-asset-bar">
+          <i class="fa-solid fa-building"></i>
+          <div style="flex:1;min-width:0">
+            <div class="sa-name" id="sa-name">—</div>
+            <div class="sa-id" id="sa-id">—</div>
+          </div>
+          <button class="btn btn-ghost btn-xs" onclick="clearSelectedAsset()"><i class="fa-solid fa-xmark"></i> Clear</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- STATS BAR -->
+    <div id="me-stats-bar" style="margin-bottom:16px">
+      <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px">
+        <div class="wcard" style="padding:14px;text-align:center">
+          <div style="font-size:26px;font-weight:800;color:var(--text)" id="stat-total">0</div>
+          <div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-top:3px">Total</div>
+        </div>
+        <div class="wcard" style="padding:14px;text-align:center">
+          <div style="font-size:26px;font-weight:800;color:var(--text3)" id="stat-draft">0</div>
+          <div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-top:3px">Draft</div>
+        </div>
+        <div class="wcard" style="padding:14px;text-align:center">
+          <div style="font-size:26px;font-weight:800;color:var(--blue)" id="stat-submitted">0</div>
+          <div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-top:3px">Submitted</div>
+        </div>
+        <div class="wcard" style="padding:14px;text-align:center">
+          <div style="font-size:26px;font-weight:800;color:var(--success)" id="stat-cleared">0</div>
+          <div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-top:3px">Cleared</div>
+        </div>
+        <div class="wcard" style="padding:14px;text-align:center">
+          <div style="font-size:26px;font-weight:800;color:var(--danger)" id="stat-notcleared">0</div>
+          <div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-top:3px">Not Cleared</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- REPORTS LIST -->
+    <div class="wcard">
+      <div class="wcard-hd">
+        <div>
+          <div class="wcard-title" id="reports-title">All M&amp;E Reports</div>
+          <div class="wcard-sub" id="reports-sub">Select an asset above to filter by facility</div>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <select class="form-control" id="filter-status" onchange="loadReports()" style="font-size:12px;padding:6px 10px;width:auto">
+            <option value="">All Statuses</option>
+            <option value="Draft">Draft</option>
+            <option value="Submitted">Submitted</option>
+            <option value="Cleared">Cleared</option>
+            <option value="Not Cleared">Not Cleared</option>
+          </select>
+          <select class="form-control" id="filter-type" onchange="loadReports()" style="font-size:12px;padding:6px 10px;width:auto">
+            <option value="">Secretariat &amp; NHP</option>
+            <option value="secretariat">Secretariat Only</option>
+            <option value="nhp">NHP Only</option>
+          </select>
+        </div>
+      </div>
+      <div style="padding:16px 20px" id="reports-list">
+        <div class="empty-state">
+          <div class="empty-icon"><i class="fa-solid fa-chart-line"></i></div>
+          <div class="empty-title">No reports yet</div>
+          <div class="empty-sub">Select an asset and click "New Report" to get started</div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /main -->
+
+<!-- ═══════════════════════════════════════════════════════════════
+     NEW REPORT MODAL
+════════════════════════════════════════════════════════════════ -->
+<div id="report-modal" class="modal-overlay">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="report-modal-title">New M&amp;E Report</div>
+      <button class="modal-close" onclick="closeReportModal()"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="modal-body" id="report-modal-body">
+      <!-- Injected by JS -->
+    </div>
+    <div class="modal-footer" id="report-modal-footer"></div>
+  </div>
+</div>
+
+<!-- CLEARANCE MODAL -->
+<div id="clearance-modal" class="modal-overlay">
+  <div class="modal" style="width:620px">
+    <div class="modal-header">
+      <div class="modal-title">Issue Clearance Certificate</div>
+      <button class="modal-close" onclick="closeClearanceModal()"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="modal-body" id="clearance-modal-body"></div>
+    <div class="modal-footer" id="clearance-modal-footer"></div>
+  </div>
+</div>
+
+<!-- VIEW MODAL -->
+<div id="view-modal" class="modal-overlay">
+  <div class="modal" style="width:700px">
+    <div class="modal-header">
+      <div class="modal-title" id="view-modal-title">Report Detail</div>
+      <button class="modal-close" onclick="document.getElementById('view-modal').classList.remove('open')"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="modal-body" id="view-modal-body"></div>
+    <div class="modal-footer" id="view-modal-footer"></div>
+  </div>
+</div>
+
+<div id="toast"><i class="fa-solid fa-circle-check"></i><span id="toast-msg">Done</span></div>
+
+<script src="js/api.js"></script>
+<script src="js/app.js"></script>
+<script src="js/notifications.js"></script>
+
+<script>
+// ── CONSTANTS ─────────────────────────────────────────────────────────────────
+const SECRETARIAT_TASKS = [
+  'General Cleaning of the Complex and its Surrounding',
+  'Horticulture work',
+  'Attendance to Minor Mechanical repairs in the complex',
+  'Water supply in the Complex for Improved sanitation purposes',
+  'Attendance to minor Electrical repairs',
+  'Operation, servicing of generators and minor repairs of borehole',
+  'Quarterly fumigation of the complex',
+  'Removal of refuse and proper disposal in a refuse dump',
+  'Provision of equipment, tools and non-hazardous chemical',
+  'Minor repairs of doors and windows such as locks and hinges',
+];
+
+const NHP_TASKS = [
+  'General Cleaning of the Facility and its Surrounding',
+  'Horticulture work',
+  'Night Security',
+  'Day Security',
+  'Quarterly cleaning of Apartment',
+  'Purchase of cleaning equipment',
+  'Purchase of Security equipment',
+  'Removal of refuse and proper disposal in a refuse dump',
+  'Hiring of Staff',
+];
+
+const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+// ── STATE ─────────────────────────────────────────────────────────────────────
+let _selectedAsset = null;   // { _id, assetId, name, type, state }
+let _allReports    = [];     // flat list across assets (for unfiltered view)
+let _assetReports  = [];     // reports for selected asset
+let _editingReport = null;   // report being edited/viewed
+
+// ── LOGOUT ────────────────────────────────────────────────────────────────────
+function doLogout() {
+  apiLogout().finally(() => { localStorage.removeItem('as_token'); window.location.href = '../login.html'; });
+}
+
+// ── ASSET SEARCH ──────────────────────────────────────────────────────────────
+let _searchTimer = null;
+function searchAssets(q) {
+  const inp = document.getElementById('asset-search-input');
+  const dd  = document.getElementById('asset-search-dd');
+  clearTimeout(_searchTimer);
+  if (!q || q.trim().length < 2) { dd.innerHTML = ''; dd.classList.remove('open'); return; }
+
+  // Position dropdown under the input (fixed positioning)
+  const rect = inp.getBoundingClientRect();
+  dd.style.top   = (rect.bottom + 6) + 'px';
+  dd.style.left  = rect.left + 'px';
+  dd.style.width = rect.width + 'px';
+
+  dd.innerHTML = '<div style="padding:10px 16px;font-size:12px;color:var(--text3)">Searching…</div>';
+  dd.classList.add('open');
+  _searchTimer = setTimeout(async () => {
+    try {
+      const res = await apiSearchAssets(q.trim());
+      const list = Array.isArray(res) ? res : (res.assets || res.data || []);
+      if (!list.length) { dd.innerHTML = '<div style="padding:10px 16px;font-size:12px;color:var(--text3)">No assets found</div>'; return; }
+      dd.innerHTML = list.slice(0, 8).map(a => `
+        <div class="asset-dd-item" onclick="selectAsset(${JSON.stringify(a).replace(/"/g,'&quot;')})">
+          <div class="asset-dd-name">${escHtml(a.name || a.assetId)}</div>
+          <div class="asset-dd-sub">${escHtml(a.assetId || '')} · ${escHtml(a.type || '')} · ${escHtml(a.state || a.location?.state || '')}</div>
+        </div>`).join('');
+    } catch { dd.innerHTML = '<div style="padding:10px 16px;font-size:12px;color:var(--danger)">Search failed</div>'; }
+  }, 300);
+}
+
+function selectAsset(a) {
+  _selectedAsset = a;
+  document.getElementById('asset-search-input').value = a.name || a.assetId;
+  document.getElementById('asset-search-dd').classList.remove('open');
+  document.getElementById('sa-name').textContent = a.name || a.assetId;
+  document.getElementById('sa-id').textContent   = a.assetId || a._id;
+  document.getElementById('selected-asset-bar').style.display = 'flex';
+  document.getElementById('reports-title').textContent = `Reports — ${a.name || a.assetId}`;
+  document.getElementById('reports-sub').textContent   = `${a.type || ''} · ${a.state || ''}`;
+  loadReports();
+}
+
+function clearSelectedAsset() {
+  _selectedAsset = null;
+  document.getElementById('asset-search-input').value = '';
+  document.getElementById('selected-asset-bar').style.display = 'none';
+  document.getElementById('reports-title').textContent = 'All M&E Reports';
+  document.getElementById('reports-sub').textContent   = 'Select an asset above to filter by facility';
+  loadReports();
+}
+
+document.addEventListener('click', e => {
+  if (!document.getElementById('asset-search-dd')?.contains(e.target) &&
+      e.target.id !== 'asset-search-input') {
+    document.getElementById('asset-search-dd')?.classList.remove('open');
+  }
+});
+
+// ── LOAD REPORTS ──────────────────────────────────────────────────────────────
+async function loadReports() {
+  const listEl    = document.getElementById('reports-list');
+  const statusFlt = document.getElementById('filter-status')?.value || '';
+  const typeFlt   = document.getElementById('filter-type')?.value   || '';
+
+  listEl.innerHTML = '<div style="padding:24px;text-align:center"><div class="spinner"></div></div>';
+
+  try {
+    if (_selectedAsset) {
+      const id   = _selectedAsset.assetId || _selectedAsset._id;
+      const data = await apiGetMeReports(id);
+      _assetReports = data.reports || [];
+      updateStatsBar(_assetReports);
+    } else {
+      const data = await apiGetAllMeReports();
+      _assetReports = data.reports || [];
+      updateStatsBar(_assetReports, data.summary);
+    }
+
+    let list = _assetReports;
+    if (statusFlt) list = list.filter(r => r.status === statusFlt);
+    if (typeFlt)   list = list.filter(r => r.reportType === typeFlt);
+
+    renderReportsList(list);
+  } catch(e) {
+    listEl.innerHTML = `<div class="empty-state"><div class="empty-icon"><i class="fa-solid fa-triangle-exclamation"></i></div><div class="empty-title">Could not load reports</div><div class="empty-sub">${escHtml(e.message)}</div></div>`;
+  }
+}
+
+function updateStatsBar(reports, summary) {
+  const s = summary || {
+    total:      reports.length,
+    draft:      reports.filter(r => r.status === 'Draft').length,
+    submitted:  reports.filter(r => r.status === 'Submitted').length,
+    cleared:    reports.filter(r => r.status === 'Cleared').length,
+    notCleared: reports.filter(r => r.status === 'Not Cleared').length,
+  };
+  document.getElementById('me-stats-bar').style.display  = '';
+  document.getElementById('stat-total').textContent      = s.total;
+  document.getElementById('stat-draft').textContent      = s.draft;
+  document.getElementById('stat-submitted').textContent  = s.submitted;
+  document.getElementById('stat-cleared').textContent    = s.cleared;
+  document.getElementById('stat-notcleared').textContent = s.notCleared;
+}
+
+// Load aggregate M&E stats + all reports across all assets
+async function loadGlobalStats() {
+  try {
+    const data = await apiGetAllMeReports();
+    updateStatsBar(data.reports || [], data.summary);
+    // If no asset selected, populate the list with all reports
+    if (!_selectedAsset) {
+      _assetReports = data.reports || [];
+      const statusFlt = document.getElementById('filter-status')?.value || '';
+      const typeFlt   = document.getElementById('filter-type')?.value   || '';
+      let list = _assetReports;
+      if (statusFlt) list = list.filter(r => r.status === statusFlt);
+      if (typeFlt)   list = list.filter(r => r.reportType === typeFlt);
+      renderReportsList(list);
+    }
+  } catch(e) {
+    console.warn('[ME] Could not load global stats:', e.message);
+  }
+}
+
+// ── PRINT CLEARANCE CERTIFICATE ───────────────────────────────────────────────
+function printCertificate(r) {
+  if (!r || !r.clearanceIssued) return;
+  const month = MONTHS[(r.reportMonth||1)-1];
+  const type  = r.reportType === 'nhp' ? 'NHP' : 'Secretariat';
+  const sat   = r.satisfactory !== false;
+  const asset = _selectedAsset;
+
+  const fmtDate = (d) => d ? new Date(d).toLocaleDateString('en-NG', {day:'2-digit',month:'long',year:'numeric'}) : '';
+  const fmtDateShort = (d) => d ? new Date(d).toLocaleDateString('en-NG') : '';
+
+  const css = [
+    '* { box-sizing:border-box; margin:0; padding:0; }',
+    'body { font-family:"Times New Roman",serif; font-size:12pt; color:#000; padding:40px; max-width:800px; margin:0 auto; }',
+    '.hdr { text-align:center; margin-bottom:24px; padding-bottom:16px; border-bottom:2px solid #000 }',
+    '.hdr h1 { font-size:14pt; font-weight:bold; text-transform:uppercase; margin-bottom:4px }',
+    '.hdr p { font-size:10pt; margin-bottom:2px }',
+    '.ttl { text-align:center; font-size:13pt; font-weight:bold; text-decoration:underline; margin:20px 0 24px }',
+    '.fr { display:flex; margin-bottom:10px; align-items:flex-start }',
+    '.fl { font-weight:bold; min-width:220px; flex-shrink:0 }',
+    '.fv { flex:1; border-bottom:1px solid #000; min-width:200px; padding-bottom:2px }',
+    '.sec { font-weight:bold; text-decoration:underline; margin:20px 0 12px }',
+    '.ct { margin-bottom:12px; line-height:1.8 }',
+    '.ct .bl { border-bottom:1px solid #000; display:inline-block; min-width:120px }',
+    '.sg { display:grid; grid-template-columns:1fr 1fr; gap:40px; margin-top:32px }',
+    '.sl { border-top:1px solid #000; margin-top:48px; margin-bottom:6px }',
+    '.slbl { font-weight:bold; font-size:11pt; margin-bottom:8px }',
+    '.sf { margin-bottom:6px; display:flex }',
+    '.sfl { min-width:120px; font-weight:bold }',
+    '.sfv { flex:1; border-bottom:1px solid #000 }',
+    '.dist { margin-top:28px; font-size:10pt }',
+    '.dist p { margin-bottom:3px }',
+    '@media print { body { padding:20px } .noprint { display:none } }',
+  ].join('\n');
+
+  const rows = [
+    ['SITE LOCATION', escHtml((asset?.name || '') + ' (' + (asset?.assetId || '') + ')')],
+    ['PROJECT DESCRIPTION', escHtml((r.reportLocation || asset?.name || '') + ' \u2014 ' + type + ' Facility Management, ' + month + ' ' + r.reportYear)],
+    ['CONTRACTOR', escHtml(r.contractorName || '')],
+    ['ADDRESS OF CONTRACTOR', escHtml(r.contractorAddress || '')],
+    ['CONTRACT NO', escHtml(r.contractNo || '')],
+    ['CONTRACT SUM', r.contractSum ? '\u20a6' + Number(r.contractSum).toLocaleString() : ''],
+    ['CONTRACT PERIOD', escHtml(r.contractPeriod || '')],
+    ['DATE OF ISSUANCE', fmtDate(r.clearanceDate)],
+  ].map(([l,v]) => '<div class="fr"><span class="fl">' + l + ':</span><span class="fv">' + v + '</span></div>').join('\n');
+
+  const html = '<!DOCTYPE html>\n<html><head><meta charset="UTF-8"><title>Clearance Certificate</title>\n<style>' + css + '<\/style></head><body>\n'
+    + '<div class="hdr"><h1>Federal Ministry of Housing and Urban Development</h1>'
+    + '<p>Headquarters, Mabushi, Abuja.</p>'
+    + '<p><strong>Department of Federal Public Assets Maintenance.</strong></p></div>\n'
+    + '<div class="ttl">FACILITY MANAGEMENT CLEARANCE CERTIFICATE.</div>\n'
+    + rows
+    + '\n<div class="sec">CERTIFICATION:</div>\n'
+    + '<div class="ct">i) &nbsp; This is to certify that your company has <strong>' + (sat ? 'satisfactorily' : 'UNSATISFACTORILY') + '</strong> '
+    + 'carried out all Facility Management works as specified in the Contract document for the Month of '
+    + '<span class="bl"><strong>' + month + ' ' + r.reportYear + '</strong></span>.</div>\n'
+    + '<div class="ct">ii) &nbsp; The unsatisfactory works/works not done are: '
+    + '<span class="bl" style="min-width:300px">' + (r.unsatisfactoryWorks ? escHtml(r.unsatisfactoryWorks) : (sat ? 'N/A \u2014 All works satisfactorily completed' : '')) + '</span>'
+    + (!sat ? '<br><em>See attached list of unsatisfactory works/works not done.</em>' : '') + '</div>\n'
+    + '<div class="sg">'
+    + '<div><div class="sl"></div><div class="slbl">CHIEF RESIDENT ARCHITECT, FMW&amp;H.</div>'
+    + '<div class="sf"><span class="sfl">NAME:</span><span class="sfv">' + escHtml(r.craName || '') + '</span></div>'
+    + '<div class="sf"><span class="sfl">DESIGNATION:</span><span class="sfv">' + escHtml(r.craDesignation || '') + '</span></div>'
+    + '<div class="sf"><span class="sfl">DATE:</span><span class="sfv">' + fmtDateShort(r.craDate) + '</span></div></div>'
+    + '<div><div class="sl"></div><div class="slbl">FACILITY MANAGER.</div>'
+    + '<div class="sf"><span class="sfl">NAME:</span><span class="sfv">' + escHtml(r.facilityManagerName || '') + '</span></div>'
+    + '<div class="sf"><span class="sfl">DESIGNATION:</span><span class="sfv">' + escHtml(r.facilityManagerDesig || '') + '</span></div>'
+    + '<div class="sf"><span class="sfl">DATE:</span><span class="sfv">' + fmtDateShort(r.facilityManagerDate) + '</span></div></div>'
+    + '</div>\n'
+    + '<div class="dist"><p><strong>Distribution:</strong></p>'
+    + '<p>1) Director, Federal Public Assets Maintenance. &nbsp;&nbsp;&nbsp; 2) Deputy Director, Monitoring and Evaluation.</p>'
+    + '<p>3) The Controller, Field Headquarters. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 4) Chief Resident Architect.</p></div>'
+    + '<br><br><button class="noprint" onclick="window.print()" style="padding:10px 24px;background:#0B2545;color:#fff;border:none;border-radius:6px;font-size:13px;cursor:pointer">'
+    + 'Print / Save as PDF</button>'
+    + '<\/body><\/html>';
+
+  const win = window.open('', '_blank');
+  win.document.open();
+  win.document.write(html);
+  win.document.close();
+  win.focus();
+}
+
+function renderReportsList(list) {
+  const listEl = document.getElementById('reports-list');
+  if (!list.length) {
+    listEl.innerHTML = `<div class="empty-state">
+      <div class="empty-icon"><i class="fa-solid fa-chart-line"></i></div>
+      <div class="empty-title">${_selectedAsset ? 'No reports for this asset' : 'No M&amp;E reports yet'}</div>
+      <div class="empty-sub">${_selectedAsset ? 'Click "New Report" to submit the first one' : 'Select an asset above and click "New Report" to get started'}</div>
+    </div>`;
+    return;
+  }
+
+  listEl.innerHTML = list.slice().reverse().map(r => {
+    const month  = MONTHS[(r.reportMonth||1)-1] || '—';
+    const year   = r.reportYear || '—';
+    const type   = r.reportType === 'nhp' ? 'NHP' : 'Secretariat';
+    const pct    = r.overallPercentage ?? 0;
+    const status = r.status || 'Draft';
+    const statusTag = {
+      'Draft':      '<span class="tag tag-gray">Draft</span>',
+      'Submitted':  '<span class="tag tag-blue">Submitted</span>',
+      'Cleared':    '<span class="tag tag-green"><i class="fa-solid fa-check" style="font-size:9px"></i> Cleared</span>',
+      'Not Cleared':'<span class="tag tag-red"><i class="fa-solid fa-xmark" style="font-size:9px"></i> Not Cleared</span>',
+    }[status] || '';
+
+    const pctColor = pct >= 75 ? 'var(--success)' : pct >= 50 ? 'var(--warn)' : 'var(--danger)';
+    // Show asset name when viewing global list
+    const assetLine = !_selectedAsset && r._assetName
+      ? `<div style="font-size:11px;color:var(--blue);font-weight:600;margin-bottom:3px"><i class="fa-solid fa-building" style="font-size:10px;margin-right:4px"></i>${escHtml(r._assetName)} <span style="color:var(--text3);font-weight:400;font-family:monospace">${escHtml(r._assetId||'')}</span></div>`
+      : '';
+
+    return `<div class="report-card" onclick="viewReport(${JSON.stringify(r).replace(/"/g,'&quot;')})">
+      <div class="report-icon"><i class="fa-solid fa-file-lines"></i></div>
+      <div class="report-meta">
+        ${assetLine}
+        <div class="report-title">${month} ${year} — ${type} Progress Report</div>
+        <div class="report-sub" style="margin-bottom:6px">
+          ${r.contractorName ? escHtml(r.contractorName) + ' · ' : ''}
+          ${r.contractNo ? 'Contract: ' + escHtml(r.contractNo) + ' · ' : ''}
+          Submitted: ${r.submittedAt ? new Date(r.submittedAt).toLocaleDateString('en-NG') : '—'}
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+          ${statusTag}
+          <span class="tag tag-navy" style="font-size:10px">${type}</span>
+          ${r.clearanceIssued ? '<span class="tag tag-green" style="font-size:10px"><i class="fa-solid fa-certificate" style="font-size:9px"></i> Certificate Issued</span>' : ''}
+        </div>
+      </div>
+      <div style="text-align:right;flex-shrink:0">
+        <div style="font-size:24px;font-weight:800;color:${pctColor}">${pct}%</div>
+        <div style="font-size:10px;color:var(--text3)">Overall</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ── NEW REPORT MODAL ──────────────────────────────────────────────────────────
+function openNewReportModal() {
+  if (!_selectedAsset) {
+    toast('Please select an asset first', 'fa-triangle-exclamation', true); return;
+  }
+  _editingReport = null;
+  document.getElementById('report-modal-title').textContent = 'New M&E Report';
+  renderReportForm(null);
+  document.getElementById('report-modal').classList.add('open');
+}
+
+function closeReportModal() { document.getElementById('report-modal').classList.remove('open'); }
+
+function renderReportForm(existing) {
+  const now   = new Date();
+  const tasks = existing
+    ? existing.tasks
+    : (document.getElementById('rm-type')?.value === 'nhp' ? NHP_TASKS : SECRETARIAT_TASKS)
+        .map(l => ({ label: l, percentage: 0 }));
+
+  const body = `
+  <!-- STEP TABS -->
+  <div class="step-tabs">
+    <div class="step-tab active" id="stab-1" onclick="switchStep(1)"><i class="fa-solid fa-file-contract"></i> Contract Info</div>
+    <div class="step-tab" id="stab-2" onclick="switchStep(2)"><i class="fa-solid fa-list-check"></i> Task Progress</div>
+    <div class="step-tab" id="stab-3" onclick="switchStep(3)"><i class="fa-solid fa-star-half-stroke"></i> Remarks</div>
+  </div>
+
+  <!-- STEP 1: CONTRACT INFO -->
+  <div class="step-pane active" id="spane-1">
+    <div class="form-section">Report Details</div>
+    <div class="form-grid">
+      <div class="form-group">
+        <label class="form-label">Report Type *</label>
+        <select class="form-control" id="rm-type" onchange="onTypeChange()">
+          <option value="secretariat" ${(!existing||existing.reportType==='secretariat')?'selected':''}>Secretariat</option>
+          <option value="nhp" ${existing?.reportType==='nhp'?'selected':''}>NHP</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Report Month *</label>
+        <select class="form-control" id="rm-month">
+          ${MONTHS.map((m,i)=>`<option value="${i+1}" ${(existing?.reportMonth===i+1||(i+1===now.getMonth()+1&&!existing))?'selected':''}>${m}</option>`).join('')}
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Report Year *</label>
+        <input class="form-control" id="rm-year" type="number" value="${existing?.reportYear||now.getFullYear()}" min="2020" max="2040">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Contract No.</label>
+        <input class="form-control" id="rm-contractno" placeholder="e.g. FMHUD/2024/001" value="${escHtml(existing?.contractNo||'')}">
+      </div>
+      <div class="form-group full">
+        <label class="form-label">Contractor Name</label>
+        <input class="form-control" id="rm-contractor" placeholder="Full company name" value="${escHtml(existing?.contractorName||'')}">
+      </div>
+      <div class="form-group full">
+        <label class="form-label">Contractor Address</label>
+        <input class="form-control" id="rm-address" placeholder="Address" value="${escHtml(existing?.contractorAddress||'')}">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Contract Sum (₦)</label>
+        <input class="form-control" id="rm-sum" type="number" placeholder="e.g. 5000000" value="${existing?.contractSum||''}">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Contract Period</label>
+        <input class="form-control" id="rm-period" placeholder="e.g. 12 months" value="${escHtml(existing?.contractPeriod||'')}">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Commencement Date</label>
+        <input class="form-control" id="rm-commence" type="date" value="${existing?.commencementDate?new Date(existing.commencementDate).toISOString().slice(0,10):''}">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Completion Period</label>
+        <input class="form-control" id="rm-completion" placeholder="e.g. December 2024" value="${escHtml(existing?.completionPeriod||'')}">
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 2: TASK PROGRESS -->
+  <div class="step-pane" id="spane-2">
+    <div class="form-section" id="tasks-section-title">Facility Management Tasks</div>
+    <div id="tasks-container">
+      ${renderTaskRows(existing ? existing.tasks : null, existing?.reportType || 'secretariat')}
+    </div>
+    <div style="margin-top:16px;padding-top:14px;border-top:2px solid var(--border);display:flex;align-items:center;justify-content:space-between">
+      <div style="font-size:13px;font-weight:700;color:var(--text2)">Overall Percentage of Work Done</div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <input class="pct-input" id="rm-overall" type="number" min="0" max="100" value="${existing?.overallPercentage||0}" style="width:90px;font-size:18px;font-weight:800;color:var(--blue)">
+        <span style="font-size:18px;font-weight:800;color:var(--blue)">%</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 3: REMARKS -->
+  <div class="step-pane" id="spane-3">
+    <div class="form-section">General Remarks</div>
+    <div style="margin-bottom:16px">
+      ${renderRatingRow('Labour Operatives Available', 'rm-labour', existing?.labourRating)}
+      ${renderRatingRow('Supply of Materials on Site', 'rm-materials', existing?.materialsRating)}
+      ${renderRatingRow('Rate of Progress of Work', 'rm-progress', existing?.progressRating)}
+      ${renderRatingRow('Quality of Workmanship', 'rm-workmanship', existing?.workmanshipRating)}
+    </div>
+    <div class="form-group full">
+      <label class="form-label">Other Comments</label>
+      <textarea class="form-control" id="rm-comments" rows="3" placeholder="Any additional observations or notes…">${escHtml(existing?.otherComments||'')}</textarea>
+    </div>
+    <div class="form-section" style="margin-top:20px">Chief Resident Architect Sign-Off</div>
+    <div class="form-grid">
+      <div class="form-group">
+        <label class="form-label">CRA Name</label>
+        <input class="form-control" id="rm-cra-name" value="${escHtml(existing?.craName||'')}">
+      </div>
+      <div class="form-group">
+        <label class="form-label">CRA Designation</label>
+        <input class="form-control" id="rm-cra-desig" value="${escHtml(existing?.craDesignation||'')}">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Date</label>
+        <input class="form-control" id="rm-cra-date" type="date" value="${existing?.craDate?new Date(existing.craDate).toISOString().slice(0,10):''}">
+      </div>
+    </div>
+  </div>`;
+
+  document.getElementById('report-modal-body').innerHTML = body;
+  document.getElementById('report-modal-footer').innerHTML = `
+    <button class="btn btn-ghost" onclick="closeReportModal()">Cancel</button>
+    <button class="btn btn-secondary" onclick="saveReport('Draft')"><i class="fa-solid fa-floppy-disk"></i> Save Draft</button>
+    <button class="btn btn-primary" onclick="saveReport('Submitted')"><i class="fa-solid fa-paper-plane"></i> Submit Report</button>`;
+}
+
+function renderTaskRows(existingTasks, type) {
+  const tasks = existingTasks || (type === 'nhp' ? NHP_TASKS : SECRETARIAT_TASKS).map(l=>({label:l,percentage:0}));
+  return tasks.map((t, i) => {
+    const pct = t.percentage || 0;
+    return `<div class="task-row">
+      <div>
+        <div class="task-num">${i+1}.</div>
+        <div class="task-label">${escHtml(t.label)}</div>
+        <div class="pct-bar-wrap"><div class="pct-bar" id="bar-${i}" style="width:${pct}%"></div></div>
+      </div>
+      <div>
+        <div style="display:flex;align-items:center;gap:6px">
+          <input class="pct-input" data-task-idx="${i}" type="number" min="0" max="100" value="${pct}"
+            oninput="updateBar(${i},this.value)">
+          <span style="font-size:13px;color:var(--text3)">%</span>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderRatingRow(label, id, current) {
+  const ratings = [
+    {val:'Very Good', cls:'sel-vg'},
+    {val:'Good',      cls:'sel-g'},
+    {val:'Fair',      cls:'sel-f'},
+    {val:'Poor',      cls:'sel-p'},
+  ];
+  return `<div style="margin-bottom:14px">
+    <div style="font-size:12px;font-weight:600;color:var(--text2);margin-bottom:6px">${label}</div>
+    <div class="rating-group" id="${id}-wrap">
+      ${ratings.map(r=>`<button type="button" class="rating-btn${current===r.val?' '+r.cls:''}"
+        data-rating-id="${id}" data-val="${r.val}"
+        onclick="selectRating('${id}','${r.val}','${r.cls}')">${r.val}</button>`).join('')}
+    </div>
+    <input type="hidden" id="${id}" value="${current||''}">
+  </div>`;
+}
+
+function selectRating(id, val, cls) {
+  document.querySelectorAll(`[data-rating-id="${id}"]`).forEach(b => b.className = 'rating-btn');
+  const btn = document.querySelector(`[data-rating-id="${id}"][data-val="${val}"]`);
+  if (btn) btn.classList.add(cls);
+  const inp = document.getElementById(id);
+  if (inp) inp.value = val;
+}
+
+function updateBar(idx, val) {
+  const pct = Math.min(100, Math.max(0, Number(val)||0));
+  const bar = document.getElementById('bar-' + idx);
+  if (bar) bar.style.width = pct + '%';
+}
+
+function switchStep(n) {
+  [1,2,3].forEach(i => {
+    document.getElementById('stab-' + i)?.classList.toggle('active', i === n);
+    document.getElementById('spane-' + i)?.classList.toggle('active', i === n);
+  });
+}
+
+function onTypeChange() {
+  const type = document.getElementById('rm-type')?.value;
+  const container = document.getElementById('tasks-container');
+  if (container) container.innerHTML = renderTaskRows(null, type);
+}
+
+// ── SAVE REPORT ───────────────────────────────────────────────────────────────
+async function saveReport(status) {
+  if (!_selectedAsset) { toast('No asset selected', 'fa-triangle-exclamation', true); return; }
+
+  const type = document.getElementById('rm-type')?.value;
+  const taskInputs = document.querySelectorAll('[data-task-idx]');
+  const tasks = Array.from(taskInputs).map(inp => {
+    const idx  = Number(inp.dataset.taskIdx);
+    const src  = type === 'nhp' ? NHP_TASKS : SECRETARIAT_TASKS;
+    const label = src[idx] || ('Task ' + (idx+1));
+    return { label, percentage: Number(inp.value)||0 };
+  });
+
+  const payload = {
+    reportType:        type,
+    reportMonth:       Number(document.getElementById('rm-month')?.value),
+    reportYear:        Number(document.getElementById('rm-year')?.value),
+    contractNo:        document.getElementById('rm-contractno')?.value.trim(),
+    contractorName:    document.getElementById('rm-contractor')?.value.trim(),
+    contractorAddress: document.getElementById('rm-address')?.value.trim(),
+    contractSum:       document.getElementById('rm-sum')?.value || undefined,
+    contractPeriod:    document.getElementById('rm-period')?.value.trim(),
+    commencementDate:  document.getElementById('rm-commence')?.value || undefined,
+    completionPeriod:  document.getElementById('rm-completion')?.value.trim(),
+    tasks,
+    overallPercentage: Number(document.getElementById('rm-overall')?.value)||0,
+    labourRating:      document.getElementById('rm-labour')?.value || undefined,
+    materialsRating:   document.getElementById('rm-materials')?.value || undefined,
+    progressRating:    document.getElementById('rm-progress')?.value || undefined,
+    workmanshipRating: document.getElementById('rm-workmanship')?.value || undefined,
+    otherComments:     document.getElementById('rm-comments')?.value.trim(),
+    craName:           document.getElementById('rm-cra-name')?.value.trim(),
+    craDesignation:    document.getElementById('rm-cra-desig')?.value.trim(),
+    craDate:           document.getElementById('rm-cra-date')?.value || undefined,
+    status,
+  };
+
+  if (!payload.reportMonth || !payload.reportYear) {
+    toast('Month and year are required', 'fa-triangle-exclamation', true); return;
+  }
+
+  try {
+    const id  = _selectedAsset.assetId || _selectedAsset._id;
+    const res = _editingReport
+      ? await apiUpdateMeReport(id, _editingReport._id, payload)
+      : await apiCreateMeReport(id, payload);
+
+    toast(status === 'Draft' ? 'Report saved as draft' : 'Report submitted successfully', 'fa-circle-check');
+    closeReportModal();
+    loadReports();
+  } catch(e) {
+    toast(e.message || 'Failed to save report', 'fa-circle-xmark', true);
+  }
+}
+
+// ── VIEW REPORT ───────────────────────────────────────────────────────────────
+function viewReport(r) {
+  _editingReport = r;
+  const month  = MONTHS[(r.reportMonth||1)-1];
+  const type   = r.reportType === 'nhp' ? 'NHP' : 'Secretariat';
+  const pct    = r.overallPercentage ?? 0;
+  const pctColor = pct >= 75 ? 'var(--success)' : pct >= 50 ? 'var(--warn)' : 'var(--danger)';
+
+  const statusTag = {
+    'Draft':       '<span class="tag tag-gray">Draft</span>',
+    'Submitted':   '<span class="tag tag-blue">Submitted</span>',
+    'Cleared':     '<span class="tag tag-green">Cleared</span>',
+    'Not Cleared': '<span class="tag tag-red">Not Cleared</span>',
+  }[r.status] || '';
+
+  const ratingBadge = v => ({ 'Very Good':'tag-green','Good':'tag-blue','Fair':'tag-warn','Poor':'tag-red' }[v]||'tag-gray');
+
+  document.getElementById('view-modal-title').textContent = `${month} ${r.reportYear} — ${type} Report`;
+
+  document.getElementById('view-modal-body').innerHTML = `
+    <!-- Header stats -->
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px">
+      <div style="background:var(--bg);border-radius:10px;padding:14px;text-align:center">
+        <div style="font-size:28px;font-weight:800;color:${pctColor}">${pct}%</div>
+        <div style="font-size:11px;color:var(--text3)">Overall Progress</div>
+      </div>
+      <div style="background:var(--bg);border-radius:10px;padding:14px;text-align:center">
+        <div style="font-size:15px;font-weight:700;color:var(--text);margin-bottom:4px">${statusTag}</div>
+        <div style="font-size:11px;color:var(--text3)">Status</div>
+      </div>
+      <div style="background:var(--bg);border-radius:10px;padding:14px;text-align:center">
+        <div style="font-size:15px;font-weight:700;color:var(--text)">${type}</div>
+        <div style="font-size:11px;color:var(--text3)">Form Type</div>
+      </div>
+    </div>
+
+    <!-- Contract info -->
+    ${r.contractorName||r.contractNo ? `<div class="form-section">Contract Information</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;font-size:13px">
+      ${r.contractNo ? `<div><span style="color:var(--text3)">Contract No:</span> <strong>${escHtml(r.contractNo)}</strong></div>` : ''}
+      ${r.contractorName ? `<div><span style="color:var(--text3)">Contractor:</span> <strong>${escHtml(r.contractorName)}</strong></div>` : ''}
+      ${r.contractSum ? `<div><span style="color:var(--text3)">Sum:</span> <strong>₦${Number(r.contractSum).toLocaleString()}</strong></div>` : ''}
+      ${r.contractPeriod ? `<div><span style="color:var(--text3)">Period:</span> <strong>${escHtml(r.contractPeriod)}</strong></div>` : ''}
+    </div>` : ''}
+
+    <!-- Task breakdown -->
+    <div class="form-section">Task Progress</div>
+    <div style="margin-bottom:16px">
+      ${(r.tasks||[]).map((t,i)=>`<div style="display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid var(--border)">
+        <div style="font-size:11px;color:var(--text3);width:18px">${i+1}.</div>
+        <div style="flex:1;font-size:13px;color:var(--text2)">${escHtml(t.label)}</div>
+        <div style="width:120px">
+          <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text3);margin-bottom:3px">
+            <span></span><span>${t.percentage}%</span>
+          </div>
+          <div class="pct-bar-wrap"><div class="pct-bar" style="width:${t.percentage}%;background:${t.percentage>=75?'var(--success)':t.percentage>=50?'var(--warn)':'var(--danger)'}"></div></div>
+        </div>
+      </div>`).join('')}
+    </div>
+
+    <!-- Ratings -->
+    ${r.labourRating||r.materialsRating||r.progressRating||r.workmanshipRating ? `
+    <div class="form-section">General Remarks</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px;font-size:12px">
+      ${r.labourRating      ? `<div style="display:flex;justify-content:space-between;background:var(--bg);padding:8px 12px;border-radius:7px"><span>Labour</span><span class="tag ${ratingBadge(r.labourRating)}">${r.labourRating}</span></div>` : ''}
+      ${r.materialsRating   ? `<div style="display:flex;justify-content:space-between;background:var(--bg);padding:8px 12px;border-radius:7px"><span>Materials</span><span class="tag ${ratingBadge(r.materialsRating)}">${r.materialsRating}</span></div>` : ''}
+      ${r.progressRating    ? `<div style="display:flex;justify-content:space-between;background:var(--bg);padding:8px 12px;border-radius:7px"><span>Rate of Progress</span><span class="tag ${ratingBadge(r.progressRating)}">${r.progressRating}</span></div>` : ''}
+      ${r.workmanshipRating ? `<div style="display:flex;justify-content:space-between;background:var(--bg);padding:8px 12px;border-radius:7px"><span>Workmanship</span><span class="tag ${ratingBadge(r.workmanshipRating)}">${r.workmanshipRating}</span></div>` : ''}
+    </div>` : ''}
+
+    ${r.otherComments ? `<div style="background:var(--bg);border-radius:8px;padding:12px 14px;font-size:13px;color:var(--text2);margin-bottom:16px"><strong>Comments:</strong> ${escHtml(r.otherComments)}</div>` : ''}
+
+    <!-- Clearance -->
+    ${r.clearanceIssued ? `
+    <div class="clearance-banner ${r.satisfactory===false?'not-cleared':''}">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+        <i class="fa-solid fa-certificate" style="color:${r.satisfactory===false?'var(--danger)':'var(--success)'}"></i>
+        <strong style="font-size:13px">Clearance Certificate ${r.satisfactory===false?'— NOT CLEARED':'Issued'}</strong>
+        ${r.clearanceDate?`<span style="font-size:11px;color:var(--text3)">${new Date(r.clearanceDate).toLocaleDateString('en-NG')}</span>`:''}
+      </div>
+      ${r.unsatisfactoryWorks?`<div style="font-size:12px;color:var(--text2)"><strong>Unsatisfactory works:</strong> ${escHtml(r.unsatisfactoryWorks)}</div>`:''}
+      ${r.facilityManagerName?`<div style="font-size:12px;color:var(--text3);margin-top:6px">Facility Manager: ${escHtml(r.facilityManagerName)}</div>`:''}
+    </div>` : ''}
+  `;
+
+  const u = getCurrentUser();
+  const isMESupervisor = u && u.role === 'Supervisor' && (u.division === 'Monitoring & Evaluation' || u.division === 'All');
+  const isAdmin        = u && u.role === 'System Admin';
+  const canIssue       = isMESupervisor || isAdmin;
+  const canEdit        = r.status === 'Draft';
+  const canClear       = r.status === 'Submitted' && canIssue;
+
+  document.getElementById('view-modal-footer').innerHTML = `
+    <button class="btn btn-ghost" onclick="document.getElementById('view-modal').classList.remove('open')">Close</button>
+    ${canEdit  ? `<button class="btn btn-secondary" onclick="editReport()"><i class="fa-solid fa-pen"></i> Edit</button>` : ''}
+    ${r.clearanceIssued ? `<button class="btn btn-secondary" onclick="printCertificate(_editingReport)"><i class="fa-solid fa-print"></i> Print Certificate</button>` : ''}
+    ${r.clearanceIssued ? `<button class="btn btn-success" onclick="viewCertificate()"><i class="fa-solid fa-certificate"></i> View Certificate</button>` : ''}
+    ${canClear ? `<button class="btn btn-primary" onclick="openClearanceModal()"><i class="fa-solid fa-certificate"></i> Issue Clearance</button>` : ''}
+    ${r.status === 'Submitted' && !canIssue ? `<span style="font-size:12px;color:var(--text3);align-self:center"><i class="fa-solid fa-lock" style="margin-right:4px"></i>Clearance requires M&amp;E Supervisor</span>` : ''}
+  `;
+
+  document.getElementById('view-modal').classList.add('open');
+}
+
+function editReport() {
+  document.getElementById('view-modal').classList.remove('open');
+  document.getElementById('report-modal-title').textContent = 'Edit Report';
+  renderReportForm(_editingReport);
+  document.getElementById('report-modal').classList.add('open');
+}
+
+// ── CLEARANCE CERTIFICATE ─────────────────────────────────────────────────────
+function openClearanceModal() {
+  document.getElementById('view-modal').classList.remove('open');
+  const r = _editingReport;
+  const month = MONTHS[(r.reportMonth||1)-1];
+
+  document.getElementById('clearance-modal-body').innerHTML = `
+    <div style="background:var(--bg);border-radius:10px;padding:14px;margin-bottom:20px;font-size:13px">
+      <strong>Report:</strong> ${month} ${r.reportYear} — ${r.reportType==='nhp'?'NHP':'Secretariat'}<br>
+      <strong>Contractor:</strong> ${escHtml(r.contractorName||'—')} · Contract ${escHtml(r.contractNo||'—')}
+    </div>
+
+    <div class="form-section">Certification</div>
+    <div class="form-group" style="margin-bottom:16px">
+      <label class="form-label">Satisfaction Status *</label>
+      <div style="display:flex;gap:10px">
+        <label style="display:flex;align-items:center;gap:7px;cursor:pointer;font-size:13px">
+          <input type="radio" name="cl-sat" id="cl-sat-yes" value="yes" checked style="accent-color:var(--success)">
+          <span>Satisfactorily carried out</span>
+        </label>
+        <label style="display:flex;align-items:center;gap:7px;cursor:pointer;font-size:13px">
+          <input type="radio" name="cl-sat" id="cl-sat-no" value="no" style="accent-color:var(--danger)">
+          <span>Unsatisfactorily carried out</span>
+        </label>
+      </div>
+    </div>
+    <div class="form-group full" style="margin-bottom:16px">
+      <label class="form-label">Unsatisfactory Works / Works Not Done</label>
+      <textarea class="form-control" id="cl-unsat" rows="3" placeholder="Describe works not completed or done unsatisfactorily (leave blank if satisfactory)…"></textarea>
+    </div>
+
+    <div class="form-section">Facility Manager Sign-Off</div>
+    <div class="form-grid">
+      <div class="form-group">
+        <label class="form-label">Facility Manager Name</label>
+        <input class="form-control" id="cl-fm-name" placeholder="">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Designation</label>
+        <input class="form-control" id="cl-fm-desig" placeholder="">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Date</label>
+        <input class="form-control" id="cl-fm-date" type="date" value="${new Date().toISOString().slice(0,10)}">
+      </div>
+    </div>
+  `;
+
+  document.getElementById('clearance-modal-footer').innerHTML = `
+    <button class="btn btn-ghost" onclick="closeClearanceModal()">Cancel</button>
+    <button class="btn btn-primary" onclick="issueClearance()"><i class="fa-solid fa-certificate"></i> Issue Certificate</button>
+  `;
+
+  document.getElementById('clearance-modal').classList.add('open');
+}
+
+function closeClearanceModal() { document.getElementById('clearance-modal').classList.remove('open'); }
+
+// ── VIEW CLEARANCE CERTIFICATE ────────────────────────────────────────────────
+function viewCertificate(reportOverride) {
+  const r = reportOverride || _editingReport;
+  if (!r || !r.clearanceIssued) return;
+
+  // Close view modal first
+  document.getElementById('view-modal').classList.remove('open');
+
+  const month = MONTHS[(r.reportMonth||1)-1];
+  const type  = r.reportType === 'nhp' ? 'NHP' : 'Secretariat';
+  const sat   = r.satisfactory !== false;
+
+  // Reuse clearance modal as certificate viewer
+  document.getElementById('clearance-modal').querySelector('.modal-title').textContent = 'Facility Management Clearance Certificate';
+  document.getElementById('clearance-modal-body').innerHTML = `
+    <!-- Official header -->
+    <div style="text-align:center;border-bottom:2px solid var(--border);padding-bottom:16px;margin-bottom:20px">
+      <div style="font-size:11px;font-weight:700;color:var(--blue);letter-spacing:1px;text-transform:uppercase">Federal Ministry of Housing and Urban Development</div>
+      <div style="font-size:10px;color:var(--text3);margin-top:3px">Headquarters, Mabushi, Abuja</div>
+      <div style="font-size:10px;color:var(--text3)">Department of Federal Public Assets Maintenance</div>
+      <div style="font-size:15px;font-weight:800;color:var(--text);margin-top:12px;text-decoration:underline">FACILITY MANAGEMENT CLEARANCE CERTIFICATE</div>
+    </div>
+
+    <!-- Asset & report info -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px;font-size:12px">
+      <div style="background:var(--bg);padding:8px 12px;border-radius:7px">
+        <div style="color:var(--text3);font-size:10px;text-transform:uppercase;margin-bottom:2px">Site Location</div>
+        <div style="font-weight:600">${escHtml(_selectedAsset?.name || '—')}</div>
+        <div style="color:var(--text3);font-size:10px">${escHtml(_selectedAsset?.assetId || '')}</div>
+      </div>
+      <div style="background:var(--bg);padding:8px 12px;border-radius:7px">
+        <div style="color:var(--text3);font-size:10px;text-transform:uppercase;margin-bottom:2px">Report Period</div>
+        <div style="font-weight:600">${month} ${r.reportYear} — ${type}</div>
+      </div>
+      <div style="background:var(--bg);padding:8px 12px;border-radius:7px">
+        <div style="color:var(--text3);font-size:10px;text-transform:uppercase;margin-bottom:2px">Contractor</div>
+        <div style="font-weight:600">${escHtml(r.contractorName || '—')}</div>
+        ${r.contractorAddress ? `<div style="color:var(--text3);font-size:10px">${escHtml(r.contractorAddress)}</div>` : ''}
+      </div>
+      <div style="background:var(--bg);padding:8px 12px;border-radius:7px">
+        <div style="color:var(--text3);font-size:10px;text-transform:uppercase;margin-bottom:2px">Contract No.</div>
+        <div style="font-weight:600;font-family:monospace">${escHtml(r.contractNo || '—')}</div>
+        ${r.contractSum ? `<div style="color:var(--text3);font-size:10px">₦${Number(r.contractSum).toLocaleString()}</div>` : ''}
+      </div>
+    </div>
+
+    <!-- Certification -->
+    <div style="background:${sat ? 'rgba(45,184,123,.06)' : 'rgba(224,85,85,.05)'};border:1px solid ${sat ? 'rgba(45,184,123,.25)' : 'rgba(224,85,85,.25)'};border-radius:10px;padding:16px;margin-bottom:16px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+        <i class="fa-solid fa-certificate" style="color:${sat ? 'var(--success)' : 'var(--danger)'};font-size:18px"></i>
+        <div style="font-size:13px;font-weight:700;color:var(--text)">
+          This is to certify that the above company has
+          <span style="color:${sat ? 'var(--success)' : 'var(--danger)'}">
+            ${sat ? 'SATISFACTORILY' : 'UNSATISFACTORILY'}
+          </span>
+          carried out all Facility Management works as specified in the Contract document for the Month of ${month} ${r.reportYear}.
+        </div>
+      </div>
+      ${!sat && r.unsatisfactoryWorks ? `
+        <div style="font-size:12px;color:var(--text2);border-top:1px solid rgba(224,85,85,.2);padding-top:10px;margin-top:4px">
+          <strong>Unsatisfactory works / works not done:</strong><br>${escHtml(r.unsatisfactoryWorks)}
+        </div>` : ''}
+      <div style="font-size:11px;color:var(--text3);margin-top:10px">
+        Overall completion: <strong style="color:${r.overallPercentage>=75?'var(--success)':r.overallPercentage>=50?'var(--warn)':'var(--danger)'}">${r.overallPercentage}%</strong>
+        · Date of issuance: <strong>${r.clearanceDate ? new Date(r.clearanceDate).toLocaleDateString('en-NG') : '—'}</strong>
+      </div>
+    </div>
+
+    <!-- Signatures -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;font-size:12px">
+      <div style="border:1px solid var(--border);border-radius:8px;padding:12px">
+        <div style="font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;margin-bottom:8px">Chief Resident Architect, FMW&amp;H</div>
+        <div style="margin-bottom:4px"><span style="color:var(--text3)">Name:</span> <strong>${escHtml(r.craName || '—')}</strong></div>
+        <div style="margin-bottom:4px"><span style="color:var(--text3)">Designation:</span> ${escHtml(r.craDesignation || '—')}</div>
+        <div><span style="color:var(--text3)">Date:</span> ${r.craDate ? new Date(r.craDate).toLocaleDateString('en-NG') : '—'}</div>
+      </div>
+      <div style="border:1px solid var(--border);border-radius:8px;padding:12px">
+        <div style="font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;margin-bottom:8px">Facility Manager</div>
+        <div style="margin-bottom:4px"><span style="color:var(--text3)">Name:</span> <strong>${escHtml(r.facilityManagerName || '—')}</strong></div>
+        <div style="margin-bottom:4px"><span style="color:var(--text3)">Designation:</span> ${escHtml(r.facilityManagerDesig || '—')}</div>
+        <div><span style="color:var(--text3)">Date:</span> ${r.facilityManagerDate ? new Date(r.facilityManagerDate).toLocaleDateString('en-NG') : '—'}</div>
+      </div>
+    </div>
+
+    <!-- Distribution -->
+    <div style="margin-top:14px;padding:10px 14px;background:var(--bg);border-radius:8px;font-size:11px;color:var(--text3)">
+      <strong>Distribution:</strong> Director, Federal Public Assets Maintenance &nbsp;·&nbsp; Deputy Director M&amp;E &nbsp;·&nbsp; The Controller, Field Headquarters &nbsp;·&nbsp; Chief Resident Architect
+    </div>
+  `;
+
+  document.getElementById('clearance-modal-footer').innerHTML = `
+    <button class="btn btn-ghost" onclick="closeClearanceModal()">Close</button>
+    <button class="btn btn-secondary" onclick="printCertificate(_editingReport)"><i class="fa-solid fa-print"></i> Print Certificate</button>
+  `;
+  document.getElementById('clearance-modal').classList.add('open');
+}
+
+async function issueClearance() {
+  if (!_selectedAsset || !_editingReport) return;
+  const satisfactory = document.querySelector('[name="cl-sat"]:checked')?.value !== 'no';
+
+  const payload = {
+    clearanceIssued:      true,
+    clearanceDate:        document.getElementById('cl-fm-date')?.value || new Date().toISOString(),
+    clearanceMonth:       MONTHS[((_editingReport.reportMonth)||1)-1],
+    satisfactory,
+    unsatisfactoryWorks:  document.getElementById('cl-unsat')?.value.trim() || undefined,
+    facilityManagerName:  document.getElementById('cl-fm-name')?.value.trim() || undefined,
+    facilityManagerDesig: document.getElementById('cl-fm-desig')?.value.trim() || undefined,
+    facilityManagerDate:  document.getElementById('cl-fm-date')?.value || undefined,
+    status: satisfactory ? 'Cleared' : 'Not Cleared',
+  };
+
+  try {
+    const assetId = _selectedAsset.assetId || _selectedAsset._id;
+    await apiUpdateMeReport(assetId, _editingReport._id, payload);
+    toast(satisfactory ? 'Clearance certificate issued' : 'Report marked as Not Cleared', 'fa-certificate');
+    closeClearanceModal();
+    loadReports();
+  } catch(e) {
+    toast(e.message || 'Failed to issue clearance', 'fa-circle-xmark', true);
+  }
+}
+
+// ── PAGE INIT ─────────────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  if (!localStorage.getItem('as_token')) { window.location.href = 'login.html'; return; }
+
+  // ── Division access guard ─────────────────────────────────────────────────
+  // Only M&E division users, Supervisors, and System Admins can access this page.
+  // Everyone else gets redirected to the dashboard with a message.
+  const _u = getCurrentUser();
+  if (_u) {
+    const role = _u.role || '';
+    const div  = _u.division || '';
+    const allowed = role === 'System Admin'
+      || role === 'Supervisor'
+      || div  === 'Monitoring & Evaluation'
+      || div  === 'All';
+    if (!allowed) {
+      // Redirect to dashboard with access-denied flag
+      window.location.href = 'dashboard.html?access_denied=me';
+      return;
+    }
+  }
+
+  initTheme(); renderUserBadge(); checkApiHealth(); applyRoleGates();
+
+  // Show stats bar immediately with zeros, then load all reports
+  updateStatsBar([]);
+  loadReports();
+
+  document.getElementById('menu-toggle')?.addEventListener('click', () => {
+    document.getElementById('sidebar')?.classList.toggle('open');
+    document.getElementById('sidebar-overlay')?.classList.toggle('open');
+  });
+  document.getElementById('sidebar-overlay')?.addEventListener('click', () => {
+    document.getElementById('sidebar')?.classList.remove('open');
+    document.getElementById('sidebar-overlay')?.classList.remove('open');
+  });
+
+  // If arriving from asset-view.html with ?asset=AST-XXXX, auto-select that asset
+  const params = new URLSearchParams(window.location.search);
+  const assetParam = params.get('asset');
+  if (assetParam) {
+    apiGetAsset(assetParam)
+      .then(data => { const a = data.asset || data; if (a && a.assetId) selectAsset(a); })
+      .catch(() => {});
+  }
+});
+</script>
+</body>
+</html>

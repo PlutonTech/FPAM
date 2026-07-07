@@ -166,6 +166,9 @@ function getUserPerms() {
   const u = getCurrentUser();
   if (!u) return {};
   const defaults = ROLE_DEFAULTS[u.role] || {};
+  // System Admin permissions are never overridden — role defaults are absolute.
+  // This prevents a bad permissions object in the DB from locking out the admin.
+  if (u.role === 'System Admin') return { ...defaults };
   // Per-user overrides from backend (stored in as_user.permissions)
   return { ...defaults, ...(u.permissions || {}) };
 }
@@ -208,6 +211,28 @@ function applyRoleGates() {
     const needed = navGates[href];
     if (needed) el.style.display = perms[needed] ? '' : 'none';
   });
+
+  // ── Nav: division scoping ─────────────────────────────────────────────────
+  // System Admin and Supervisor are cross-division — they see everything.
+  // All other roles only see nav items whose data-division matches theirs.
+  // Items with no data-division attribute are always visible.
+  const crossDivision = ['System Admin', 'Supervisor'];
+  const userDivision  = u.division || 'All';
+
+  if (!crossDivision.includes(role) && userDivision !== 'All') {
+    document.querySelectorAll('.nav-item[data-division]').forEach(el => {
+      const allowed = el.dataset.division.split(',').map(d => d.trim());
+      el.style.display = allowed.includes(userDivision) ? '' : 'none';
+    });
+  } else {
+    // Cross-division — ensure all division-gated nav items are visible
+    // (unless already hidden by a permission gate above)
+    document.querySelectorAll('.nav-item[data-division]').forEach(el => {
+      const href   = (el.getAttribute('href') || '').split('/').pop();
+      const needed = navGates[href];
+      if (!needed || perms[needed]) el.style.display = '';
+    });
+  }
 
   // ── Delete buttons ────────────────────────────────────────────────────────
   if (!perms.canDelete) {
@@ -358,13 +383,19 @@ function closeModal() { document.getElementById('modal-overlay')?.classList.remo
 // ── USER BADGE IN SIDEBAR ────────────────────────────────────────────────────
 function renderUserBadge() {
   const user = getCurrentUser() || { name: 'Admin User', role: 'System Admin' };
-  const initials = user.name.split(' ').map(n => n[0]).join('').slice(0, 2);
+  const initials = user.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase();
   const nameEl = document.getElementById('sb-user-name');
   const roleEl = document.getElementById('sb-user-role');
   const initEl = document.getElementById('sb-user-initials');
+  const divEl  = document.getElementById('sb-user-division');
   if (nameEl) nameEl.textContent = user.name;
-  if (roleEl) roleEl.textContent = user.role?.toUpperCase();
+  if (roleEl) roleEl.textContent = (user.role || '').toUpperCase();
   if (initEl) initEl.textContent = initials;
+  if (divEl) {
+    const div = user.division || 'All';
+    divEl.textContent = div === 'All' ? 'All Divisions' : div;
+    divEl.style.display = '';
+  }
 }
 
 // ── INIT ──────────────────────────────────────────────────────────────────────
