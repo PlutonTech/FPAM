@@ -360,7 +360,7 @@ story.append(info_table([
     ('Maps',          'Leaflet 1.9 — CDN — asset map with clustering and spatial filters'),
     ('Charts',        'Chart.js 4.4 — CDN — analytics and dashboard mini charts'),
     ('PDF export',    'jsPDF 2.x — CDN — report and asset PDF generation'),
-    ('API base',      'http://localhost:3001/api — set in js/api.js as API_BASE constant'),
+    ('API base',      'https://fpambacend.onrender.com/api — set in js/api.js as API_BASE constant'),
     ('Auth storage',  'localStorage: as_token (JWT), as_user (user object JSON)'),
 ]))
 story.append(gap(10))
@@ -661,7 +661,7 @@ issues = [
      'getUserPerms() in app.js returns pure ROLE_DEFAULTS for this role. '
      'This prevents a bad DB state from locking out the admin.'),
     ('Live Server vs localhost:3001',
-     'All API calls must go through js/api.js which sets API_BASE = http://localhost:3001/api. '
+     'All API calls must go through js/api.js which sets API_BASE = https://fpambacend.onrender.com/api. '
      'Never use relative fetch URLs — Live Server serves on a different port (e.g. 64547).'),
 ]
 
@@ -738,9 +738,9 @@ story.append(PageBreak())
 story += section_header('10. Deployment & Environment', 'Local dev and production configuration')
 
 story.append(info_table([
-    ('Local Backend',   'http://localhost:3001 — npm run dev (nodemon in src/)'),
+    ('Local Backend',   'https://fpambacend.onrender.com — npm run dev (nodemon in src/)'),
     ('Local Frontend',  'VS Code Live Server or any static file server'),
-    ('Production API',  'http://localhost:3001/api (Render deployment)'),
+    ('Production API',  'https://fpambacend.onrender.com/api (Render deployment)'),
     ('Production Web',  'https://fpam.vercel.app (Vercel deployment)'),
     ('Planned Domain',  'https://fpam.fmhud.gov.ng'),
     ('Database (local)','mongodb://localhost:27017/assetspatial'),
