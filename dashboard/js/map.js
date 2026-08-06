@@ -96,13 +96,18 @@ async function renderMap() {
 
     const m = L.marker([lat, lng], { icon: markerIcon(a.condition) })
       .addTo(leafletMap)
-      .on('click', () => showMapInfoPanel(a));
+      .on('click', (e) => {
+        L.DomEvent.stopPropagation(e);
+        leafletMap.flyTo([lat, lng], Math.max(leafletMap.getZoom(), 14), { duration: 0.5 });
+        showMapInfoPanel(a);
+      });
 
-    m.bindPopup(`<div style="font-family:'Space Grotesk',sans-serif;min-width:160px">
-      <strong style="font-size:13px">${escHtml(a.name||a.assetId||a.id)}</strong><br>
-      <span style="font-size:11px;color:#666">${escHtml(a.type)} · <span style="color:${COND_COLORS[a.condition]||'#aaa'}">${escHtml(a.condition)}</span></span><br>
-      <span style="font-family:'Space Mono',monospace;font-size:10px;color:#4A90D9">${Number(lat).toFixed(5)}, ${Number(lng).toFixed(5)}</span>
-    </div>`, { maxWidth: 240 });
+    // Lightweight tooltip instead of popup (tooltip doesn't intercept clicks)
+    m.bindTooltip(
+      `<strong>${escHtml(a.name||a.assetId||a.id)}</strong><br>
+       <span style="font-size:10px;color:#888">${escHtml(a.type||'')} · ${escHtml(a.condition||'')}</span>`,
+      { direction: 'top', offset: [0, -10] }
+    );
 
     leafletMarkers.push(m);
   });

@@ -110,13 +110,32 @@ function renderUsersGrid(list) {
   }).join('');
 }
 
-// Show/hide division selector based on role
+// Show/hide division selector based on role, and show/populate the MDA
+// picker when the role is MDA Agent (an MDA Agent belongs to exactly one
+// MDA, not a division — the two fields are mutually exclusive).
 function toggleDivisionField(selectId, role) {
   const wrap = document.getElementById(selectId + '-wrap');
   if (!wrap) return;
   const crossDiv = ['Supervisor', 'System Admin'].includes(role);
   wrap.style.opacity = crossDiv ? '0.5' : '1';
   wrap.style.pointerEvents = crossDiv ? 'none' : '';
+}
+
+function onRoleChange(prefix, role) {
+  const isMdaAgent = role === 'MDA Agent';
+  const divWrap = document.getElementById(prefix + '-division-wrap');
+  const mdaWrap = document.getElementById(prefix + '-mda-wrap');
+
+  // Division field: hidden entirely for MDA Agent, dimmed (but visible) for
+  // cross-division roles (Supervisor/System Admin), fully active otherwise.
+  if (divWrap) divWrap.style.display = isMdaAgent ? 'none' : '';
+  if (!isMdaAgent) toggleDivisionField(prefix + '-division', role);
+
+  // MDA field: only relevant for MDA Agent.
+  if (mdaWrap) {
+    mdaWrap.style.display = isMdaAgent ? '' : 'none';
+    if (isMdaAgent) populateMdaSelect(prefix + '-mda');
+  }
 }
 
 function openCreateUser() {
@@ -131,8 +150,8 @@ function openCreateUser() {
       </div>
       <div class="form-group">
         <label class="form-label">Role *</label>
-        <select class="form-control" id="nu-role" onchange="toggleDivisionField('nu-division', this.value)">
-          <option>Field Agent</option><option>Supervisor</option><option>GIS Analyst</option><option>System Admin</option>
+        <select class="form-control" id="nu-role" onchange="onRoleChange('nu', this.value)">
+          <option>Field Agent</option><option>Supervisor</option><option>GIS Analyst</option><option>System Admin</option><option>MDA Agent</option>
         </select>
       </div>
       <div class="form-group" id="nu-division-wrap">
@@ -141,6 +160,11 @@ function openCreateUser() {
           ${DIVISIONS.map(d=>`<option>${d}</option>`).join('')}
         </select>
         <div style="font-size:11px;color:var(--text3);margin-top:4px">Supervisors & Admins have access to all divisions</div>
+      </div>
+      <div class="form-group full" id="nu-mda-wrap" style="display:none">
+        <label class="form-label">MDA *</label>
+        <select class="form-control" id="nu-mda"></select>
+        <div style="font-size:11px;color:var(--text3);margin-top:4px">This agent will only see and submit requests for their assigned MDA</div>
       </div>
       <div class="form-group full">
         <label class="form-label">Email Address *</label>
@@ -184,11 +208,18 @@ async function doCreateUser() {
   if (!name || !email || !pass) { toast('Name, email and password are required', 'fa-triangle-exclamation', true); return; }
   if (pass.length < 8) { toast('Password must be at least 8 characters', 'fa-triangle-exclamation', true); return; }
 
+  const isMdaAgent = role === 'MDA Agent';
+  const mda = document.getElementById('nu-mda')?.value || '';
+  if (isMdaAgent && !mda) { toast('Select an MDA for this agent', 'fa-triangle-exclamation', true); return; }
+
   const data = {
     name, email, password: pass, role,
     division: (['Supervisor','System Admin'].includes(role))
       ? 'All'
-      : (document.getElementById('nu-division')?.value || 'Assets & Condition'),
+      : isMdaAgent
+        ? null
+        : (document.getElementById('nu-division')?.value || 'Assets & Condition'),
+    mda: isMdaAgent ? mda : undefined,
     zone:   document.getElementById('nu-zone')?.value,
     states: (document.getElementById('nu-states')?.value||'').split(',').map(s=>s.trim()).filter(Boolean),
   };
@@ -211,19 +242,25 @@ const addUser = doCreateUser;
 
 function openEditUser(u) {
   const crossDiv = ['Supervisor','System Admin'].includes(u.role);
+  const isMdaAgent = u.role === 'MDA Agent';
   openModal('Edit User',
     `<div class="form-grid">
       <div class="form-group full"><label class="form-label">Name</label><input class="form-control" id="eu-name" value="${escHtml(u.name)}"></div>
       <div class="form-group"><label class="form-label">Role</label>
-        <select class="form-control" id="eu-role" onchange="toggleDivisionField('eu-division', this.value)">
-          ${['Field Agent','Supervisor','GIS Analyst','System Admin'].map(r=>`<option ${u.role===r?'selected':''}>${r}</option>`).join('')}
+        <select class="form-control" id="eu-role" onchange="onRoleChange('eu', this.value)">
+          ${['Field Agent','Supervisor','GIS Analyst','System Admin','MDA Agent'].map(r=>`<option ${u.role===r?'selected':''}>${r}</option>`).join('')}
         </select>
       </div>
-      <div class="form-group" id="eu-division-wrap" ${crossDiv?'style="opacity:.5;pointer-events:none"':''}>
+      <div class="form-group" id="eu-division-wrap" style="${isMdaAgent?'display:none':(crossDiv?'opacity:.5;pointer-events:none':'')}">
         <label class="form-label">Division</label>
         <select class="form-control" id="eu-division">
           ${DIVISIONS.map(d=>`<option ${(u.division||'Assets & Condition')===d?'selected':''}>${d}</option>`).join('')}
         </select>
+      </div>
+      <div class="form-group full" id="eu-mda-wrap" style="${isMdaAgent?'':'display:none'}">
+        <label class="form-label">MDA *</label>
+        <select class="form-control" id="eu-mda"></select>
+        <div style="font-size:11px;color:var(--text3);margin-top:4px">This agent will only see and submit requests for their assigned MDA</div>
       </div>
       <div class="form-group"><label class="form-label">Zone</label>
         <select class="form-control" id="eu-zone">
@@ -235,16 +272,24 @@ function openEditUser(u) {
     `<button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
      <button class="btn btn-primary" onclick="doEditUser('${u._id||u.id}')"><i class="fa-solid fa-floppy-disk"></i> Save</button>`
   );
+  if (isMdaAgent) populateMdaSelect('eu-mda', u.mda || '');
 }
 
 async function doEditUser(id) {
   const role = document.getElementById('eu-role')?.value;
+  const isMdaAgent = role === 'MDA Agent';
+  const mda = document.getElementById('eu-mda')?.value || '';
+  if (isMdaAgent && !mda) { toast('Select an MDA for this agent', 'fa-triangle-exclamation', true); return; }
+
   const data = {
     name: document.getElementById('eu-name')?.value.trim(),
     role,
     division: (['Supervisor','System Admin'].includes(role))
       ? 'All'
-      : (document.getElementById('eu-division')?.value || 'Assets & Condition'),
+      : isMdaAgent
+        ? null
+        : (document.getElementById('eu-division')?.value || 'Assets & Condition'),
+    mda: isMdaAgent ? mda : undefined,
     zone: document.getElementById('eu-zone')?.value,
   };
   try {

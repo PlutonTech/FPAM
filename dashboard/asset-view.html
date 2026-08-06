@@ -481,9 +481,10 @@ table.maint-table tbody tr:hover { background: var(--blue-bg); }
     <a class="nav-item" href="capture.html" data-division="Assets &amp; Condition"><i class="fa-solid fa-location-crosshairs"></i>Field Capture</a>
     <a class="nav-item" href="approvals.html" data-require-role="Sub-Head,Supervisor,System Admin"><i class="fa-solid fa-stamp"></i>Approvals</a>
     <a class="nav-item" href="inspections.html" data-division="Assets &amp; Condition"><i class="fa-solid fa-clipboard-check"></i>Inspections</a>
-    <!-- <a class="nav-item" href="me.html" data-division="Monitoring &amp; Evaluation"><i class="fa-solid fa-chart-line"></i>M&amp;E Reports</a> -->
+    <a class="nav-item" href="me.html" data-division="Monitoring &amp; Evaluation"><i class="fa-solid fa-chart-line"></i>M&amp;E Reports</a>
     <a class="nav-item" href="analytics.html"><i class="fa-solid fa-chart-bar"></i>Analytics</a>
     <a class="nav-item" href="users.html"><i class="fa-solid fa-users"></i>Users<span class="nav-badge" id="nb-users">0</span></a>
+    <a class="nav-item" href="form_requests.html"><i class="fa-solid fa-file-circle-check"></i>Form Requests</a>
     <div class="nav-section">Divisions</div>
     <a class="nav-item active" href="assets.html" data-division="Assets &amp; Condition"><i class="fa-solid fa-database"></i>Assets &amp; Condition</a>
     <a class="nav-item" href="me.html" data-division="Monitoring &amp; Evaluation"><i class="fa-solid fa-chart-line"></i>Monitoring &amp; Evaluation</a>
@@ -686,6 +687,9 @@ table.maint-table tbody tr:hover { background: var(--blue-bg); }
           <button class="av-tab-btn" onclick="switchTab('audit', this)">
             <i class="fa-solid fa-clock-rotate-left"></i> Audit
           </button>
+          <button class="av-tab-btn" onclick="switchTab('inventory', this)">
+            <i class="fa-solid fa-boxes-stacked"></i> Inventory
+          </button>
         </div>
 
         <!-- OVERVIEW -->
@@ -750,6 +754,11 @@ table.maint-table tbody tr:hover { background: var(--blue-bg); }
           <div id="audit-panel-content"><div style="text-align:center;padding:40px"><div class="spinner"></div></div></div>
         </div>
 
+        <!-- INVENTORY -->
+        <div id="tab-inventory" class="av-tab-panel">
+          <div id="inventory-panel-content"><div style="text-align:center;padding:40px"><div class="spinner"></div></div></div>
+        </div>
+
       </div><!-- /tabs -->
     </div><!-- /av-content -->
 
@@ -796,6 +805,7 @@ table.maint-table tbody tr:hover { background: var(--blue-bg); }
 <script src="js/lifecycle.js"></script>
 <script src="js/pdf_report_enhanced.js"></script>
 <script src="js/asset_enhancements.js"></script>
+<script src="js/inventory_grid.js"></script>
 <script>
 'use strict';
 
@@ -1069,6 +1079,7 @@ async function loadTabContent(name) {
   if (name === 'valuation')   renderValuationTab(a);
   if (name === 'history')       renderHistoryTab(a);
   if (name === 'audit')         await renderAuditTab(id);
+  if (name === 'inventory')     renderInventoryTab(id, a);
   if (name === 'relationships') {
     const el = document.getElementById('relationships-panel-content');
     if (el) renderRelationshipsTab(_assetId, el);

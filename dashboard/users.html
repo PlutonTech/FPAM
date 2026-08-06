@@ -97,6 +97,7 @@
     <!-- <a class="nav-item" href="me.html" data-division="Monitoring &amp; Evaluation"><i class="fa-solid fa-chart-line"></i>M&amp;E Reports</a> -->
     <a class="nav-item" href="analytics.html"><i class="fa-solid fa-chart-bar"></i>Analytics</a>
     <a class="nav-item active" href="users.html"><i class="fa-solid fa-users"></i>Users<span class="nav-badge" id="nb-users">0</span></a>
+    <a class="nav-item" href="form_requests.html"><i class="fa-solid fa-file-circle-check"></i>Form Requests</a>
     <div class="nav-section">Divisions</div>
     <a class="nav-item" href="assets.html" data-division="Assets &amp; Condition"><i class="fa-solid fa-database"></i>Assets &amp; Condition</a>
     <a class="nav-item" href="me.html" data-division="Monitoring &amp; Evaluation"><i class="fa-solid fa-chart-line"></i>Monitoring &amp; Evaluation</a>
@@ -136,7 +137,7 @@
       <div class="conn-status" id="conn-status"><span class="conn-dot" id="conn-dot"></span><span id="conn-label">Connecting…</span></div>
       <select class="filter-input" id="filter-role" onchange="loadUsers()" style="font-size:12px">
         <option value="">All Roles</option>
-        <option>Field Agent</option><option>Sub-Head</option><option>Supervisor</option><option>GIS Analyst</option><option>System Admin</option>
+        <option>Field Agent</option><option>Sub-Head</option><option>Supervisor</option><option>GIS Analyst</option><option>System Admin</option><option>MDA Agent</option>
       </select>
       <select class="filter-input" id="filter-division" onchange="loadUsers()" style="font-size:12px">
         <option value="">All Divisions</option>
@@ -195,6 +196,13 @@
           </div>
           <div style="padding:14px" id="perm-body-gis"></div>
         </div>
+        <div class="surface-card" id="perm-card-mdaagent">
+          <div class="card-header">
+            <div class="card-title"><i class="fa-solid fa-building-columns" style="color:#8b5cf6"></i> MDA Agent</div>
+            <button class="btn btn-ghost btn-xs" onclick="doSaveRoleConfig('MDA Agent')"><i class="fa-solid fa-floppy-disk"></i> Save</button>
+          </div>
+          <div style="padding:14px" id="perm-body-mdaagent"></div>
+        </div>
       </div>
       <div style="text-align:right">
         <button class="btn btn-danger btn-sm" onclick="doResetRoleConfigs()"><i class="fa-solid fa-rotate-left"></i> Reset All to Defaults</button>
@@ -219,9 +227,9 @@
 <script src="js/users.js"></script>
 <script>
 // ── Role permissions — fully self-contained, defined last ─────────────────────
-const ROLE_PERM_KEYS   = ['canCreate','canEdit','canDelete','canApprove','canExport','canViewAll','canManageUsers','canViewAudit','canManageSettings'];
-const ROLE_PERM_LABELS = { canCreate:'Create Assets', canEdit:'Edit Assets', canDelete:'Delete Assets', canApprove:'Approve Captures', canExport:'Export Data', canViewAll:'View All Assets', canManageUsers:'Manage Users', canViewAudit:'View Audit Log', canManageSettings:'Manage Settings' };
-const ROLE_CARD_MAP    = { 'Field Agent':'field', 'Sub-Head':'subhead', 'Supervisor':'super', 'GIS Analyst':'gis' };
+const ROLE_PERM_KEYS   = ['canCreate','canEdit','canDelete','canApprove','canExport','canViewAll','canManageUsers','canViewAudit','canManageSettings','canEditInventory','canSubmitFormRequests','canReviewFormRequests'];
+const ROLE_PERM_LABELS = { canCreate:'Create Assets', canEdit:'Edit Assets', canDelete:'Delete Assets', canApprove:'Approve Captures', canExport:'Export Data', canViewAll:'View All Assets', canManageUsers:'Manage Users', canViewAudit:'View Audit Log', canManageSettings:'Manage Settings', canEditInventory:'Edit Inventory', canSubmitFormRequests:'Submit Form Requests', canReviewFormRequests:'Review Form Requests' };
+const ROLE_CARD_MAP    = { 'Field Agent':'field', 'Sub-Head':'subhead', 'Supervisor':'super', 'GIS Analyst':'gis', 'MDA Agent':'mdaagent' };
 
 function renderRoleCards(configs) {
   (configs || []).forEach(cfg => {

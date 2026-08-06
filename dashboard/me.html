@@ -215,9 +215,9 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);display:flex
       <div class="logo-sub">Federal Registry</div>
     </div>
   </div>
-    <nav class="sidebar-nav">
+  <nav class="sidebar-nav">
     <div class="nav-section">Platform</div>
-    <a class="nav-item" href="dashboard.html"><i class="fa-solid fa-gauge-high"></i>Dashboard<span class="nav-badge" id="nb-assets">0</span></a>
+    <a class="nav-item" href="dashboard.html"><i class="fa-solid fa-gauge-high"></i>Dashboard</a>
     <a class="nav-item" href="map.html"><i class="fa-solid fa-map"></i>Live Map</a>
     <a class="nav-item" href="assets.html" data-division="Assets &amp; Condition"><i class="fa-solid fa-database"></i>Asset Registry</a>
     <div class="nav-section">Management</div>
@@ -226,13 +226,8 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);display:flex
     <a class="nav-item" href="inspections.html" data-division="Assets &amp; Condition"><i class="fa-solid fa-clipboard-check"></i>Inspections</a>
     <a class="nav-item active" href="me.html" data-division="Monitoring &amp; Evaluation"><i class="fa-solid fa-chart-line"></i>M&amp;E Reports</a>
     <a class="nav-item" href="analytics.html"><i class="fa-solid fa-chart-bar"></i>Analytics</a>
-    <a class="nav-item" href="users.html"><i class="fa-solid fa-users"></i>Users<span class="nav-badge" id="nb-users">0</span></a>
-    <div class="nav-section">Divisions</div>
-    <a class="nav-item" href="assets.html" data-division="Assets &amp; Condition"><i class="fa-solid fa-database"></i>Assets &amp; Condition</a>
-    <a class="nav-item active" href="me.html" data-division="Monitoring &amp; Evaluation"><i class="fa-solid fa-chart-line"></i>Monitoring &amp; Evaluation</a>
-    <a class="nav-item" href="#" data-division="Planning &amp; Design" style="opacity:.45;pointer-events:none;cursor:default" title="Coming Soon"><i class="fa-solid fa-drafting-compass"></i>Planning &amp; Design<span style="font-size:9px;background:rgba(255,255,255,.12);padding:1px 6px;border-radius:4px;margin-left:auto">Soon</span></a>
-    <a class="nav-item" href="#" data-division="Rehabilitation &amp; Restoration" style="opacity:.45;pointer-events:none;cursor:default" title="Coming Soon"><i class="fa-solid fa-helmet-safety"></i>Rehabilitation &amp; Restoration<span style="font-size:9px;background:rgba(255,255,255,.12);padding:1px 6px;border-radius:4px;margin-left:auto">Soon</span></a>
-    <a class="nav-item" href="#" data-division="Building Training &amp; Maintenance" style="opacity:.45;pointer-events:none;cursor:default" title="Coming Soon"><i class="fa-solid fa-chalkboard-user"></i>Training &amp; Maintenance<span style="font-size:9px;background:rgba(255,255,255,.12);padding:1px 6px;border-radius:4px;margin-left:auto">Soon</span></a>
+    <a class="nav-item" href="users.html"><i class="fa-solid fa-users"></i>Users</a>
+    <a class="nav-item" href="form_requests.html"><i class="fa-solid fa-file-circle-check"></i>Form Requests</a>
     <div class="nav-section">Data Tools</div>
     <a class="nav-item" href="ocr.html"><i class="fa-solid fa-file-magnifying-glass"></i>OCR Scanner</a>
     <a class="nav-item" href="excel.html"><i class="fa-solid fa-file-excel"></i>Excel Import</a>
@@ -240,7 +235,6 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);display:flex
     <div class="nav-section">System</div>
     <a class="nav-item" href="audit.html"><i class="fa-solid fa-clock-rotate-left"></i>Audit Log</a>
     <a class="nav-item" href="settings.html"><i class="fa-solid fa-sliders"></i>Settings</a>
-    <a class="nav-item" href="guidelines.html"><i class="fa-solid fa-book-open"></i>Guidelines</a>
   </nav>
   <div class="sidebar-bottom">
     <div class="user-card-sb">
@@ -346,6 +340,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);display:flex
             <option value="">Secretariat &amp; NHP</option>
             <option value="secretariat">Secretariat Only</option>
             <option value="nhp">NHP Only</option>
+            <option value="others">Others Only</option>
           </select>
         </div>
       </div>
@@ -734,6 +729,7 @@ function renderReportForm(existing) {
     <div class="step-tab active" id="stab-1" onclick="switchStep(1)"><i class="fa-solid fa-file-contract"></i> Contract Info</div>
     <div class="step-tab" id="stab-2" onclick="switchStep(2)"><i class="fa-solid fa-list-check"></i> Task Progress</div>
     <div class="step-tab" id="stab-3" onclick="switchStep(3)"><i class="fa-solid fa-star-half-stroke"></i> Remarks</div>
+    <div class="step-tab" id="stab-4" onclick="switchStep(4)"><i class="fa-solid fa-camera"></i> Photos</div>
   </div>
 
   <!-- STEP 1: CONTRACT INFO -->
@@ -745,6 +741,7 @@ function renderReportForm(existing) {
         <select class="form-control" id="rm-type" onchange="onTypeChange()">
           <option value="secretariat" ${(!existing||existing.reportType==='secretariat')?'selected':''}>Secretariat</option>
           <option value="nhp" ${existing?.reportType==='nhp'?'selected':''}>NHP</option>
+          <option value="others" ${existing?.reportType==='others'?'selected':''}>Others</option>
         </select>
       </div>
       <div class="form-group">
@@ -823,7 +820,7 @@ function renderReportForm(existing) {
         <input class="form-control" id="rm-cra-name" value="${escHtml(existing?.craName||'')}">
       </div>
       <div class="form-group">
-        <label class="form-label">CRA Designation</label>
+        <label class="form-label">FPAM Supervisor</label>
         <input class="form-control" id="rm-cra-desig" value="${escHtml(existing?.craDesignation||'')}">
       </div>
       <div class="form-group">
@@ -831,6 +828,19 @@ function renderReportForm(existing) {
         <input class="form-control" id="rm-cra-date" type="date" value="${existing?.craDate?new Date(existing.craDate).toISOString().slice(0,10):''}">
       </div>
     </div>
+  </div>
+
+  <!-- STEP 4: PHOTOS -->
+  <div class="step-pane" id="spane-4">
+    <div class="form-section">Site / Work Progress Photos</div>
+    <div style="font-size:12px;color:var(--text3);margin-bottom:14px">Attach photos taken during the site visit. They will be uploaded to the asset's photo gallery and linked to this report.</div>
+    <div style="border:2px dashed var(--border);border-radius:10px;padding:24px;text-align:center;background:var(--bg);cursor:pointer" onclick="document.getElementById('rm-photos-input').click()">
+      <i class="fa-solid fa-cloud-arrow-up" style="font-size:28px;color:var(--blue);margin-bottom:10px"></i>
+      <div style="font-size:13px;font-weight:600;color:var(--text)">Click to attach photos</div>
+      <div style="font-size:11px;color:var(--text3);margin-top:4px">JPG, PNG — multiple files supported</div>
+      <input type="file" id="rm-photos-input" accept="image/*" multiple style="display:none" onchange="previewReportPhotos(this)">
+    </div>
+    <div id="rm-photos-preview" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:12px"></div>
   </div>`;
 
   document.getElementById('report-modal-body').innerHTML = body;
@@ -841,6 +851,24 @@ function renderReportForm(existing) {
 }
 
 function renderTaskRows(existingTasks, type) {
+  if (type === 'others') {
+    const tasks = existingTasks || [];
+    return `<div id="custom-tasks">
+      ${tasks.map((t, i) => `<div class="task-row">
+        <div>
+          <input class="form-control" data-task-label="${i}" value="${escHtml(t.label)}" placeholder="Task description" style="margin-bottom:4px">
+          <div class="pct-bar-wrap"><div class="pct-bar" id="bar-${i}" style="width:${t.percentage||0}%"></div></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:6px">
+          <input class="pct-input" data-task-idx="${i}" type="number" min="0" max="100" value="${t.percentage||0}"
+            oninput="updateBar(${i},this.value)">
+          <span style="font-size:13px;color:var(--text3)">%</span>
+          <button type="button" class="btn btn-danger btn-xs" onclick="removeCustomTask(${i})" style="padding:4px 7px"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+      </div>`).join('')}
+    </div>
+    <button type="button" class="btn btn-ghost btn-sm" onclick="addCustomTask()" style="margin-top:10px"><i class="fa-solid fa-plus"></i> Add Task</button>`;
+  }
   const tasks = existingTasks || (type === 'nhp' ? NHP_TASKS : SECRETARIAT_TASKS).map(l=>({label:l,percentage:0}));
   return tasks.map((t, i) => {
     const pct = t.percentage || 0;
@@ -859,6 +887,30 @@ function renderTaskRows(existingTasks, type) {
       </div>
     </div>`;
   }).join('');
+}
+
+function addCustomTask() {
+  const container = document.getElementById('custom-tasks');
+  if (!container) return;
+  const i = container.querySelectorAll('[data-task-idx]').length;
+  const div = document.createElement('div');
+  div.className = 'task-row';
+  div.innerHTML = `<div>
+    <input class="form-control" data-task-label="${i}" placeholder="Task description" style="margin-bottom:4px">
+    <div class="pct-bar-wrap"><div class="pct-bar" id="bar-${i}" style="width:0%"></div></div>
+  </div>
+  <div style="display:flex;align-items:center;gap:6px">
+    <input class="pct-input" data-task-idx="${i}" type="number" min="0" max="100" value="0"
+      oninput="updateBar(${i},this.value)">
+    <span style="font-size:13px;color:var(--text3)">%</span>
+    <button type="button" class="btn btn-danger btn-xs" onclick="this.closest('.task-row').remove()" style="padding:4px 7px"><i class="fa-solid fa-xmark"></i></button>
+  </div>`;
+  container.appendChild(div);
+}
+
+function removeCustomTask(idx) {
+  const row = document.querySelector(`[data-task-idx="${idx}"]`)?.closest('.task-row');
+  if (row) row.remove();
 }
 
 function renderRatingRow(label, id, current) {
@@ -894,10 +946,40 @@ function updateBar(idx, val) {
 }
 
 function switchStep(n) {
-  [1,2,3].forEach(i => {
+  [1,2,3,4].forEach(i => {
     document.getElementById('stab-' + i)?.classList.toggle('active', i === n);
     document.getElementById('spane-' + i)?.classList.toggle('active', i === n);
   });
+}
+
+let _reportPhotoBlobUrls = [];   // track blob URLs so we can revoke on re-selection, avoiding leaks
+
+function previewReportPhotos(input) {
+  const preview = document.getElementById('rm-photos-preview');
+  if (!preview) return;
+
+  // Revoke any blob URLs from a previous selection before creating new ones
+  _reportPhotoBlobUrls.forEach(u => URL.revokeObjectURL(u));
+  _reportPhotoBlobUrls = [];
+
+  const files = Array.from(input.files);
+  const cards = files.map(file => {
+    const url = URL.createObjectURL(file);
+    _reportPhotoBlobUrls.push(url);
+    return `<div style="position:relative">
+      <img src="${url}" style="width:80px;height:80px;object-fit:cover;border-radius:8px;border:1px solid var(--border)">
+      <div style="font-size:9px;color:var(--text3);text-align:center;margin-top:3px;max-width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${escHtml(file.name)}</div>
+    </div>`;
+  });
+
+  const badge = files.length ? `<div style="display:flex;align-items:center;justify-content:center;padding:8px 12px;background:rgba(45,184,123,.08);border-radius:8px;border:1px solid rgba(45,184,123,.2);font-size:11px;color:var(--success);align-self:center">
+      <i class="fa-solid fa-check" style="margin-right:5px"></i>${files.length} photo${files.length>1?'s':''} ready
+    </div>` : '';
+
+  // Single assignment — avoids the innerHTML += anti-pattern, which re-parses
+  // and rebuilds the entire subtree (destroying/recreating every prior <img>)
+  // on each iteration when done in a loop.
+  preview.innerHTML = cards.join('') + badge;
 }
 
 function onTypeChange() {
@@ -907,15 +989,47 @@ function onTypeChange() {
 }
 
 // ── SAVE REPORT ───────────────────────────────────────────────────────────────
+// Fetches a protected image (GridFS photo endpoints require a Bearer token,
+// so a plain <img src="..."> won't work) as a blob URL. Self-contained here
+// rather than relying on asset_detail.js's authedBlob(), since this page
+// doesn't include that script.
+const _meBlobCache = {};
+async function _meAuthedBlob(url) {
+  if (_meBlobCache[url]) return _meBlobCache[url];
+  try {
+    const r = await fetch(url, { headers: { Authorization: 'Bearer ' + (localStorage.getItem('as_token') || '') } });
+    if (!r.ok) return null;
+    const blob = await r.blob();
+    if (!blob.size) return null;
+    const bUrl = URL.createObjectURL(blob);
+    _meBlobCache[url] = bUrl;
+    return bUrl;
+  } catch { return null; }
+}
+
+function _meViewPhotoLightbox(bUrl) {
+  const lb = document.createElement('div');
+  lb.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:9999;display:flex;align-items:center;justify-content:center;cursor:zoom-out';
+  lb.innerHTML = `<img src="${bUrl}" style="max-width:92vw;max-height:88vh;border-radius:8px">`;
+  lb.onclick = () => lb.remove();
+  document.body.appendChild(lb);
+}
 async function saveReport(status) {
   if (!_selectedAsset) { toast('No asset selected', 'fa-triangle-exclamation', true); return; }
 
   const type = document.getElementById('rm-type')?.value;
   const taskInputs = document.querySelectorAll('[data-task-idx]');
+
   const tasks = Array.from(taskInputs).map(inp => {
-    const idx  = Number(inp.dataset.taskIdx);
-    const src  = type === 'nhp' ? NHP_TASKS : SECRETARIAT_TASKS;
-    const label = src[idx] || ('Task ' + (idx+1));
+    const idx = Number(inp.dataset.taskIdx);
+    // For 'others', get label from corresponding text input
+    let label;
+    if (type === 'others') {
+      label = document.querySelector(`[data-task-label="${idx}"]`)?.value.trim() || ('Task ' + (idx+1));
+    } else {
+      const src = type === 'nhp' ? NHP_TASKS : SECRETARIAT_TASKS;
+      label = src[idx] || ('Task ' + (idx+1));
+    }
     return { label, percentage: Number(inp.value)||0 };
   });
 
@@ -954,6 +1068,21 @@ async function saveReport(status) {
       : await apiCreateMeReport(id, payload);
 
     toast(status === 'Draft' ? 'Report saved as draft' : 'Report submitted successfully', 'fa-circle-check');
+
+    // Upload any attached photos to the asset, tagged with this report's ID
+    // so the view modal can later show only photos captured for THIS report
+    // rather than the asset's entire photo gallery.
+    const reportId = res?.report?._id || _editingReport?._id;
+    const photoInput = document.getElementById('rm-photos-input');
+    if (photoInput?.files?.length && _selectedAsset) {
+      const assetId = _selectedAsset.assetId || _selectedAsset._id;
+      let uploaded = 0;
+      for (const file of photoInput.files) {
+        try { await apiUploadPhoto(assetId, file, { meReportId: reportId }); uploaded++; } catch {}
+      }
+      if (uploaded) toast(`${uploaded} photo${uploaded>1?'s':''} uploaded`, 'fa-camera');
+    }
+
     closeReportModal();
     loadReports();
   } catch(e) {
@@ -1021,6 +1150,12 @@ function viewReport(r) {
       </div>`).join('')}
     </div>
 
+    <!-- Photos (loaded async — see _loadReportPhotos below) -->
+    <div class="form-section">Site / Work Progress Photos</div>
+    <div id="report-view-photos" style="margin-bottom:16px">
+      <div style="text-align:center;padding:16px"><div class="spinner" style="width:20px;height:20px;border-width:2px;margin:0 auto"></div></div>
+    </div>
+
     <!-- Ratings -->
     ${r.labourRating||r.materialsRating||r.progressRating||r.workmanshipRating ? `
     <div class="form-section">General Remarks</div>
@@ -1063,6 +1198,62 @@ function viewReport(r) {
   `;
 
   document.getElementById('view-modal').classList.add('open');
+
+  // _selectedAsset is only set when viewing a single asset's reports; on the
+  // global "All M&E Reports" list it's null by design, so fall back to the
+  // report's own denormalized _assetId (see renderReportsList's assetLine).
+  const assetId = _selectedAsset?.assetId || _selectedAsset?._id || r._assetId;
+  if (assetId) {
+    _loadReportPhotos(assetId, r._id);
+  } else {
+    // Fail visibly rather than leaving the placeholder spinner stuck forever
+    const container = document.getElementById('report-view-photos');
+    if (container) container.innerHTML = `<div style="font-size:12px;color:var(--text3);text-align:center;padding:12px">Could not determine asset for this report</div>`;
+  }
+}
+
+// Fetches the asset's photo gallery, filters to only photos tagged with this
+// report's ID (see saveReport()'s upload loop), and renders them as
+// authenticated thumbnails. Photo endpoints require a Bearer token, so a
+// plain <img src="..."> won't work — we fetch each as a blob first, same
+// pattern used in asset-view.html / asset_detail.js.
+async function _loadReportPhotos(assetId, reportId) {
+  const container = document.getElementById('report-view-photos');
+  if (!container) return;
+
+  try {
+    const r = await apiFetch(`/assets/${assetId}/photos`);
+    const all = r.photos || r.files || [];
+    const matched = all.filter(p => String(p.meReportId || '') === String(reportId));
+
+    if (!matched.length) {
+      container.innerHTML = `<div style="font-size:12px;color:var(--text3);text-align:center;padding:12px">No photos attached to this report</div>`;
+      return;
+    }
+
+    container.innerHTML = `<div style="display:flex;flex-wrap:wrap;gap:8px">
+      ${matched.map((p, i) => `<div id="rvp-thumb-${i}" style="width:80px;height:80px;border-radius:8px;overflow:hidden;border:1px solid var(--border);background:var(--bg);display:flex;align-items:center;justify-content:center;cursor:pointer">
+        <div class="spinner" style="width:16px;height:16px;border-width:2px"></div>
+      </div>`).join('')}
+    </div>`;
+
+    matched.forEach(async (p, i) => {
+      const fid = p.fileId || p._id;
+      if (!fid) return;
+      const url = `${API_BASE}/assets/${assetId}/photos/${fid}`;
+      const el  = document.getElementById(`rvp-thumb-${i}`);
+      if (!el) return;
+      const blob = await _meAuthedBlob(url);
+      if (blob) {
+        el.innerHTML = `<img src="${blob}" alt="Report photo ${i+1}" style="width:100%;height:100%;object-fit:cover">`;
+        el.onclick = () => _meViewPhotoLightbox(blob);
+      } else {
+        el.innerHTML = `<i class="fa-solid fa-image-slash" style="color:var(--text3)"></i>`;
+      }
+    });
+  } catch (e) {
+    container.innerHTML = `<div style="font-size:12px;color:var(--text3);text-align:center;padding:12px">Could not load photos</div>`;
+  }
 }
 
 function editReport() {

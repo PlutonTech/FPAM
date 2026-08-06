@@ -11,24 +11,16 @@
 <div id="sidebar-overlay" class="sidebar-overlay"></div>
 <aside id="sidebar">
   <div class="logo"><div class="logo-icon"><i class="fa-solid fa-map-location-dot"></i></div><div class="logo-text"><div class="logo-mark">AssetSpatial</div><div class="logo-sub">Federal Registry</div></div></div>
-    <nav class="sidebar-nav">
+  <nav class="sidebar-nav">
     <div class="nav-section">Platform</div>
-    <a class="nav-item" href="dashboard.html"><i class="fa-solid fa-gauge-high"></i>Dashboard<span class="nav-badge" id="nb-assets">0</span></a>
+    <a class="nav-item" href="dashboard.html"><i class="fa-solid fa-gauge-high"></i>Dashboard</a>
     <a class="nav-item" href="map.html"><i class="fa-solid fa-map"></i>Live Map</a>
-    <a class="nav-item" href="assets.html" data-division="Assets &amp; Condition"><i class="fa-solid fa-database"></i>Asset Registry</a>
+    <a class="nav-item" href="assets.html"><i class="fa-solid fa-database"></i>Asset Registry</a>
     <div class="nav-section">Management</div>
-    <a class="nav-item" href="capture.html" data-division="Assets &amp; Condition"><i class="fa-solid fa-location-crosshairs"></i>Field Capture</a>
-    <a class="nav-item" href="approvals.html" data-require-role="Sub-Head,Supervisor,System Admin"><i class="fa-solid fa-stamp"></i>Approvals</a>
-    <a class="nav-item" href="inspections.html" data-division="Assets &amp; Condition"><i class="fa-solid fa-clipboard-check"></i>Inspections</a>
-    <!-- <a class="nav-item" href="me.html" data-division="Monitoring &amp; Evaluation"><i class="fa-solid fa-chart-line"></i>M&amp;E Reports</a> -->
+    <a class="nav-item" href="capture.html"><i class="fa-solid fa-location-crosshairs"></i>Field Capture</a>
     <a class="nav-item" href="analytics.html"><i class="fa-solid fa-chart-bar"></i>Analytics</a>
-    <a class="nav-item" href="users.html"><i class="fa-solid fa-users"></i>Users<span class="nav-badge" id="nb-users">0</span></a>
-    <div class="nav-section">Divisions</div>
-    <a class="nav-item" href="assets.html" data-division="Assets &amp; Condition"><i class="fa-solid fa-database"></i>Assets &amp; Condition</a>
-    <a class="nav-item" href="me.html" data-division="Monitoring &amp; Evaluation"><i class="fa-solid fa-chart-line"></i>Monitoring &amp; Evaluation</a>
-    <a class="nav-item" href="#" data-division="Planning &amp; Design" style="opacity:.45;pointer-events:none;cursor:default" title="Coming Soon"><i class="fa-solid fa-drafting-compass"></i>Planning &amp; Design<span style="font-size:9px;background:rgba(255,255,255,.12);padding:1px 6px;border-radius:4px;margin-left:auto">Soon</span></a>
-    <a class="nav-item" href="#" data-division="Rehabilitation &amp; Restoration" style="opacity:.45;pointer-events:none;cursor:default" title="Coming Soon"><i class="fa-solid fa-helmet-safety"></i>Rehabilitation &amp; Restoration<span style="font-size:9px;background:rgba(255,255,255,.12);padding:1px 6px;border-radius:4px;margin-left:auto">Soon</span></a>
-    <a class="nav-item" href="#" data-division="Building Training &amp; Maintenance" style="opacity:.45;pointer-events:none;cursor:default" title="Coming Soon"><i class="fa-solid fa-chalkboard-user"></i>Training &amp; Maintenance<span style="font-size:9px;background:rgba(255,255,255,.12);padding:1px 6px;border-radius:4px;margin-left:auto">Soon</span></a>
+    <a class="nav-item" href="users.html"><i class="fa-solid fa-users"></i>Users</a>
+    <a class="nav-item" href="form_requests.html"><i class="fa-solid fa-file-circle-check"></i>Form Requests</a>
     <div class="nav-section">Data Tools</div>
     <a class="nav-item" href="ocr.html"><i class="fa-solid fa-file-magnifying-glass"></i>OCR Scanner</a>
     <a class="nav-item" href="excel.html"><i class="fa-solid fa-file-excel"></i>Excel Import</a>
@@ -36,19 +28,14 @@
     <div class="nav-section">System</div>
     <a class="nav-item" href="audit.html"><i class="fa-solid fa-clock-rotate-left"></i>Audit Log</a>
     <a class="nav-item" href="settings.html"><i class="fa-solid fa-sliders"></i>Settings</a>
-    <a class="nav-item" href="guidelines.html"><i class="fa-solid fa-book-open"></i>Guidelines</a>
   </nav>
   <div class="sidebar-bottom">
-    <div class="user-card-sb">
-      <div class="user-av" id="sb-user-initials">A</div>
-      <div style="flex:1;min-width:0">
-        <div class="user-nm" id="sb-user-name">Loading…</div>
-        <div class="user-rl" id="sb-user-role">—</div>
-        <div id="sb-user-division" style="font-size:9px;color:rgba(255,255,255,.35);margin-top:2px;letter-spacing:.3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis"></div>
-      </div>
-      <div style="display:flex;gap:4px">
-        <button class="icon-btn" onclick="toggleTheme()" title="Toggle theme"><i class="fa-solid fa-circle-half-stroke"></i></button>
-        <button class="icon-btn" onclick="doLogout()" title="Logout"><i class="fa-solid fa-right-from-bracket"></i></button>
+    <div class="user-card">
+      <div class="user-avatar" id="sb-user-initials" style="background:var(--accent);color:#000">A</div>
+      <div class="user-info"><div class="user-name" id="sb-user-name">Loading…</div><div class="user-role" id="sb-user-role">—</div></div>
+      <div style="display:flex;gap:4px;margin-left:auto">
+        <button class="icon-btn" onclick="toggleTheme()"><i class="fa-solid fa-circle-half-stroke"></i></button>
+        <button class="icon-btn" onclick="doLogout()"><i class="fa-solid fa-right-from-bracket"></i></button>
       </div>
     </div>
   </div>
@@ -59,6 +46,10 @@
     <div class="header-title"><div class="page-title">FILE DATABASE</div><div class="breadcrumb">AssetSpatial / Data Tools / Files</div></div>
     <div class="header-actions" style="margin-left:auto">
       <div class="conn-status" id="conn-status"><span class="conn-dot" id="conn-dot"></span><span id="conn-label">Connecting…</span></div>
+      <div style="position:relative">
+        <i class="fa-solid fa-magnifying-glass" style="position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--text3);font-size:12px;pointer-events:none"></i>
+        <input class="filter-input" id="f-search" placeholder="Search files…" oninput="loadFileDB()" style="font-size:12px;padding-left:30px;width:180px">
+      </div>
       <select class="filter-input" id="f-asset" onchange="loadFileDB()" style="font-size:12px;max-width:200px">
         <option value="">All Assets</option>
       </select>
@@ -314,8 +305,9 @@ async function loadFileDB() {
   const tbody = document.getElementById('fdb-tbody');
   tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:24px"><div class="spinner" style="margin:0 auto"></div></td></tr>';
 
-  const assetFilter = document.getElementById('f-asset')?.value;
-  const typeFilter  = document.getElementById('f-type')?.value;
+  const assetFilter  = document.getElementById('f-asset')?.value;
+  const typeFilter   = document.getElementById('f-type')?.value;
+  const searchQuery  = (document.getElementById('f-search')?.value || '').toLowerCase().trim();
 
   try {
     // Single aggregated call — returns all files across all assets
@@ -347,6 +339,14 @@ async function loadFileDB() {
     if (typeFilter === 'excel')    return f._category === 'excel';
     if (typeFilter === 'document') return f._category === 'document';
     return true;
+  });
+  if (searchQuery) display = display.filter(f => {
+    const hay = [
+      f.filename || f.originalname || f.name || '',
+      f._assetId || '', f._assetName || '',
+      f._category || '', f.mimetype || '',
+    ].join(' ').toLowerCase();
+    return hay.includes(searchQuery);
   });
 
   renderFileDB(display);

@@ -740,7 +740,7 @@ story += section_header('10. Deployment & Environment', 'Local dev and productio
 story.append(info_table([
     ('Local Backend',   'http://localhost:3001 — npm run dev (nodemon in src/)'),
     ('Local Frontend',  'VS Code Live Server or any static file server'),
-    ('Production API',  'https://fpambacend.onrender.com/api (Render deployment)'),
+    ('Production API',  'http://localhost:3001/api (Render deployment)'),
     ('Production Web',  'https://fpam.vercel.app (Vercel deployment)'),
     ('Planned Domain',  'https://fpam.fmhud.gov.ng'),
     ('Database (local)','mongodb://localhost:27017/assetspatial'),

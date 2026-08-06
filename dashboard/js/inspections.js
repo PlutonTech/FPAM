@@ -287,19 +287,88 @@ function viewInspectionReport(inspId) {
 
 // ── OPEN PICKER (no assetId known) ────────────────────────────────────────────
 function openScheduleInspectionPicker() {
-  _inspModal('Schedule Inspection',
-    `<div>
-      <label style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:5px;color:var(--text2,#2C3E50)">Asset ID</label>
-      <input id="insp-picker-id" placeholder="e.g. AST-1004"
-        style="width:100%;padding:9px 13px;border:1px solid var(--border,#E8ECF0);border-radius:8px;font-size:13px;color:var(--text,#0B1829);background:var(--bg,#F4F6F9);outline:none;font-family:inherit">
-      <div style="font-size:11px;color:var(--text3,#5A6A7A);margin-top:5px">Enter the Asset ID to schedule an inspection for it</div>
+  const inp  = 'width:100%;padding:9px 13px;border:1px solid var(--border,#E8ECF0);border-radius:8px;font-size:13px;color:var(--text,#0B1829);background:var(--bg,#F4F6F9);outline:none;font-family:inherit';
+  _inspModal('Select Asset for Inspection',
+    `<div style="position:relative">
+      <label style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:5px;color:var(--text2,#2C3E50)">Search Asset</label>
+      <div style="position:relative">
+        <i class="fa-solid fa-magnifying-glass" style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--text3,#5A6A7A);font-size:12px;pointer-events:none"></i>
+        <input id="insp-picker-search" placeholder="Type asset name or ID…" oninput="inspPickerSearch(this.value)"
+          style="${inp};padding-left:34px" autocomplete="off">
+      </div>
+      <div id="insp-picker-results" style="margin-top:6px;max-height:220px;overflow-y:auto;border:1px solid var(--border,#E8ECF0);border-radius:8px;display:none;background:#fff"></div>
+      <input type="hidden" id="insp-picker-id">
+      <input type="hidden" id="insp-picker-name">
+      <div id="insp-picker-selected" style="display:none;margin-top:8px;padding:8px 12px;background:rgba(74,144,217,.08);border:1px solid rgba(74,144,217,.2);border-radius:8px;font-size:12px;color:var(--text,#0B1829)"></div>
+      <div style="font-size:11px;color:var(--text3,#5A6A7A);margin-top:8px">Search by name, ID, state, or MDA</div>
     </div>`,
     `<button onclick="_inspModalClose()" style="background:none;border:1px solid var(--border,#E8ECF0);color:var(--text2,#2C3E50);padding:8px 16px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600">Cancel</button>
-     <button onclick="_inspModalClose();openScheduleInspection(document.getElementById('insp-picker-id').value,'Asset '+document.getElementById('insp-picker-id').value)"
+     <button onclick="_doPickerContinue()"
        style="background:var(--blue,#4A90D9);color:#fff;border:none;padding:8px 18px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600">
-       <i class="fa-solid fa-arrow-right"></i> Continue
+       <i class="fa-solid fa-calendar-plus"></i> Schedule
      </button>`
   );
+  // Kick off with full list
+  setTimeout(() => inspPickerSearch(''), 100);
+}
+
+let _inspPickerTimer = null;
+async function inspPickerSearch(q) {
+  clearTimeout(_inspPickerTimer);
+  _inspPickerTimer = setTimeout(async () => {
+    const res = document.getElementById('insp-picker-results');
+    if (!res) return;
+    res.style.display = '';
+    res.innerHTML = '<div style="padding:10px 14px;font-size:12px;color:var(--text3,#5A6A7A)">Searching…</div>';
+    try {
+      const r = q.trim().length >= 2
+        ? await apiSearchAssets(q.trim())
+        : await apiGetAssets({ limit: 80 });
+      const list = Array.isArray(r) ? r : (r.assets || r.data || []);
+      if (!list.length) {
+        res.innerHTML = '<div style="padding:10px 14px;font-size:12px;color:var(--text3)">No assets found</div>';
+        return;
+      }
+      res.innerHTML = list.slice(0, 60).map(a => {
+        const id   = a.assetId || a.id;
+        const name = a.name || id;
+        return `<div onclick="inspPickerSelect('${id.replace(/'/g,"\\'")}','${name.replace(/'/g,"\\'")}')}"
+          style="padding:9px 14px;cursor:pointer;border-bottom:1px solid var(--border,#E8ECF0);font-size:13px;transition:background .1s"
+          onmouseover="this.style.background='rgba(74,144,217,.07)'" onmouseout="this.style.background=''">
+          <div style="font-weight:600;color:var(--text,#0B1829)">${name}</div>
+          <div style="font-size:10px;color:var(--text3,#5A6A7A);font-family:monospace;margin-top:1px">${id}${a.state ? ' · ' + a.state : ''}${a.type ? ' · ' + a.type : ''}</div>
+        </div>`;
+      }).join('');
+    } catch(e) {
+      res.innerHTML = `<div style="padding:10px 14px;font-size:12px;color:#e05555">Search failed: ${e.message}</div>`;
+    }
+  }, q.trim().length >= 2 ? 280 : 0);
+}
+
+function inspPickerSelect(id, name) {
+  document.getElementById('insp-picker-id').value   = id;
+  document.getElementById('insp-picker-name').value = name;
+  const sel = document.getElementById('insp-picker-selected');
+  if (sel) {
+    sel.style.display = '';
+    sel.innerHTML = `<i class="fa-solid fa-building" style="color:var(--blue,#4A90D9);margin-right:6px"></i><strong>${name}</strong> <span style="color:var(--text3);font-family:monospace;font-size:10px">${id}</span>`;
+  }
+  const inp = document.getElementById('insp-picker-search');
+  if (inp) inp.value = name;
+  const res = document.getElementById('insp-picker-results');
+  if (res) res.style.display = 'none';
+}
+
+function _doPickerContinue() {
+  const id   = document.getElementById('insp-picker-id')?.value.trim();
+  const name = document.getElementById('insp-picker-name')?.value.trim() || id;
+  if (!id) {
+    const inp = document.getElementById('insp-picker-search');
+    if (inp) inp.style.borderColor = '#e05555';
+    return;
+  }
+  _inspModalClose();
+  openScheduleInspection(id, name);
 }
 
 // ── DASHBOARD SUMMARY (inject into dashboard page) ────────────────────────────

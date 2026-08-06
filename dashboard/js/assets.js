@@ -65,6 +65,27 @@ async function renderAssets() {
 }
 
 function renderAssetsTable(list) {
+  // ── ENSURE TABLE HEADERS MATCH DATA COLUMNS ───────────────────────────────
+  // Target by ID first; fall back to finding the thead of the table containing assets-tbody
+  const tbody = document.getElementById('assets-tbody');
+  const thead = document.getElementById('assets-thead')
+    || tbody?.closest('table')?.querySelector('thead');
+  if (thead) {
+    thead.innerHTML = `<tr>
+      <th style="width:36px"></th>
+      <th>Asset ID</th>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Geometry</th>
+      <th>Condition</th>
+      <th>Coordinates</th>
+      <th>State</th>
+      <th>MDA</th>
+      <th>Risk</th>
+      <th>Agent</th>
+      <th style="width:110px">Actions</th>
+    </tr>`;
+  }
   // ── STATS BAR ──────────────────────────────────────────────────────────────
   // Runs unconditionally (even when the filtered list is empty) so the bar
   // always reflects the current filter, not just the current page.
@@ -87,9 +108,9 @@ function renderAssetsTable(list) {
   const start = (currentPage - 1) * ASSETS_PAGE_SIZE;
   const pageItems = list.slice(start, start + ASSETS_PAGE_SIZE);
 
-  const tbody = document.getElementById('assets-tbody');
+  const tbody2 = document.getElementById('assets-tbody');
   if (!total) {
-    tbody.innerHTML = `<tr><td colspan="11"><div class="empty-state">
+    tbody2.innerHTML = `<tr><td colspan="12"><div class="empty-state">
       <div class="empty-icon"><i class="fa-solid fa-layer-group"></i></div>
       <div class="empty-title">No assets found</div>
       <div class="empty-sub">Adjust filters or capture a new asset</div>
@@ -98,7 +119,7 @@ function renderAssetsTable(list) {
     return;
   }
 
-  tbody.innerHTML = pageItems.map(a => {
+  tbody2.innerHTML = pageItems.map(a => {
     const id = a.assetId || a.id;
     const geom = a.geomType || a.geom || '—';
     const lat = a.lat || a.location?.coordinates?.[1] || '—';

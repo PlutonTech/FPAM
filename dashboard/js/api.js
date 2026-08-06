@@ -4,7 +4,7 @@
  * Falls back gracefully to localStorage when backend is unreachable.
  */
 
-const API_BASE = window.API_BASE || 'https://fpambacend.onrender.com/api';
+const API_BASE = window.API_BASE || 'http://localhost:3001/api';
 
 let _token = localStorage.getItem('as_token') || null;
 let _apiOnline = false;
@@ -94,9 +94,10 @@ async function apiSearchAssets(q) {
 }
 
 // ── Photos ───────────────────────────────────────────────────────────────────
-async function apiUploadPhoto(assetId, file) {
+async function apiUploadPhoto(assetId, file, meta = {}) {
   const fd = new FormData();
   fd.append('photo', file);
+  if (meta.meReportId) fd.append('meReportId', meta.meReportId);
   return apiFetchRaw(`/assets/${assetId}/photos`, { method: 'POST', body: fd });
 }
 
@@ -288,6 +289,61 @@ async function apiSeedMdas(force = false) {
   return apiFetch('/mdas/seed', { method: 'POST', body: { force } });
 }
 
+// ── Form Requests (compliance forms / MDA certification workflow) ──────────────
+async function apiGetFormRequests(params = {}) {
+  const qs = new URLSearchParams(params).toString();
+  return apiFetch(`/form-requests${qs ? '?' + qs : ''}`);
+}
+
+async function apiGetFormRequest(id) {
+  return apiFetch(`/form-requests/${id}`);
+}
+
+async function apiCreateFormRequest(data) {
+  return apiFetch('/form-requests', { method: 'POST', body: data });
+}
+
+async function apiUpdateFormRequest(id, data) {
+  return apiFetch(`/form-requests/${id}`, { method: 'PATCH', body: data });
+}
+
+async function apiDeleteFormRequest(id) {
+  return apiFetch(`/form-requests/${id}`, { method: 'DELETE' });
+}
+
+async function apiUploadFormRequestAttachment(id, file, label = '') {
+  const fd = new FormData();
+  fd.append('file', file);
+  if (label) fd.append('label', label);
+  return apiFetchRaw(`/form-requests/${id}/attachments`, { method: 'POST', body: fd });
+}
+
+// certificateBlob comes from jsPDF's doc.output('blob')
+async function apiIssueCertificate(id, certificateBlob, certificateNumber = '') {
+  const fd = new FormData();
+  fd.append('certificate', certificateBlob, `certificate-${id}.pdf`);
+  if (certificateNumber) fd.append('certificateNumber', certificateNumber);
+  return apiFetchRaw(`/form-requests/${id}/issue-certificate`, { method: 'POST', body: fd });
+}
+
+async function apiMarkPhysicalCertificateIssued(id) {
+  return apiFetch(`/form-requests/${id}/mark-physical-issued`, { method: 'POST' });
+}
+
+async function apiGetFormTypesMeta() {
+  return apiFetch('/form-requests/meta/form-types');
+}
+
+// Downloads a FormRequest's issued certificate PDF as a blob (auth header
+// required, so this can't just be a plain <a href> link — see
+// routes/form_requests_routes.js: GET /:id/certificate).
+async function apiFetchCertificateBlob(requestId) {
+  const url = `${API_BASE}/form-requests/${requestId}/certificate`;
+  const r = await fetch(url, { headers: authHeaders() });
+  if (!r.ok) throw new Error(`HTTP ${r.status}`);
+  return r.blob();
+}
+
 // Cached MDA list for dropdowns — invalidated after any add/edit/delete
 let _mdaCache = null;
 
@@ -375,7 +431,7 @@ function updateConnIndicator(online) {
 // Check API health on load
 async function checkApiHealth() {
   try {
-    const r = await fetch(`${window.API_BASE || 'https://fpambacend.onrender.com'}/health`);
+    const r = await fetch(`${window.API_BASE || 'http://localhost:3001'}/health`);
     if (r.ok) { _apiOnline = true; updateConnIndicator(true); }
   } catch { _apiOnline = false; updateConnIndicator(false); }
 }

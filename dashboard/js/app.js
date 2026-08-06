@@ -152,14 +152,13 @@ function renderPage(page) {
 // permissions come from u.permissions (per-user overrides) falling back to role defaults.
 
 const ROLE_DEFAULTS = {
-  'System Admin':  { canCreate:true,  canEdit:true,  canDelete:true,  canExport:true,  canViewAll:true,  canManageUsers:true,  canViewAudit:true,  canManageSettings:true,  canApprove:true  },
-  'Supervisor':    { canCreate:true,  canEdit:true,  canDelete:true,  canExport:true,  canViewAll:true,  canManageUsers:false, canViewAudit:true,  canManageSettings:false, canApprove:true  },
-  // Sub-Head — one rung above Field Agent. Reviews and approves/rejects
-  // captures submitted by Field Agents before they count as verified.
-  'Sub-Head':      { canCreate:true,  canEdit:false, canDelete:false, canExport:false, canViewAll:true,  canManageUsers:false, canViewAudit:false, canManageSettings:false, canApprove:true  },
-  'GIS Analyst':   { canCreate:false, canEdit:false, canDelete:false, canExport:true,  canViewAll:true,  canManageUsers:false, canViewAudit:true,  canManageSettings:false, canApprove:false },
-  'Field Agent':   { canCreate:false, canEdit:false, canDelete:false, canExport:false, canViewAll:false, canManageUsers:false, canViewAudit:false, canManageSettings:false, canApprove:false },
+  'System Admin':  { canCreate:true,  canEdit:true,  canDelete:true,  canExport:true,  canViewAll:true,  canManageUsers:true,  canViewAudit:true,  canManageSettings:true,  canApprove:true,  canEditInventory:true  },
+  'Supervisor':    { canCreate:true,  canEdit:true,  canDelete:true,  canExport:true,  canViewAll:true,  canManageUsers:false, canViewAudit:true,  canManageSettings:false, canApprove:true,  canEditInventory:true  },
+  'Sub-Head':      { canCreate:true,  canEdit:false, canDelete:false, canExport:false, canViewAll:true,  canManageUsers:false, canViewAudit:false, canManageSettings:false, canApprove:true,  canEditInventory:true  },
+  'GIS Analyst':   { canCreate:false, canEdit:false, canDelete:false, canExport:true,  canViewAll:true,  canManageUsers:false, canViewAudit:true,  canManageSettings:false, canApprove:false, canEditInventory:false },
+  'Field Agent':   { canCreate:false, canEdit:false, canDelete:false, canExport:false, canViewAll:false, canManageUsers:false, canViewAudit:false, canManageSettings:false, canApprove:false, canEditInventory:true  },
 };
+
 window.ROLE_PERMS = ROLE_DEFAULTS; // expose for dashboard.js and notifications.js
 
 function getUserPerms() {
