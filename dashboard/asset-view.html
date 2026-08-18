@@ -799,12 +799,12 @@ table.maint-table tbody tr:hover { background: var(--blue-bg); }
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script src="js/api.js"></script>
+<script src="js/api_additions.js"></script>
 <script src="js/app.js"></script>
 <script src="js/notifications.js"></script>
 <script src="js/inspections.js"></script>
 <script src="js/lifecycle.js"></script>
 <script src="js/pdf_report_enhanced.js"></script>
-<script src="js/asset_enhancements.js"></script>
 <script src="js/inventory_grid.js"></script>
 <script>
 'use strict';
@@ -863,7 +863,13 @@ async function loadAsset(id) {
 
 // ── RENDER ────────────────────────────────────────────────────────────────────
 function renderAssetView(a) {
-  const id  = a.assetId || a._id || a.id || '—';
+  // Display identifier: the structured FGN-... assetCode is what should
+  // show throughout this page now — assetId (legacy AST-... / internal
+  // sequential ID) still exists and is still what's used for API calls
+  // elsewhere, but it's no longer the human-facing label. Falls back to
+  // assetId for any asset that hasn't been through the coding migration yet.
+  const id       = a.assetCode || a.assetId || a._id || a.id || '—';
+  const legacyId = a.assetCode && a.assetId && a.assetId !== a.assetCode ? a.assetId : null;
   const lat = Number(a.lat || a.location?.coordinates?.[1]);
   const lng = Number(a.lng || a.location?.coordinates?.[0]);
   const hasCoords = lat && lng && !isNaN(lat) && !isNaN(lng);
@@ -881,6 +887,7 @@ function renderAssetView(a) {
     </button>`;
 
   document.getElementById('av-asset-id').textContent = id;
+  document.getElementById('av-asset-id').style.fontFamily = "'Courier New', monospace";
   const condBadge = document.getElementById('av-condition-badge');
   condBadge.textContent = a.condition || 'Unassessed';
   condBadge.className = 'tag ' + condTagClass(a.condition);
@@ -938,7 +945,8 @@ function renderAssetView(a) {
   const _ovLng = Number(a.lng || a.location?.coordinates?.[0]);
   const _hasCoords = _ovLat && _ovLng && !isNaN(_ovLat) && !isNaN(_ovLng);
   const cells = [
-    ['Asset ID',          `<span style="font-family:'Courier New',monospace;font-size:12px">${escStr(id)}</span>`],
+    ['Asset Code',         `<span style="font-family:'Courier New',monospace;font-size:12px">${escStr(id)}</span>`
+                            + (legacyId ? `<div style="font-size:10.5px;color:var(--text3,#5A6A7A);margin-top:2px;font-family:'Courier New',monospace">Legacy ID: ${escStr(legacyId)}</div>` : '')],
     ['Geometry',          geomIconHtml(a.geomType||a.geom) + ' ' + escStr(a.geomType||a.geom||'—')],
     ['Sector',            escStr(a.sector || '—')],
     ['Assessment',        a.assessed === 'Assessed'
@@ -1636,13 +1644,17 @@ async function renderAuditTab(assetId) {
         <i class="fa-solid fa-clock-rotate-left" style="color:var(--text3)"></i>
         <div style="flex:1">
           <div style="font-size:13px;font-weight:600">${escStr((l.action||l.type||'').replace(/_/g,' '))}</div>
-          <div style="font-size:11px;color:var(--text3)">${l.createdAt ? new Date(l.createdAt).toLocaleString('en-NG') : '—'} · ${escStr(l.performedBy||l.user||'—')}</div>
+          <div style="font-size:11px;color:var(--text3)">${l.ts ? new Date(l.ts).toLocaleString('en-NG') : '—'} · ${escStr(l.performedBy?.name || l.performedBy?.email || l.user || 'System')}</div>
           ${l.detail ? `<div style="font-size:12px;color:var(--text2)">${escStr(l.detail)}</div>` : ''}
         </div>
       </div>`).join('')}
     </div>`;
-  } catch {
-    el.innerHTML = `<div class="empty-state"><div class="empty-title">Could not load audit log</div></div>`;
+  } catch (err) {
+    console.error('renderAuditTab: apiGetAudit failed for', assetId, err);
+    el.innerHTML = `<div class="empty-state">
+      <div class="empty-title">Could not load audit log</div>
+      <div style="font-family:'Courier New',monospace;font-size:11px;color:#e05555;margin-top:6px">${escStr(err.message || String(err))}</div>
+    </div>`;
   }
 }
 

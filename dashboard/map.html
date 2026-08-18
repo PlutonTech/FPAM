@@ -266,7 +266,8 @@
     <div id="map-float-filters">
       <select class="map-float-select" id="map-filter-type" onchange="filterMap()">
         <option value="">All Types</option>
-        <option>Infrastructure</option><option>Land / Property</option><option>Utility</option><option>Environmental</option><option>Equipment</option>
+        <option>Infrastructure</option><option>Land / Property</option><option>Utility</option><option>Environmental</option><option>Equipment</option><option>Monument</option>
+        <option>Administrative Office</option><option>Residential</option><option>Hospital</option><option>School</option><option>Laboratory</option><option>Warehouse</option><option>Court</option><option>Security Facility</option>
       </select>
       <select class="map-float-select" id="map-filter-cond" onchange="filterMap()">
         <option value="">All Conditions</option>
@@ -336,6 +337,7 @@
 <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
 <script src="js/api.js"></script>
 <script src="js/app.js"></script>
+<script src="js/notifications.js"></script>
 <script src="js/map.js"></script>
 <script>
 function doLogout(){ apiLogout().finally(()=>{ localStorage.removeItem('as_token'); window.location.href='login.html'; }); }

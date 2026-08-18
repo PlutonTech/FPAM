@@ -65,27 +65,6 @@ async function renderAssets() {
 }
 
 function renderAssetsTable(list) {
-  // ── ENSURE TABLE HEADERS MATCH DATA COLUMNS ───────────────────────────────
-  // Target by ID first; fall back to finding the thead of the table containing assets-tbody
-  const tbody = document.getElementById('assets-tbody');
-  const thead = document.getElementById('assets-thead')
-    || tbody?.closest('table')?.querySelector('thead');
-  if (thead) {
-    thead.innerHTML = `<tr>
-      <th style="width:36px"></th>
-      <th>Asset ID</th>
-      <th>Name</th>
-      <th>Type</th>
-      <th>Geometry</th>
-      <th>Condition</th>
-      <th>Coordinates</th>
-      <th>State</th>
-      <th>MDA</th>
-      <th>Risk</th>
-      <th>Agent</th>
-      <th style="width:110px">Actions</th>
-    </tr>`;
-  }
   // ── STATS BAR ──────────────────────────────────────────────────────────────
   // Runs unconditionally (even when the filtered list is empty) so the bar
   // always reflects the current filter, not just the current page.
@@ -108,9 +87,9 @@ function renderAssetsTable(list) {
   const start = (currentPage - 1) * ASSETS_PAGE_SIZE;
   const pageItems = list.slice(start, start + ASSETS_PAGE_SIZE);
 
-  const tbody2 = document.getElementById('assets-tbody');
+  const tbody = document.getElementById('assets-tbody');
   if (!total) {
-    tbody2.innerHTML = `<tr><td colspan="12"><div class="empty-state">
+    tbody.innerHTML = `<tr><td colspan="11"><div class="empty-state">
       <div class="empty-icon"><i class="fa-solid fa-layer-group"></i></div>
       <div class="empty-title">No assets found</div>
       <div class="empty-sub">Adjust filters or capture a new asset</div>
@@ -119,7 +98,7 @@ function renderAssetsTable(list) {
     return;
   }
 
-  tbody2.innerHTML = pageItems.map(a => {
+  tbody.innerHTML = pageItems.map(a => {
     const id = a.assetId || a.id;
     const geom = a.geomType || a.geom || '—';
     const lat = a.lat || a.location?.coordinates?.[1] || '—';
@@ -412,3 +391,150 @@ function exportAssets(fmt) { downloadExport(fmt); }
 function toggleSelectAll(checked) { toggleSelectAllAssets(checked); }
 function clearSelection() { clearBulkSelection(); }
 function bulkExport(fmt) { downloadExport(fmt, [...selectedAssetIds]); }
+
+// ── PERCENTAGE EXPORT (Assessed / Unassessed) ─────────────────────────────────
+// Lets a user export e.g. "20% of Assessed assets" — computes how many assets
+// that is, picks that many (sorted alphabetically for reproducibility), shows
+// a preview with sample asset names, then exports that exact set via the
+// existing /assets/export/bulk endpoint (downloadExport handles the fetch).
+let _peIds = [];        // asset IDs currently staged for percentage export
+let _peSelection = [];  // full asset objects for the staged selection
+
+function _peAnchor() {
+  // Prefer inserting right next to the existing "Assessed" filter so this
+  // reads as part of the filter bar. Falls back to just above the table.
+  const filterAssessed = document.getElementById('filter-assessed');
+  if (filterAssessed) {
+    return filterAssessed.closest('.filters-row, .filter-row, .filter-bar, .filters, .toolbar, form') || filterAssessed.parentElement;
+  }
+  const tbody = document.getElementById('assets-tbody');
+  if (tbody) {
+    const table = tbody.closest('table');
+    return table ? table.parentElement : tbody.parentElement;
+  }
+  return null;
+}
+
+function initPercentExportUI() {
+  if (document.getElementById('percent-export-panel')) return; // already injected
+  const anchor = _peAnchor();
+  if (!anchor || !anchor.parentElement) return; // page structure not ready — skip silently
+
+  const panel = document.createElement('div');
+  panel.id = 'percent-export-panel';
+  panel.style.cssText = 'background:#fff;border:1px solid var(--border,#dde3ec);border-radius:8px;'
+    + 'padding:14px 18px;margin:14px 0;display:flex;flex-wrap:wrap;align-items:flex-end;gap:14px';
+  panel.innerHTML = `
+    <div style="display:flex;align-items:center;gap:8px;font-weight:600;font-size:13px;color:var(--navy,#0B2545);margin-right:4px">
+      <i class="fa-solid fa-percent"></i> Percentage Export
+    </div>
+    <div>
+      <label style="display:block;font-size:11px;color:#5A6A7A;margin-bottom:4px">Data set</label>
+      <select id="pe-assessed" class="form-control" style="min-width:150px">
+        <option value="Assessed">Assessed assets</option>
+        <option value="Unassessed">Unassessed assets</option>
+        <option value="">All assets</option>
+      </select>
+    </div>
+    <div>
+      <label style="display:block;font-size:11px;color:#5A6A7A;margin-bottom:4px">Percentage to export</label>
+      <div style="display:flex;align-items:center;gap:8px">
+        <input id="pe-percent" type="number" min="1" max="100" value="20" class="form-control" style="width:80px">
+        <span style="font-size:13px;color:#5A6A7A">%</span>
+      </div>
+    </div>
+    <button type="button" class="btn btn-outline btn-sm" id="pe-preview-btn" onclick="previewPercentExport()">
+      <i class="fa-solid fa-magnifying-glass"></i> Preview &amp; Export
+    </button>
+    <span id="pe-hint" style="font-size:11.5px;color:#5A6A7A"></span>
+  `;
+  anchor.insertAdjacentElement('afterend', panel);
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initPercentExportUI);
+} else {
+  initPercentExportUI();
+}
+
+async function previewPercentExport() {
+  const assessedVal = document.getElementById('pe-assessed')?.value ?? '';
+  const pctRaw       = document.getElementById('pe-percent')?.value;
+  const hint         = document.getElementById('pe-hint');
+  const btn          = document.getElementById('pe-preview-btn');
+  let pct = Math.round(Number(pctRaw));
+  if (!Number.isFinite(pct) || pct < 1) pct = 1;
+  if (pct > 100) pct = 100;
+  const pctEl = document.getElementById('pe-percent');
+  if (pctEl) pctEl.value = pct;
+
+  const label = assessedVal === 'Assessed' ? 'Assessed' : assessedVal === 'Unassessed' ? 'Unassessed' : 'All';
+
+  if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Loading…'; }
+  if (hint) hint.textContent = '';
+
+  let list = [];
+  try {
+    const params = assessedVal ? { assessed: assessedVal } : {};
+    list = await fetchAllAssets(params);
+  } catch {
+    list = allAssets.filter(a => !assessedVal || (a.assessed || 'Unassessed') === assessedVal);
+  } finally {
+    if (btn) { btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-magnifying-glass"></i> Preview &amp; Export'; }
+  }
+
+  const total = list.length;
+  if (!total) {
+    if (hint) hint.textContent = `No ${label.toLowerCase()} assets found.`;
+    toast(`No ${label.toLowerCase()} assets found`, 'fa-circle-info');
+    return;
+  }
+
+  const count = Math.max(1, Math.round((pct / 100) * total));
+  const sorted = [...list].sort((a, b) => (a.name || '').localeCompare(b.name || ''));
+  _peSelection = sorted.slice(0, count);
+  _peIds = _peSelection.map(a => a.assetId || a.id);
+
+  if (hint) hint.textContent = `≈ ${count} of ${total} ${label.toLowerCase()} assets`;
+
+  const SAMPLE_SHOW = 10;
+  const sampleRows = _peSelection.slice(0, SAMPLE_SHOW).map(a => {
+    const id = escHtml(a.assetId || a.id || '—');
+    const nm = escHtml(a.name || 'Unnamed asset');
+    const cond = escHtml(a.condition || 'Unknown');
+    return `<div style="display:flex;justify-content:space-between;gap:10px;padding:7px 0;border-bottom:1px solid var(--border,#eef1f5)">
+      <div style="min-width:0"><div style="font-size:13px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${nm}</div>
+      <div style="font-family:'Space Mono',monospace;font-size:10px;color:#5A6A7A">${id}</div></div>
+      <span class="tag ${condColor ? condColor(a.condition) : ''}" style="flex-shrink:0;align-self:center">${cond}</span>
+    </div>`;
+  }).join('');
+  const moreCount = _peSelection.length - SAMPLE_SHOW;
+
+  openModal(
+    `Export ${pct}% of ${label} Assets`,
+    `<div style="margin-bottom:14px">
+      <div style="font-size:24px;font-weight:700;color:var(--navy,#0B2545)">${count.toLocaleString()} <span style="font-size:14px;font-weight:400;color:#5A6A7A">of ${total.toLocaleString()} ${label.toLowerCase()} assets (${pct}%)</span></div>
+      <div style="font-size:11px;color:#5A6A7A;margin-top:4px">Sorted alphabetically — the first ${count.toLocaleString()} will be exported.</div>
+    </div>
+    <div style="max-height:320px;overflow-y:auto;border:1px solid var(--border,#dde3ec);border-radius:6px;padding:0 12px">
+      ${sampleRows || '<div style="padding:12px 0;color:#5A6A7A;font-size:12px">No preview available.</div>'}
+      ${moreCount > 0 ? `<div style="padding:8px 0;font-size:11.5px;color:#5A6A7A">+ ${moreCount.toLocaleString()} more asset${moreCount === 1 ? '' : 's'}</div>` : ''}
+    </div>`,
+    `<button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+     <button class="btn btn-outline" onclick="exportPercentSelection('json')"><i class="fa-solid fa-file-code"></i> JSON</button>
+     <button class="btn btn-outline" onclick="exportPercentSelection('geojson')"><i class="fa-solid fa-map"></i> GeoJSON</button>
+     <button class="btn btn-outline" onclick="exportPercentSelection('xlsx')"><i class="fa-solid fa-file-excel"></i> XLSX</button>
+     <button class="btn btn-outline" onclick="exportPercentSelection('pdf')"><i class="fa-solid fa-file-pdf"></i> PDF</button>
+     <button class="btn btn-primary" onclick="exportPercentSelection('csv')"><i class="fa-solid fa-file-csv"></i> CSV</button>`
+  );
+}
+
+function exportPercentSelection(fmt) {
+  if (!_peIds.length) { toast('Nothing staged to export', 'fa-triangle-exclamation', true); return; }
+  downloadExport(fmt, _peIds);
+  if (typeof addAudit === 'function') {
+    addAudit('PERCENT_EXPORT', 'MULTIPLE', null, `${_peIds.length} assets exported as ${fmt.toUpperCase()} (percentage export)`);
+  }
+  toast(`Exporting ${_peIds.length} assets as ${fmt.toUpperCase()}`, 'fa-download');
+  closeModal();
+}

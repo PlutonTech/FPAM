@@ -25,7 +25,11 @@ async function generatePDFReport() {
   const conds = ['Good','Fair','Poor','Critical'];
   const condRGB = [[0,135,83],[230,167,0],[255,107,53],[214,69,69]];
   const condCounts = conds.map(c => allAssets.filter(a=>a.condition===c).length);
-  const types = ['Infrastructure','Land / Property','Utility','Environmental','Equipment'];
+  const types = [
+    'Infrastructure','Land / Property','Utility','Environmental','Equipment','Monument',
+    'Administrative Office','Residential','Hospital','School','Laboratory',
+    'Warehouse','Court','Security Facility',
+  ];
 
   // ── COVER ──
   doc.setFillColor(10, 15, 13); doc.rect(0,0,W,297,'F');

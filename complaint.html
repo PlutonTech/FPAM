@@ -1,204 +1,1296 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Log a Complaint &#8212; FPAM</title><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"><style>*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{--navy:#0B2545;--navy2:#0e2d57;--blue:#4A90D9;--blue-lt:#6AAEE8;--terra:#B54A2F;--gold:#D4A017;--white:#fff;--bg:#F4F6F9;--text:#0B1829;--text3:#5A6A7A;--border:#dde3ec;--ff-d:"Cormorant Garamond",Georgia,serif;--ff-b:"Inter",system-ui,sans-serif;--ff-m:"JetBrains Mono",monospace;--ticker-h:34px;--nav-h:70px;--top-offset:calc(var(--ticker-h) + var(--nav-h))}
-html{scroll-behavior:smooth}body{font-family:var(--ff-b);color:var(--text);background:#fff;overflow-x:hidden}::-webkit-scrollbar{width:4px}::-webkit-scrollbar-thumb{background:var(--blue);border-radius:4px}a{text-decoration:none;color:inherit}img{display:block;max-width:100%}
-#top-ticker{position:fixed;top:0;left:0;right:0;z-index:600;height:var(--ticker-h);background:var(--navy);border-bottom:1px solid rgba(74,144,217,.3);overflow:hidden;display:flex;align-items:center}
-.tt-label{flex-shrink:0;background:var(--blue);height:100%;display:flex;align-items:center;padding:0 16px;font-family:var(--ff-m);font-size:8.5px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:#fff;gap:7px;white-space:nowrap;border-right:1px solid rgba(255,255,255,.12)}
-.tt-track-wrap{flex:1;overflow:hidden;position:relative}.tt-track-wrap::before,.tt-track-wrap::after{content:"";position:absolute;top:0;bottom:0;width:36px;z-index:2}.tt-track-wrap::before{left:0;background:linear-gradient(to right,var(--navy),transparent)}.tt-track-wrap::after{right:0;background:linear-gradient(to left,var(--navy),transparent)}
-.tt-track{display:flex;white-space:nowrap;animation:tt-scroll 55s linear infinite}.tt-item{display:inline-flex;align-items:center;gap:10px;padding:0 34px;font-family:var(--ff-b);font-size:11px;color:rgba(255,255,255,.62)}.tt-sep{color:var(--blue);font-size:8px;opacity:.6}@keyframes tt-scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-#nav{position:fixed;top:var(--ticker-h);left:0;right:0;z-index:500;background:rgba(11,37,69,.97);backdrop-filter:blur(20px);box-shadow:0 1px 0 rgba(255,255,255,.07)}
-.nav-inner{display:flex;align-items:center;justify-content:space-between;padding:0 44px;height:var(--nav-h);max-width:1400px;margin:0 auto}
-.nav-logo{display:flex;align-items:center;gap:8px;flex-shrink:0}.nav-logo img{height:46px;width:auto;filter:drop-shadow(0 1px 6px rgba(0,0,0,.4));transition:transform .2s}.nav-logo img:hover{transform:scale(1.05)}.nav-logo-div{width:1px;height:34px;background:rgba(255,255,255,.25);margin:0 4px;flex-shrink:0}
-.nav-links{display:flex;align-items:center;gap:26px}.nav-links a{font-family:var(--ff-b);font-size:12.5px;font-weight:500;color:rgba(255,255,255,.78);transition:.15s;letter-spacing:.3px;padding:4px 0;border-bottom:1.5px solid transparent}.nav-links a:hover,.nav-links a.active{color:#fff;border-bottom-color:var(--blue)}
-.nav-actions{display:flex;align-items:center;gap:10px;flex-shrink:0}.nav-cta{background:var(--terra);color:#fff;padding:8px 18px;border-radius:6px;font-family:var(--ff-b);font-size:12px;font-weight:600;display:flex;align-items:center;gap:7px;transition:.2s;white-space:nowrap}.nav-cta:hover{background:#c55535;transform:translateY(-1px)}
-.nav-login{background:transparent;color:#fff;padding:8px 18px;border-radius:6px;font-family:var(--ff-b);font-size:12px;font-weight:600;display:flex;align-items:center;gap:7px;border:1.5px solid rgba(255,255,255,.35);transition:.2s;white-space:nowrap}.nav-login:hover{background:rgba(255,255,255,.1);border-color:#fff}
-.nav-burger{display:none;background:none;border:none;color:#fff;font-size:21px;cursor:pointer}.nav-mob{display:none;position:fixed;top:var(--top-offset);left:0;right:0;background:rgba(11,37,69,.98);backdrop-filter:blur(20px);padding:20px 32px;flex-direction:column;gap:12px;z-index:499;border-top:1px solid rgba(255,255,255,.07)}.nav-mob.open{display:flex}.nav-mob a{font-family:var(--ff-b);color:rgba(255,255,255,.8);font-size:14.5px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.06)}
-.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 26px;border-radius:6px;font-family:var(--ff-b);font-size:13px;font-weight:600;cursor:pointer;border:none;transition:.22s;white-space:nowrap}.btn-blue{background:var(--blue);color:#fff}.btn-blue:hover{background:var(--blue-lt);transform:translateY(-2px)}.btn-terra{background:var(--terra);color:#fff}.btn-terra:hover{background:#c55535}.btn-outline{background:transparent;color:var(--blue);border:1.5px solid var(--blue)}.btn-outline:hover{background:var(--blue);color:#fff}
-.section{padding:90px 0}.section.alt{background:var(--bg)}.container{max-width:1180px;margin:0 auto;padding:0 36px}
-.eyebrow{font-family:var(--ff-m);font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--blue);margin-bottom:12px;display:flex;align-items:center;gap:8px}.eyebrow::after{content:"";flex:0 0 28px;height:1px;background:var(--blue);border-radius:2px}
-.s-title{font-family:var(--ff-d);font-size:clamp(26px,3vw,46px);font-weight:600;color:var(--navy);line-height:1.1;margin-bottom:14px;letter-spacing:.3px}.s-title.white{color:#fff}
-.s-sub{font-family:var(--ff-b);font-size:15px;font-weight:300;color:var(--text3);line-height:1.8;max-width:540px}.s-sub.white{color:rgba(255,255,255,.6)}
-.page-hero{position:relative;height:300px;overflow:hidden;background:var(--navy);display:flex;align-items:center;margin-top:var(--top-offset)}.page-hero-bg{position:absolute;inset:0;background-size:cover;background-position:center;opacity:.22}.page-hero-overlay{position:absolute;inset:0;background:linear-gradient(to right,rgba(11,37,69,.96) 40%,rgba(11,37,69,.5) 100%)}.page-hero-content{position:relative;z-index:1;padding:0 60px}.page-hero h1{font-family:var(--ff-d);font-size:clamp(30px,4vw,52px);font-weight:600;color:#fff;letter-spacing:.5px;margin-bottom:10px}.page-hero p{font-family:var(--ff-b);font-size:14.5px;font-weight:300;color:rgba(255,255,255,.6);max-width:480px;line-height:1.75}
-.breadcrumb{font-family:var(--ff-m);font-size:8.5px;letter-spacing:2px;text-transform:uppercase;color:var(--blue-lt);margin-bottom:14px;display:flex;align-items:center;gap:8px}
-.reveal{opacity:0;transform:translateY(24px);transition:opacity .7s ease,transform .7s ease}.reveal.visible{opacity:1;transform:none}.rd1{transition-delay:.1s}.rd2{transition-delay:.2s}.rd3{transition-delay:.32s}
-@media(max-width:960px){.nav-links,.nav-actions{display:none}.nav-burger{display:block}.nav-inner{padding:0 20px}.container{padding:0 24px}.page-hero-content{padding:0 28px}}
-.complaint-layout{display:grid;grid-template-columns:300px 1fr;gap:48px;align-items:start}
-.cl-sidebar{background:var(--navy);border-radius:6px;padding:28px;position:sticky;top:calc(var(--top-offset) + 24px)}
-.cls-title{font-family:var(--ff-d);font-size:20px;font-weight:600;color:#fff;margin-bottom:16px}
-.cls-steps{display:flex;flex-direction:column;gap:0}
-.cls-step{display:flex;gap:14px;align-items:flex-start;padding:14px 0;border-bottom:1px solid rgba(255,255,255,.07)}
-.cls-step:last-child{border:none}
-.cls-step-num{width:28px;height:28px;border-radius:50%;background:rgba(74,144,217,.2);border:1px solid rgba(74,144,217,.4);display:flex;align-items:center;justify-content:center;font-family:var(--ff-m);font-size:10px;color:var(--blue-lt);flex-shrink:0}
-.cls-step-t{font-family:var(--ff-b);font-size:12.5px;font-weight:500;color:rgba(255,255,255,.55)}
-.cls-step-b{font-family:var(--ff-b);font-size:11px;font-weight:300;color:rgba(255,255,255,.3);margin-top:2px}
-.cform{background:#fff;border-radius:6px;border:1px solid var(--border);padding:40px}
-.cf-section{margin-bottom:36px;padding-bottom:36px;border-bottom:1px solid var(--border)}
-.cf-section:last-of-type{border:none;margin-bottom:0;padding-bottom:0}
-.cf-section-title{font-family:var(--ff-d);font-size:20px;font-weight:600;color:var(--navy);margin-bottom:4px}
-.cf-section-sub{font-family:var(--ff-b);font-size:13px;font-weight:300;color:var(--text3);margin-bottom:20px}
-.fg{display:flex;flex-direction:column;gap:5px;margin-bottom:16px}
-.fg label{font-family:var(--ff-m);font-size:8.5px;color:var(--text3);letter-spacing:1px;text-transform:uppercase}
-.fg label .req{color:var(--terra)}
-.fg input,.fg textarea,.fg select{border:1px solid var(--border);border-radius:5px;padding:11px 13px;font-family:var(--ff-b);font-size:13.5px;color:var(--text);outline:none;transition:.2s;background:#fff;width:100%}
-.fg input:focus,.fg textarea:focus,.fg select:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(74,144,217,.1)}
-.fg textarea{resize:vertical;min-height:110px}
-.fg input.error,.fg select.error,.fg textarea.error{border-color:var(--terra)}
-.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-.severity-group{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-.sev-btn{padding:12px;border:1px solid var(--border);border-radius:5px;text-align:center;cursor:pointer;transition:.2s}
-.sev-btn.active{border-color:var(--blue);background:rgba(74,144,217,.07)}
-.sev-btn i{font-size:18px;display:block;margin-bottom:5px}
-.sev-low i{color:#2DB87B}.sev-med i{color:var(--gold)}.sev-high i{color:var(--terra)}
-.sev-label{font-family:var(--ff-b);font-size:12px;font-weight:600;color:var(--navy)}
-.sev-desc{font-family:var(--ff-b);font-size:10.5px;font-weight:300;color:var(--text3);margin-top:2px}
-#cf-feedback{margin-top:16px;padding:14px 18px;border-radius:5px;font-family:var(--ff-b);font-size:13px;display:none}
-#cf-feedback.success{background:rgba(45,184,123,.1);border:1px solid rgba(45,184,123,.3);color:#1a6b3c}
-#cf-feedback.error{background:rgba(181,74,47,.1);border:1px solid rgba(181,74,47,.3);color:var(--terra)}
-#cf-feedback.sending{background:rgba(74,144,217,.1);border:1px solid rgba(74,144,217,.3);color:var(--blue)}
-@media(max-width:960px){.complaint-layout{grid-template-columns:1fr}.cl-sidebar{position:static}.form-row,.severity-group{grid-template-columns:1fr 1fr}}
-@media(max-width:560px){.form-row,.severity-group{grid-template-columns:1fr}.cform{padding:24px}}
-</style></head><body>
-<div id="top-ticker">
-  <div class="tt-label"><i class="fa-solid fa-satellite-dish"></i>Latest News</div>
-  <div class="tt-track-wrap"><div class="tt-track">
-    <span class="tt-item">FPAM Commissions Renovation of Federal Secretariat Complex Phase I <span class="tt-sep">&#9670;</span></span>
-    <span class="tt-item">500 Housing Units Rehabilitated Across 6 States Under 2024 Maintenance Programme <span class="tt-sep">&#9670;</span></span>
-    <span class="tt-item">FPAM Adopts Digital Maintenance Management System Nationwide <span class="tt-sep">&#9670;</span></span>
-    <span class="tt-item">Safety First: FPAM Launches Nationwide Structural Compliance Drive Across 31 MDAs <span class="tt-sep">&#9670;</span></span>
-    <span class="tt-item">Presidential Executive Order No. 11 &#8212; All MDAs Now Under Mandatory Maintenance Framework <span class="tt-sep">&#9670;</span></span>
-    <span class="tt-item">Director Arc. Chioma Wogu-Ogbonna Inaugurates New Asset Inventory Portal <span class="tt-sep">&#9670;</span></span>
-    <span class="tt-item">FPAM Targets 250+ Housing Estates for Comprehensive Upkeep Under &#8358;12B 2025 Programme <span class="tt-sep">&#9670;</span></span>
-    <span class="tt-item">FPAM Commissions Renovation of Federal Secretariat Complex Phase I <span class="tt-sep">&#9670;</span></span>
-    <span class="tt-item">500 Housing Units Rehabilitated Across 6 States Under 2024 Maintenance Programme <span class="tt-sep">&#9670;</span></span>
-    <span class="tt-item">FPAM Adopts Digital Maintenance Management System Nationwide <span class="tt-sep">&#9670;</span></span>
-    <span class="tt-item">Safety First: FPAM Launches Nationwide Structural Compliance Drive Across 31 MDAs <span class="tt-sep">&#9670;</span></span>
-    <span class="tt-item">Presidential Executive Order No. 11 &#8212; All MDAs Now Under Mandatory Maintenance Framework <span class="tt-sep">&#9670;</span></span>
-    <span class="tt-item">Director Arc. Chioma Wogu-Ogbonna Inaugurates New Asset Inventory Portal <span class="tt-sep">&#9670;</span></span>
-    <span class="tt-item">FPAM Targets 250+ Housing Estates for Comprehensive Upkeep Under &#8358;12B 2025 Programme <span class="tt-sep">&#9670;</span></span>
-  </div></div>
-</div>
-<nav id="nav"><div class="nav-inner"><a class="nav-logo" href="index.html"><img src="images/logo_ministry.png" alt="Ministry"><div class="nav-logo-div"></div><img src="images/logo_fpam.png" alt="FPAM"><div style="margin-left:10px;display:flex;flex-direction:column;justify-content:center"><div style="font-family:'Cormorant Garamond',Georgia,serif;font-size:22px;font-weight:700;color:#fff;letter-spacing:3px;line-height:1">FPAM</div><div style="font-family:'JetBrains Mono',monospace;font-size:7px;color:rgba(255,255,255,.4);letter-spacing:1.5px;text-transform:uppercase;margin-top:2px">Federal Public Asset Maintenance</div></div></a><div class="nav-links"><a href="index.html">Home</a>
-      <a href="about.html">About</a>
-      <a href="contact.html">Contact</a>
-      <a href="gallery.html">Gallery</a>
-      <a href="assets.html">Asset</a></div><div class="nav-actions"><a href="complaint.html" class="nav-cta"><i class="fa-solid fa-file-pen"></i> Log a Complaint</a><a href="login.html" class="nav-login"><i class="fa-solid fa-right-to-bracket"></i> Login</a></div><button class="nav-burger" onclick="toggleMenu()"><i class="fa-solid fa-bars"></i></button></div><div class="nav-mob" id="nav-mob"><a href="index.html" onclick="toggleMenu()">Home</a><a href="about.html" onclick="toggleMenu()">About</a><a href="contact.html" onclick="toggleMenu()">Contact</a><a href="gallery.html" onclick="toggleMenu()">Gallery</a><a href="assets.html" onclick="toggleMenu()">Asset</a><a href="complaint.html" onclick="toggleMenu()">Log a Complaint</a><a href="login.html" onclick="toggleMenu()" style="color:var(--blue-lt)"><i class="fa-solid fa-right-to-bracket"></i> Login</a></div></nav><script>function toggleMenu(){document.getElementById('nav-mob').classList.toggle('open')}</script>
-<div class="page-hero">
-  <div class="page-hero-bg" style="background-image:url('images/photo_secretariat.jpg')"></div>
-  <div class="page-hero-overlay"></div>
-  <div class="page-hero-content">
-    <div class="breadcrumb"><a href="index.html">Home</a><i class="fa-solid fa-chevron-right"></i>Log a Complaint</div>
-    <h1>Log a Complaint</h1>
-    <p>Report maintenance issues, safety concerns or estate problems directly to FPAM for official action.</p>
-  </div>
-</div>
-<section class="section">
-  <div class="container">
-    <div class="complaint-layout">
-      <div class="cl-sidebar reveal">
-        <div class="cls-title">How It Works</div>
-        <div class="cls-steps">
-          <div class="cls-step"><div class="cls-step-num">1</div><div><div class="cls-step-t">Submit Your Complaint</div><div class="cls-step-b">Fill in the form with full details of the issue.</div></div></div>
-          <div class="cls-step"><div class="cls-step-num">2</div><div><div class="cls-step-t">Acknowledgement</div><div class="cls-step-b">You'll receive a reference number within 24 hours.</div></div></div>
-          <div class="cls-step"><div class="cls-step-num">3</div><div><div class="cls-step-t">Investigation</div><div class="cls-step-b">FPAM team reviews and assigns to the relevant unit.</div></div></div>
-          <div class="cls-step"><div class="cls-step-num">4</div><div><div class="cls-step-t">Resolution</div><div class="cls-step-b">Issue is addressed and you are informed of outcome.</div></div></div>
-        </div>
-        <div style="margin-top:20px;padding:14px;background:rgba(181,74,47,.1);border:1px solid rgba(181,74,47,.2);border-radius:4px">
-          <p style="font-family:var(--ff-b);font-size:11.5px;font-weight:300;color:rgba(255,255,255,.55);line-height:1.65;max-width:100%"><strong style="color:rgba(255,255,255,.7)">Urgent safety issues?</strong><br>Call our emergency line:<br><strong style="color:var(--terra);font-family:var(--ff-d);font-size:18px">0800-FPAM-911</strong></p>
-        </div>
-      </div>
-      <div class="cform reveal rd1">
-        <div class="cf-section">
-          <div class="cf-section-title">Your Details</div>
-          <div class="cf-section-sub">We need your contact information to follow up on your complaint.</div>
-          <div class="form-row"><div class="fg"><label>Full Name <span class="req">*</span></label><input type="text" id="f-name" placeholder="Your full name"></div><div class="fg"><label>Email Address <span class="req">*</span></label><input type="email" id="f-email" placeholder="your@email.com"></div></div>
-          <div class="form-row"><div class="fg"><label>Phone Number <span class="req">*</span></label><input type="tel" id="f-phone" placeholder="+234 800 000 0000"></div><div class="fg"><label>Your Role</label><select id="f-role"><option value="">Select...</option><option>Estate Resident</option><option>Government Employee</option><option>MDA Representative</option><option>Member of Public</option><option>Other</option></select></div></div>
-        </div>
-        <div class="cf-section">
-          <div class="cf-section-title">Asset / Location Details</div>
-          <div class="cf-section-sub">Tell us which asset or estate this complaint relates to.</div>
-          <div class="form-row"><div class="fg"><label>State <span class="req">*</span></label><select id="f-state"><option value="">Select state...</option><option>Abia</option><option>Adamawa</option><option>Akwa Ibom</option><option>Anambra</option><option>Bauchi</option><option>Bayelsa</option><option>Benue</option><option>Borno</option><option>Cross River</option><option>Delta</option><option>Ebonyi</option><option>Edo</option><option>Ekiti</option><option>Enugu</option><option>FCT Abuja</option><option>Gombe</option><option>Imo</option><option>Jigawa</option><option>Kaduna</option><option>Kano</option><option>Katsina</option><option>Kebbi</option><option>Kogi</option><option>Kwara</option><option>Lagos</option><option>Nasarawa</option><option>Niger</option><option>Ogun</option><option>Ondo</option><option>Osun</option><option>Oyo</option><option>Plateau</option><option>Rivers</option><option>Sokoto</option><option>Taraba</option><option>Yobe</option><option>Zamfara</option></select></div><div class="fg"><label>Asset / Estate Name <span class="req">*</span></label><input type="text" id="f-asset" placeholder="e.g. NHP Estate Phase I, Lafia"></div></div>
-          <div class="fg"><label>Full Address / Location Description</label><input type="text" id="f-address" placeholder="Street address or landmark"></div>
-          <div class="fg"><label>Asset Category</label><select id="f-category"><option value="">Select category...</option><option>Government Building</option><option>Housing Estate</option><option>Infrastructure (Road/Drainage)</option><option>Utility (Electricity/Water)</option><option>Common Area / Landscaping</option><option>Other</option></select></div>
-        </div>
-        <div class="cf-section">
-          <div class="cf-section-title">Complaint Details</div>
-          <div class="cf-section-sub">Describe the issue clearly so our team can act appropriately.</div>
-          <div class="fg"><label>Complaint Type <span class="req">*</span></label><select id="f-type"><option value="">Select complaint type...</option><option>Structural Damage / Deterioration</option><option>Electrical / Plumbing Failure</option><option>Road / Drainage Issue</option><option>Safety Hazard</option><option>Waste Management</option><option>Noise / Disturbance</option><option>Illegal Occupation / Trespass</option><option>Rent / Tenancy Issue</option><option>Poor Maintenance / Neglect</option><option>Other</option></select></div>
-          <div class="fg"><label>Severity Level <span class="req">*</span></label>
-            <div class="severity-group">
-              <div class="sev-btn sev-low" id="sev-low" onclick="setSeverity('low')"><i class="fa-solid fa-circle-check"></i><div class="sev-label">Low</div><div class="sev-desc">Minor, can wait</div></div>
-              <div class="sev-btn sev-med" id="sev-med" onclick="setSeverity('medium')"><i class="fa-solid fa-triangle-exclamation"></i><div class="sev-label">Medium</div><div class="sev-desc">Needs attention soon</div></div>
-              <div class="sev-btn sev-high" id="sev-high" onclick="setSeverity('high')"><i class="fa-solid fa-circle-exclamation"></i><div class="sev-label">High</div><div class="sev-desc">Urgent safety risk</div></div>
-            </div>
-            <input type="hidden" id="f-severity" value="">
-          </div>
-          <div class="fg"><label>Date Issue Was First Noticed</label><input type="date" id="f-date"></div>
-          <div class="fg"><label>Detailed Description <span class="req">*</span></label><textarea id="f-desc" placeholder="Describe the issue in as much detail as possible..."></textarea></div>
-          <div class="fg"><label>Previous Reports (if any)</label><input type="text" id="f-prev" placeholder="Reference number of any previous complaint"></div>
-        </div>
-        <div style="display:flex;align-items:center;gap:16px;margin-top:28px">
-          <button class="btn btn-blue" id="submit-btn" onclick="submitComplaint()"><i class="fa-solid fa-paper-plane"></i> Submit Complaint</button>
-          <p style="font-family:var(--ff-b);font-size:11.5px;font-weight:300;color:var(--text3);line-height:1.6">By submitting, you confirm this information is accurate and held per Nigeria's Data Protection Act.</p>
-        </div>
-        <div id="cf-feedback"></div>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Log a Complaint &#8212; FPAM</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0
+    }
+
+    :root {
+      --navy: #0B2545;
+      --navy2: #0e2d57;
+      --blue: #4A90D9;
+      --blue-lt: #6AAEE8;
+      --terra: #B54A2F;
+      --gold: #D4A017;
+      --white: #fff;
+      --bg: #F4F6F9;
+      --text: #0B1829;
+      --text3: #5A6A7A;
+      --border: #dde3ec;
+      --ff-d: "Cormorant Garamond", Georgia, serif;
+      --ff-b: "Inter", system-ui, sans-serif;
+      --ff-m: "JetBrains Mono", monospace;
+      --ticker-h: 34px;
+      --nav-h: 70px;
+      --top-offset: calc(var(--ticker-h) + var(--nav-h))
+    }
+
+    html {
+      scroll-behavior: smooth
+    }
+
+    body {
+      font-family: var(--ff-b);
+      color: var(--text);
+      background: #fff;
+      overflow-x: hidden
+    }
+
+    ::-webkit-scrollbar {
+      width: 4px
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--blue);
+      border-radius: 4px
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit
+    }
+
+    img {
+      display: block;
+      max-width: 100%
+    }
+
+    #top-ticker {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 600;
+      height: var(--ticker-h);
+      background: var(--navy);
+      border-bottom: 1px solid rgba(74, 144, 217, .3);
+      overflow: hidden;
+      display: flex;
+      align-items: center
+    }
+
+    .tt-label {
+      flex-shrink: 0;
+      background: var(--blue);
+      height: 100%;
+      display: flex;
+      align-items: center;
+      padding: 0 16px;
+      font-family: var(--ff-m);
+      font-size: 8.5px;
+      font-weight: 500;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #fff;
+      gap: 7px;
+      white-space: nowrap;
+      border-right: 1px solid rgba(255, 255, 255, .12)
+    }
+
+    .tt-track-wrap {
+      flex: 1;
+      overflow: hidden;
+      position: relative
+    }
+
+    .tt-track-wrap::before,
+    .tt-track-wrap::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 36px;
+      z-index: 2
+    }
+
+    .tt-track-wrap::before {
+      left: 0;
+      background: linear-gradient(to right, var(--navy), transparent)
+    }
+
+    .tt-track-wrap::after {
+      right: 0;
+      background: linear-gradient(to left, var(--navy), transparent)
+    }
+
+    .tt-track {
+      display: flex;
+      white-space: nowrap;
+      animation: tt-scroll 55s linear infinite
+    }
+
+    .tt-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0 34px;
+      font-family: var(--ff-b);
+      font-size: 11px;
+      color: rgba(255, 255, 255, .62)
+    }
+
+    .tt-sep {
+      color: var(--blue);
+      font-size: 8px;
+      opacity: .6
+    }
+
+    @keyframes tt-scroll {
+      from {
+        transform: translateX(0)
+      }
+
+      to {
+        transform: translateX(-50%)
+      }
+    }
+
+    #nav {
+      position: fixed;
+      top: var(--ticker-h);
+      left: 0;
+      right: 0;
+      z-index: 500;
+      background: rgba(11, 37, 69, .97);
+      backdrop-filter: blur(20px);
+      box-shadow: 0 1px 0 rgba(255, 255, 255, .07)
+    }
+
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 44px;
+      height: var(--nav-h);
+      max-width: 1400px;
+      margin: 0 auto
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0
+    }
+
+    .nav-logo img {
+      height: 46px;
+      width: auto;
+      filter: drop-shadow(0 1px 6px rgba(0, 0, 0, .4));
+      transition: transform .2s
+    }
+
+    .nav-logo img:hover {
+      transform: scale(1.05)
+    }
+
+    .nav-logo-div {
+      width: 1px;
+      height: 34px;
+      background: rgba(255, 255, 255, .25);
+      margin: 0 4px;
+      flex-shrink: 0
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 26px
+    }
+
+    .nav-links a {
+      font-family: var(--ff-b);
+      font-size: 12.5px;
+      font-weight: 500;
+      color: rgba(255, 255, 255, .78);
+      transition: .15s;
+      letter-spacing: .3px;
+      padding: 4px 0;
+      border-bottom: 1.5px solid transparent
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      color: #fff;
+      border-bottom-color: var(--blue)
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-shrink: 0
+    }
+
+    .nav-cta {
+      background: var(--terra);
+      color: #fff;
+      padding: 8px 18px;
+      border-radius: 6px;
+      font-family: var(--ff-b);
+      font-size: 12px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      transition: .2s;
+      white-space: nowrap
+    }
+
+    .nav-cta:hover {
+      background: #c55535;
+      transform: translateY(-1px)
+    }
+
+    .nav-login {
+      background: transparent;
+      color: #fff;
+      padding: 8px 18px;
+      border-radius: 6px;
+      font-family: var(--ff-b);
+      font-size: 12px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      border: 1.5px solid rgba(255, 255, 255, .35);
+      transition: .2s;
+      white-space: nowrap
+    }
+
+    .nav-login:hover {
+      background: rgba(255, 255, 255, .1);
+      border-color: #fff
+    }
+
+    .nav-burger {
+      display: none;
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 21px;
+      cursor: pointer
+    }
+
+    .nav-mob {
+      display: none;
+      position: fixed;
+      top: var(--top-offset);
+      left: 0;
+      right: 0;
+      background: rgba(11, 37, 69, .98);
+      backdrop-filter: blur(20px);
+      padding: 20px 32px;
+      flex-direction: column;
+      gap: 12px;
+      z-index: 499;
+      border-top: 1px solid rgba(255, 255, 255, .07)
+    }
+
+    .nav-mob.open {
+      display: flex
+    }
+
+    .nav-mob a {
+      font-family: var(--ff-b);
+      color: rgba(255, 255, 255, .8);
+      font-size: 14.5px;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, .06)
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 26px;
+      border-radius: 6px;
+      font-family: var(--ff-b);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: .22s;
+      white-space: nowrap
+    }
+
+    .btn-blue {
+      background: var(--blue);
+      color: #fff
+    }
+
+    .btn-blue:hover {
+      background: var(--blue-lt);
+      transform: translateY(-2px)
+    }
+
+    .btn-terra {
+      background: var(--terra);
+      color: #fff
+    }
+
+    .btn-terra:hover {
+      background: #c55535
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--blue);
+      border: 1.5px solid var(--blue)
+    }
+
+    .btn-outline:hover {
+      background: var(--blue);
+      color: #fff
+    }
+
+    .section {
+      padding: 90px 0
+    }
+
+    .section.alt {
+      background: var(--bg)
+    }
+
+    .container {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 0 36px
+    }
+
+    .eyebrow {
+      font-family: var(--ff-m);
+      font-size: 9px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--blue);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px
+    }
+
+    .eyebrow::after {
+      content: "";
+      flex: 0 0 28px;
+      height: 1px;
+      background: var(--blue);
+      border-radius: 2px
+    }
+
+    .s-title {
+      font-family: var(--ff-d);
+      font-size: clamp(26px, 3vw, 46px);
+      font-weight: 600;
+      color: var(--navy);
+      line-height: 1.1;
+      margin-bottom: 14px;
+      letter-spacing: .3px
+    }
+
+    .s-title.white {
+      color: #fff
+    }
+
+    .s-sub {
+      font-family: var(--ff-b);
+      font-size: 15px;
+      font-weight: 300;
+      color: var(--text3);
+      line-height: 1.8;
+      max-width: 540px
+    }
+
+    .s-sub.white {
+      color: rgba(255, 255, 255, .6)
+    }
+
+    .page-hero {
+      position: relative;
+      height: 300px;
+      overflow: hidden;
+      background: var(--navy);
+      display: flex;
+      align-items: center;
+      margin-top: var(--top-offset)
+    }
+
+    .page-hero-bg {
+      position: absolute;
+      inset: 0;
+      background-size: cover;
+      background-position: center;
+      opacity: .22
+    }
+
+    .page-hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to right, rgba(11, 37, 69, .96) 40%, rgba(11, 37, 69, .5) 100%)
+    }
+
+    .page-hero-content {
+      position: relative;
+      z-index: 1;
+      padding: 0 60px
+    }
+
+    .page-hero h1 {
+      font-family: var(--ff-d);
+      font-size: clamp(30px, 4vw, 52px);
+      font-weight: 600;
+      color: #fff;
+      letter-spacing: .5px;
+      margin-bottom: 10px
+    }
+
+    .page-hero p {
+      font-family: var(--ff-b);
+      font-size: 14.5px;
+      font-weight: 300;
+      color: rgba(255, 255, 255, .6);
+      max-width: 480px;
+      line-height: 1.75
+    }
+
+    .breadcrumb {
+      font-family: var(--ff-m);
+      font-size: 8.5px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--blue-lt);
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity .7s ease, transform .7s ease
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: none
+    }
+
+    .rd1 {
+      transition-delay: .1s
+    }
+
+    .rd2 {
+      transition-delay: .2s
+    }
+
+    .rd3 {
+      transition-delay: .32s
+    }
+
+    @media(max-width:960px) {
+
+      .nav-links,
+      .nav-actions {
+        display: none
+      }
+
+      .nav-burger {
+        display: block
+      }
+
+      .nav-inner {
+        padding: 0 20px
+      }
+
+      .container {
+        padding: 0 24px
+      }
+
+      .page-hero-content {
+        padding: 0 28px
+      }
+    }
+
+    .complaint-layout {
+      display: grid;
+      grid-template-columns: 300px 1fr;
+      gap: 48px;
+      align-items: start
+    }
+
+    .cl-sidebar {
+      background: var(--navy);
+      border-radius: 6px;
+      padding: 28px;
+      position: sticky;
+      top: calc(var(--top-offset) + 24px)
+    }
+
+    .cls-title {
+      font-family: var(--ff-d);
+      font-size: 20px;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 16px
+    }
+
+    .cls-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 0
+    }
+
+    .cls-step {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      padding: 14px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, .07)
+    }
+
+    .cls-step:last-child {
+      border: none
+    }
+
+    .cls-step-num {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: rgba(74, 144, 217, .2);
+      border: 1px solid rgba(74, 144, 217, .4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--ff-m);
+      font-size: 10px;
+      color: var(--blue-lt);
+      flex-shrink: 0
+    }
+
+    .cls-step-t {
+      font-family: var(--ff-b);
+      font-size: 12.5px;
+      font-weight: 500;
+      color: rgba(255, 255, 255, .55)
+    }
+
+    .cls-step-b {
+      font-family: var(--ff-b);
+      font-size: 11px;
+      font-weight: 300;
+      color: rgba(255, 255, 255, .3);
+      margin-top: 2px
+    }
+
+    .cform {
+      background: #fff;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      padding: 40px
+    }
+
+    .cf-section {
+      margin-bottom: 36px;
+      padding-bottom: 36px;
+      border-bottom: 1px solid var(--border)
+    }
+
+    .cf-section:last-of-type {
+      border: none;
+      margin-bottom: 0;
+      padding-bottom: 0
+    }
+
+    .cf-section-title {
+      font-family: var(--ff-d);
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--navy);
+      margin-bottom: 4px
+    }
+
+    .cf-section-sub {
+      font-family: var(--ff-b);
+      font-size: 13px;
+      font-weight: 300;
+      color: var(--text3);
+      margin-bottom: 20px
+    }
+
+    .fg {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      margin-bottom: 16px
+    }
+
+    .fg label {
+      font-family: var(--ff-m);
+      font-size: 8.5px;
+      color: var(--text3);
+      letter-spacing: 1px;
+      text-transform: uppercase
+    }
+
+    .fg label .req {
+      color: var(--terra)
+    }
+
+    .fg input,
+    .fg textarea,
+    .fg select {
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      padding: 11px 13px;
+      font-family: var(--ff-b);
+      font-size: 13.5px;
+      color: var(--text);
+      outline: none;
+      transition: .2s;
+      background: #fff;
+      width: 100%
+    }
+
+    .fg input:focus,
+    .fg textarea:focus,
+    .fg select:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(74, 144, 217, .1)
+    }
+
+    .fg textarea {
+      resize: vertical;
+      min-height: 110px
+    }
+
+    .fg input.error,
+    .fg select.error,
+    .fg textarea.error {
+      border-color: var(--terra)
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px
+    }
+
+    .severity-group {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px
+    }
+
+    .sev-btn {
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      text-align: center;
+      cursor: pointer;
+      transition: .2s
+    }
+
+    .sev-btn.active {
+      border-color: var(--blue);
+      background: rgba(74, 144, 217, .07)
+    }
+
+    .sev-btn i {
+      font-size: 18px;
+      display: block;
+      margin-bottom: 5px
+    }
+
+    .sev-low i {
+      color: #2DB87B
+    }
+
+    .sev-med i {
+      color: var(--gold)
+    }
+
+    .sev-high i {
+      color: var(--terra)
+    }
+
+    .sev-label {
+      font-family: var(--ff-b);
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--navy)
+    }
+
+    .sev-desc {
+      font-family: var(--ff-b);
+      font-size: 10.5px;
+      font-weight: 300;
+      color: var(--text3);
+      margin-top: 2px
+    }
+
+    #cf-feedback {
+      margin-top: 16px;
+      padding: 14px 18px;
+      border-radius: 5px;
+      font-family: var(--ff-b);
+      font-size: 13px;
+      display: none
+    }
+
+    #cf-feedback.success {
+      background: rgba(45, 184, 123, .1);
+      border: 1px solid rgba(45, 184, 123, .3);
+      color: #1a6b3c
+    }
+
+    #cf-feedback.error {
+      background: rgba(181, 74, 47, .1);
+      border: 1px solid rgba(181, 74, 47, .3);
+      color: var(--terra)
+    }
+
+    #cf-feedback.sending {
+      background: rgba(74, 144, 217, .1);
+      border: 1px solid rgba(74, 144, 217, .3);
+      color: var(--blue)
+    }
+
+    @media(max-width:960px) {
+      .complaint-layout {
+        grid-template-columns: 1fr
+      }
+
+      .cl-sidebar {
+        position: static
+      }
+
+      .form-row,
+      .severity-group {
+        grid-template-columns: 1fr 1fr
+      }
+    }
+
+    @media(max-width:560px) {
+
+      .form-row,
+      .severity-group {
+        grid-template-columns: 1fr
+      }
+
+      .cform {
+        padding: 24px
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="top-ticker">
+    <div class="tt-label"><i class="fa-solid fa-satellite-dish"></i>Latest News</div>
+    <div class="tt-track-wrap">
+      <div class="tt-track">
+        <span class="tt-item">FPAM Commissions Renovation of Federal Secretariat Complex Phase I <span
+            class="tt-sep">&#9670;</span></span>
+        <span class="tt-item">500 Housing Units Rehabilitated Across 6 States Under 2024 Maintenance Programme <span
+            class="tt-sep">&#9670;</span></span>
+        <span class="tt-item">FPAM Adopts Digital Maintenance Management System Nationwide <span
+            class="tt-sep">&#9670;</span></span>
+        <span class="tt-item">Safety First: FPAM Launches Nationwide Structural Compliance Drive Across 31 MDAs <span
+            class="tt-sep">&#9670;</span></span>
+        <span class="tt-item">Presidential Executive Order No. 11 &#8212; All MDAs Now Under Mandatory Maintenance
+          Framework <span class="tt-sep">&#9670;</span></span>
+        <span class="tt-item">Director Arc. Chioma Wogu-Ogbonna Inaugurates New Asset Inventory Portal <span
+            class="tt-sep">&#9670;</span></span>
+        <span class="tt-item">FPAM Targets 250+ Housing Estates for Comprehensive Upkeep Under &#8358;12B 2025 Programme
+          <span class="tt-sep">&#9670;</span></span>
+        <span class="tt-item">FPAM Commissions Renovation of Federal Secretariat Complex Phase I <span
+            class="tt-sep">&#9670;</span></span>
+        <span class="tt-item">500 Housing Units Rehabilitated Across 6 States Under 2024 Maintenance Programme <span
+            class="tt-sep">&#9670;</span></span>
+        <span class="tt-item">FPAM Adopts Digital Maintenance Management System Nationwide <span
+            class="tt-sep">&#9670;</span></span>
+        <span class="tt-item">Safety First: FPAM Launches Nationwide Structural Compliance Drive Across 31 MDAs <span
+            class="tt-sep">&#9670;</span></span>
+        <span class="tt-item">Presidential Executive Order No. 11 &#8212; All MDAs Now Under Mandatory Maintenance
+          Framework <span class="tt-sep">&#9670;</span></span>
+        <span class="tt-item">Director Arc. Chioma Wogu-Ogbonna Inaugurates New Asset Inventory Portal <span
+            class="tt-sep">&#9670;</span></span>
+        <span class="tt-item">FPAM Targets 250+ Housing Estates for Comprehensive Upkeep Under &#8358;12B 2025 Programme
+          <span class="tt-sep">&#9670;</span></span>
       </div>
     </div>
   </div>
-</section>
-<style>footer{background:#04080f;padding:56px 0 24px;color:rgba(255,255,255,.5)}.fg-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;margin-bottom:44px}.fb-logo{display:flex;align-items:center;gap:10px;margin-bottom:14px}.fb-logo img{height:44px;width:auto;filter:drop-shadow(0 2px 8px rgba(0,0,0,.4))}.fb-logo-div{width:1px;height:32px;background:rgba(255,255,255,.12)}footer p{font-family:var(--ff-b);font-size:12.5px;font-weight:300;line-height:1.8;max-width:270px}.fc-t{font-family:var(--ff-b);font-size:11px;font-weight:600;color:#fff;margin-bottom:13px;letter-spacing:1px;text-transform:uppercase}footer ul{list-style:none;display:flex;flex-direction:column;gap:8px}footer ul a{font-family:var(--ff-b);font-size:12.5px;font-weight:300;color:rgba(255,255,255,.4);transition:.15s}footer ul a:hover{color:var(--blue-lt)}.f-bottom{border-top:1px solid rgba(255,255,255,.06);padding-top:20px;display:flex;justify-content:space-between;align-items:center}.f-bottom p{font-family:var(--ff-m);font-size:9.5px;letter-spacing:1px;color:rgba(255,255,255,.22)}.f-soc{display:flex;gap:8px}.f-soc a{width:32px;height:32px;border-radius:6px;background:rgba(255,255,255,.04);display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.38);font-size:13px;transition:.2s}.f-soc a:hover{background:var(--blue);color:#fff}@media(max-width:960px){.fg-grid{grid-template-columns:1fr 1fr}}@media(max-width:560px){.fg-grid{grid-template-columns:1fr}}</style><footer><div class="container"><div class="fg-grid"><div><div class="fb-logo"><img src="images/logo_ministry.png" alt="Ministry"><div class="fb-logo-div"></div><img src="images/logo_fpam.png" alt="FPAM"></div><p>Federal Public Asset Maintenance  Department &#8212; agency of the Federal Ministry of Housing &amp; Urban Development.</p><div style="margin-top:14px;font-family:var(--ff-m);font-size:9px;color:rgba(255,255,255,.18);letter-spacing:1.5px">&#169; 2025 FPAM &#183; FEDERAL GOVERNMENT OF NIGERIA</div></div><div><div class="fc-t">Navigate</div><ul><li><a href="index.html">Home</a></li><li><a href="about.html">About</a></li><li><a href="gallery.html">Gallery</a></li><li><a href="assets.html">Asset</a></li><li><a href="contact.html">Contact</a></li></ul></div><div><div class="fc-t">Resources</div><ul><li><a href="#">Asset Directory</a></li><li><a href="#">Compliance Forms</a></li><li><a href="#">Maintenance Reports</a></li><li><a href="#">Housing Policy</a></li><li><a href="complaint.html">Log a Complaint</a></li></ul></div><div><div class="fc-t">Contact</div><ul><li><a href="#">Federal Secretariat Complex, Phase III</a></li><li><a href="#">Shehu Shagari Way, Abuja</a></li><li><a href="mailto:info@fpam.housing.gov.ng">info@fpam.housing.gov.ng</a></li><li><a href="#">+234 800 000 0000</a></li></ul><div style="margin-top:16px;padding:12px 14px;background:rgba(181,74,47,.1);border:1px solid rgba(181,74,47,.22);border-radius:4px"><div style="font-family:var(--ff-m);font-size:8px;color:rgba(255,255,255,.35);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px">Emergency Line</div><div style="font-family:var(--ff-d);font-size:18px;font-weight:600;color:var(--terra)">0800-FPAM-911</div></div></div></div><div class="f-bottom"><p>FEDERAL MINISTRY OF HOUSING &amp; URBAN DEVELOPMENT &#183; ALL RIGHTS RESERVED</p><div class="f-soc"><a href="#"><i class="fa-brands fa-twitter"></i></a><a href="#"><i class="fa-brands fa-facebook-f"></i></a><a href="#"><i class="fa-brands fa-instagram"></i></a><a href="#"><i class="fa-brands fa-youtube"></i></a><a href="#"><i class="fa-brands fa-linkedin-in"></i></a></div></div></div></footer><script>document.querySelectorAll(".reveal").forEach(el=>{new IntersectionObserver(([e])=>{if(e.isIntersecting)el.classList.add("visible");},{threshold:.1}).observe(el);});</script>
-<script>
-let severity='';
-function setSeverity(val){
-  severity=val;document.getElementById('f-severity').value=val;
-  ['low','medium','high'].forEach(s=>document.getElementById('sev-'+s).classList.remove('active'));
-  document.getElementById('sev-'+val).classList.add('active');
-}
-function submitComplaint(){
-  const required=[['f-name','Full Name'],['f-email','Email'],['f-phone','Phone'],['f-state','State'],['f-asset','Asset Name'],['f-type','Complaint Type'],['f-desc','Description']];
-  let ok=true;
-  required.forEach(([id])=>{const el=document.getElementById(id);if(!el.value.trim()){el.classList.add('error');ok=false;}else el.classList.remove('error');});
-  if(!severity)ok=false;
-  const fb=document.getElementById('cf-feedback');
-  if(!ok){fb.className='error';fb.style.display='block';fb.innerHTML='<i class="fa-solid fa-circle-exclamation"></i> Please fill in all required fields and select a severity level.';return;}
-  const btn=document.getElementById('submit-btn');
-  btn.disabled=true;btn.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i> Submitting...';
-  fb.className='sending';fb.style.display='block';fb.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i> Sending your complaint...';
-  const ref='FPAM-'+Date.now().toString(36).toUpperCase();
-  const params={
-    complainant_name:document.getElementById('f-name').value,
-    complainant_email:document.getElementById('f-email').value,
-    complainant_phone:document.getElementById('f-phone').value,
-    state:document.getElementById('f-state').value,
-    asset_name:document.getElementById('f-asset').value,
-    complaint_type:document.getElementById('f-type').value,
-    severity:severity.toUpperCase(),
-    description:document.getElementById('f-desc').value,
-    ref_number:ref,
-    submission_date:new Date().toLocaleDateString('en-GB',{weekday:'long',year:'numeric',month:'long',day:'numeric'})
-  };
-  const subject='[FPAM Complaint] '+params.complaint_type+' — '+params.asset_name;
-  const body='FPAM COMPLAINT SUBMISSION
-'+'='.repeat(40)+'
-Reference: '+params.ref_number+'
-Date: '+params.submission_date+'
+  <nav id="nav">
+    <div class="nav-inner"><a class="nav-logo" href="index.html"><img src="images/logo_ministry.png" alt="Ministry">
+        <div class="nav-logo-div"></div><img src="images/logo_fpam.png" alt="FPAM">
+        <div style="margin-left:10px;display:flex;flex-direction:column;justify-content:center">
+          <div
+            style="font-family:'Cormorant Garamond',Georgia,serif;font-size:22px;font-weight:700;color:#fff;letter-spacing:3px;line-height:1">
+            FPAM</div>
+          <div
+            style="font-family:'JetBrains Mono',monospace;font-size:7px;color:rgba(255,255,255,.4);letter-spacing:1.5px;text-transform:uppercase;margin-top:2px">
+            Federal Public Asset Maintenance</div>
+        </div>
+      </a>
+      <div class="nav-links"><a href="index.html">Home</a>
+        <a href="about.html">About</a>
+      <a href="news.html">News</a>
+        <a href="contact.html">Contact</a>
+        <a href="gallery.html">Gallery</a>
+        <a href="assets.html">Asset</a>
+      </div>
+      <div class="nav-actions"><a href="complaint.html" class="nav-cta"><i class="fa-solid fa-file-pen"></i>User
+          Feedback</a><a href="login.html" class="nav-login"><i class="fa-solid fa-right-to-bracket"></i> Login</a>
+      </div><button class="nav-burger" onclick="toggleMenu()"><i class="fa-solid fa-bars"></i></button>
+    </div>
+    <div class="nav-mob" id="nav-mob"><a href="index.html" onclick="toggleMenu()">Home</a><a href="about.html"
+        onclick="toggleMenu()">About</a><a href="news.html" onclick="toggleMenu()">News</a><a href="contact.html" onclick="toggleMenu()">Contact</a><a href="gallery.html"
+        onclick="toggleMenu()">Gallery</a><a href="assets.html" onclick="toggleMenu()">Asset</a><a href="complaint.html"
+        onclick="toggleMenu()">Log a Complaint</a><a href="login.html" onclick="toggleMenu()"
+        style="color:var(--blue-lt)"><i class="fa-solid fa-right-to-bracket"></i> Login</a></div>
+  </nav>
+  <script>function toggleMenu() { document.getElementById('nav-mob').classList.toggle('open') }</script>
+  <div class="page-hero">
+    <div class="page-hero-bg" style="background-image:url('images/photo_secretariat.jpg')"></div>
+    <div class="page-hero-overlay"></div>
+    <div class="page-hero-content">
+      <div class="breadcrumb"><a href="index.html">Home</a><i class="fa-solid fa-chevron-right"></i>Log a Complaint
+      </div>
+      <h1>Log a Complaint</h1>
+      <p>Report maintenance issues, safety concerns or estate problems directly to FPAM for official action.</p>
+    </div>
+  </div>
+  <section class="section">
+    <div class="container">
+      <div class="complaint-layout">
+        <div class="cl-sidebar reveal">
+          <div class="cls-title">How It Works</div>
+          <div class="cls-steps">
+            <div class="cls-step">
+              <div class="cls-step-num">1</div>
+              <div>
+                <div class="cls-step-t">Submit Your Complaint</div>
+                <div class="cls-step-b">Fill in the form with full details of the issue.</div>
+              </div>
+            </div>
+            <div class="cls-step">
+              <div class="cls-step-num">2</div>
+              <div>
+                <div class="cls-step-t">Acknowledgement</div>
+                <div class="cls-step-b">You'll receive a reference number within 24 hours.</div>
+              </div>
+            </div>
+            <div class="cls-step">
+              <div class="cls-step-num">3</div>
+              <div>
+                <div class="cls-step-t">Investigation</div>
+                <div class="cls-step-b">FPAM team reviews and assigns to the relevant unit.</div>
+              </div>
+            </div>
+            <div class="cls-step">
+              <div class="cls-step-num">4</div>
+              <div>
+                <div class="cls-step-t">Resolution</div>
+                <div class="cls-step-b">Issue is addressed and you are informed of outcome.</div>
+              </div>
+            </div>
+          </div>
+          <div
+            style="margin-top:20px;padding:14px;background:rgba(181,74,47,.1);border:1px solid rgba(181,74,47,.2);border-radius:4px">
+            <p
+              style="font-family:var(--ff-b);font-size:11.5px;font-weight:300;color:rgba(255,255,255,.55);line-height:1.65;max-width:100%">
+              <strong style="color:rgba(255,255,255,.7)">Urgent safety issues?</strong><br>Call our emergency
+              line:<br><strong style="color:var(--terra);font-family:var(--ff-d);font-size:18px">0800-FPAM-911</strong>
+            </p>
+          </div>
+        </div>
+        <div class="cform reveal rd1">
+          <div class="cf-section">
+            <div class="cf-section-title">Your Details</div>
+            <div class="cf-section-sub">We need your contact information to follow up on your complaint.</div>
+            <div class="form-row">
+              <div class="fg"><label>Full Name <span class="req">*</span></label><input type="text" id="f-name"
+                  placeholder="Your full name"></div>
+              <div class="fg"><label>Email Address <span class="req">*</span></label><input type="email" id="f-email"
+                  placeholder="your@email.com"></div>
+            </div>
+            <div class="form-row">
+              <div class="fg"><label>Phone Number <span class="req">*</span></label><input type="tel" id="f-phone"
+                  placeholder="+234 800 000 0000"></div>
+              <div class="fg"><label>Your Role</label><select id="f-role">
+                  <option value="">Select...</option>
+                  <option>Estate Resident</option>
+                  <option>Government Employee</option>
+                  <option>MDA Representative</option>
+                  <option>Member of Public</option>
+                  <option>Other</option>
+                </select></div>
+            </div>
+          </div>
+          <div class="cf-section">
+            <div class="cf-section-title">Asset / Location Details</div>
+            <div class="cf-section-sub">Tell us which asset or estate this complaint relates to.</div>
+            <div class="form-row">
+              <div class="fg"><label>State <span class="req">*</span></label><select id="f-state">
+                  <option value="">Select state...</option>
+                  <option>Abia</option>
+                  <option>Adamawa</option>
+                  <option>Akwa Ibom</option>
+                  <option>Anambra</option>
+                  <option>Bauchi</option>
+                  <option>Bayelsa</option>
+                  <option>Benue</option>
+                  <option>Borno</option>
+                  <option>Cross River</option>
+                  <option>Delta</option>
+                  <option>Ebonyi</option>
+                  <option>Edo</option>
+                  <option>Ekiti</option>
+                  <option>Enugu</option>
+                  <option>FCT Abuja</option>
+                  <option>Gombe</option>
+                  <option>Imo</option>
+                  <option>Jigawa</option>
+                  <option>Kaduna</option>
+                  <option>Kano</option>
+                  <option>Katsina</option>
+                  <option>Kebbi</option>
+                  <option>Kogi</option>
+                  <option>Kwara</option>
+                  <option>Lagos</option>
+                  <option>Nasarawa</option>
+                  <option>Niger</option>
+                  <option>Ogun</option>
+                  <option>Ondo</option>
+                  <option>Osun</option>
+                  <option>Oyo</option>
+                  <option>Plateau</option>
+                  <option>Rivers</option>
+                  <option>Sokoto</option>
+                  <option>Taraba</option>
+                  <option>Yobe</option>
+                  <option>Zamfara</option>
+                </select></div>
+              <div class="fg"><label>Asset / Estate Name <span class="req">*</span></label><input type="text"
+                  id="f-asset" placeholder="e.g. NHP Estate Phase I, Lafia"></div>
+            </div>
+            <div class="fg"><label>Full Address / Location Description</label><input type="text" id="f-address"
+                placeholder="Street address or landmark"></div>
+            <div class="fg"><label>Asset Category</label><select id="f-category">
+                <option value="">Select category...</option>
+                <option>Government Building</option>
+                <option>Housing Estate</option>
+                <option>Infrastructure (Road/Drainage)</option>
+                <option>Utility (Electricity/Water)</option>
+                <option>Common Area / Landscaping</option>
+                <option>Other</option>
+              </select></div>
+          </div>
+          <div class="cf-section">
+            <div class="cf-section-title">Complaint Details</div>
+            <div class="cf-section-sub">Describe the issue clearly so our team can act appropriately.</div>
+            <div class="fg"><label>Complaint Type <span class="req">*</span></label><select id="f-type">
+                <option value="">Select complaint type...</option>
+                <option>Structural Damage / Deterioration</option>
+                <option>Electrical / Plumbing Failure</option>
+                <option>Road / Drainage Issue</option>
+                <option>Safety Hazard</option>
+                <option>Waste Management</option>
+                <option>Noise / Disturbance</option>
+                <option>Illegal Occupation / Trespass</option>
+                <option>Rent / Tenancy Issue</option>
+                <option>Poor Maintenance / Neglect</option>
+                <option>Other</option>
+              </select></div>
+            <div class="fg"><label>Severity Level <span class="req">*</span></label>
+              <div class="severity-group">
+                <div class="sev-btn sev-low" id="sev-low" onclick="setSeverity('low')"><i
+                    class="fa-solid fa-circle-check"></i>
+                  <div class="sev-label">Low</div>
+                  <div class="sev-desc">Minor, can wait</div>
+                </div>
+                <div class="sev-btn sev-med" id="sev-med" onclick="setSeverity('medium')"><i
+                    class="fa-solid fa-triangle-exclamation"></i>
+                  <div class="sev-label">Medium</div>
+                  <div class="sev-desc">Needs attention soon</div>
+                </div>
+                <div class="sev-btn sev-high" id="sev-high" onclick="setSeverity('high')"><i
+                    class="fa-solid fa-circle-exclamation"></i>
+                  <div class="sev-label">High</div>
+                  <div class="sev-desc">Urgent safety risk</div>
+                </div>
+              </div>
+              <input type="hidden" id="f-severity" value="">
+            </div>
+            <div class="fg"><label>Date Issue Was First Noticed</label><input type="date" id="f-date"></div>
+            <div class="fg"><label>Detailed Description <span class="req">*</span></label><textarea id="f-desc"
+                placeholder="Describe the issue in as much detail as possible..."></textarea></div>
+            <div class="fg"><label>Previous Reports (if any)</label><input type="text" id="f-prev"
+                placeholder="Reference number of any previous complaint"></div>
+          </div>
+          <div style="display:flex;align-items:center;gap:16px;margin-top:28px">
+            <button class="btn btn-blue" id="submit-btn" onclick="submitComplaint()"><i
+                class="fa-solid fa-paper-plane"></i> Submit Feedback</button>
+            <p style="font-family:var(--ff-b);font-size:11.5px;font-weight:300;color:var(--text3);line-height:1.6">By
+              submitting, you confirm this information is accurate and held per Nigeria's Data Protection Act.</p>
+          </div>
+          <div id="cf-feedback"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <style>
+    footer {
+      background: #04080f;
+      padding: 56px 0 24px;
+      color: rgba(255, 255, 255, .5)
+    }
 
-COMPLAINANT
-Name: '+params.complainant_name+'
-Email: '+params.complainant_email+'
-Phone: '+params.complainant_phone+'
+    .fg-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 40px;
+      margin-bottom: 44px
+    }
+
+    .fb-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px
+    }
+
+    .fb-logo img {
+      height: 44px;
+      width: auto;
+      filter: drop-shadow(0 2px 8px rgba(0, 0, 0, .4))
+    }
+
+    .fb-logo-div {
+      width: 1px;
+      height: 32px;
+      background: rgba(255, 255, 255, .12)
+    }
+
+    footer p {
+      font-family: var(--ff-b);
+      font-size: 12.5px;
+      font-weight: 300;
+      line-height: 1.8;
+      max-width: 270px
+    }
+
+    .fc-t {
+      font-family: var(--ff-b);
+      font-size: 11px;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 13px;
+      letter-spacing: 1px;
+      text-transform: uppercase
+    }
+
+    footer ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px
+    }
+
+    footer ul a {
+      font-family: var(--ff-b);
+      font-size: 12.5px;
+      font-weight: 300;
+      color: rgba(255, 255, 255, .4);
+      transition: .15s
+    }
+
+    footer ul a:hover {
+      color: var(--blue-lt)
+    }
+
+    .f-bottom {
+      border-top: 1px solid rgba(255, 255, 255, .06);
+      padding-top: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center
+    }
+
+    .f-bottom p {
+      font-family: var(--ff-m);
+      font-size: 9.5px;
+      letter-spacing: 1px;
+      color: rgba(255, 255, 255, .22)
+    }
+
+    .f-soc {
+      display: flex;
+      gap: 8px
+    }
+
+    .f-soc a {
+      width: 32px;
+      height: 32px;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, .04);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: rgba(255, 255, 255, .38);
+      font-size: 13px;
+      transition: .2s
+    }
+
+    .f-soc a:hover {
+      background: var(--blue);
+      color: #fff
+    }
+
+    @media(max-width:960px) {
+      .fg-grid {
+        grid-template-columns: 1fr 1fr
+      }
+    }
+
+    @media(max-width:560px) {
+      .fg-grid {
+        grid-template-columns: 1fr
+      }
+    }
+  </style>
+  <footer>
+    <div class="container">
+      <div class="fg-grid">
+        <div>
+          <div class="fb-logo"><img src="images/logo_ministry.png" alt="Ministry">
+            <div class="fb-logo-div"></div><img src="images/logo_fpam.png" alt="FPAM">
+          </div>
+          <p>Federal Public Asset Maintenance Department &#8212; agency of the Federal Ministry of Housing &amp; Urban
+            Development.</p>
+          <div
+            style="margin-top:14px;font-family:var(--ff-m);font-size:9px;color:rgba(255,255,255,.18);letter-spacing:1.5px">
+            &#169; 2025 FPAM &#183; FEDERAL GOVERNMENT OF NIGERIA</div>
+        </div>
+        <div>
+          <div class="fc-t">Navigate</div>
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="about.html">About</a></li><li><a href="news.html">News</a></li>
+            <li><a href="gallery.html">Gallery</a></li>
+            <li><a href="assets.html">Asset</a></li>
+            <li><a href="contact.html">Contact</a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="fc-t">Resources</div>
+          <ul>
+            <li><a href="#">Asset Directory</a></li>
+            <li><a href="#">Compliance Forms</a></li>
+            <li><a href="#">Maintenance Reports</a></li>
+            <li><a href="#">Housing Policy</a></li>
+            <li><a href="complaint.html">Log a Complaint</a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="fc-t">Contact</div>
+          <ul>
+            <li><a href="#">Federal Secretariat Complex, Phase III</a></li>
+            <li><a href="#">Shehu Shagari Way, Abuja</a></li>
+            <li><a href="mailto:info@fpam.housing.gov.ng">info@fpam.housing.gov.ng</a></li>
+            <li><a href="#">+234 800 000 0000</a></li>
+          </ul>
+          <div
+            style="margin-top:16px;padding:12px 14px;background:rgba(181,74,47,.1);border:1px solid rgba(181,74,47,.22);border-radius:4px">
+            <div
+              style="font-family:var(--ff-m);font-size:8px;color:rgba(255,255,255,.35);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px">
+              Emergency Line</div>
+            <div style="font-family:var(--ff-d);font-size:18px;font-weight:600;color:var(--terra)">0800-FPAM-911</div>
+          </div>
+        </div>
+      </div>
+      <div class="f-bottom">
+        <p>FEDERAL MINISTRY OF HOUSING &amp; URBAN DEVELOPMENT &#183; ALL RIGHTS RESERVED</p>
+        <div class="f-soc"><a href="#"><i class="fa-brands fa-twitter"></i></a><a href="#"><i
+              class="fa-brands fa-facebook-f"></i></a><a href="#"><i class="fa-brands fa-instagram"></i></a><a
+            href="#"><i class="fa-brands fa-youtube"></i></a><a href="#"><i class="fa-brands fa-linkedin-in"></i></a>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <script>document.querySelectorAll(".reveal").forEach(el => { new IntersectionObserver(([e]) => { if (e.isIntersecting) el.classList.add("visible"); }, { threshold: .1 }).observe(el); });</script>
+  <script>
+    let severity = '';
+    function setSeverity(val) {
+      severity = val; document.getElementById('f-severity').value = val;
+      ['low', 'medium', 'high'].forEach(s => document.getElementById('sev-' + s).classList.remove('active'));
+      document.getElementById('sev-' + val).classList.add('active');
+    }
+    function submitComplaint() {
+      const required = [['f-name', 'Full Name'], ['f-email', 'Email'], ['f-phone', 'Phone'], ['f-state', 'State'], ['f-asset', 'Asset Name'], ['f-type', 'Complaint Type'], ['f-desc', 'Description']];
+      let ok = true;
+      required.forEach(([id]) => { const el = document.getElementById(id); if (!el.value.trim()) { el.classList.add('error'); ok = false; } else el.classList.remove('error'); });
+      if (!severity) ok = false;
+      const fb = document.getElementById('cf-feedback');
+      if (!ok) { fb.className = 'error'; fb.style.display = 'block'; fb.innerHTML = '<i class="fa-solid fa-circle-exclamation"></i> Please fill in all required fields and select a severity level.'; return; }
+      const btn = document.getElementById('submit-btn');
+      btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Submitting...';
+      fb.className = 'sending'; fb.style.display = 'block'; fb.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Sending your complaint...';
+      const ref = 'FPAM-' + Date.now().toString(36).toUpperCase();
+      const params = {
+        complainant_name: document.getElementById('f-name').value,
+        complainant_email: document.getElementById('f-email').value,
+        complainant_phone: document.getElementById('f-phone').value,
+        state: document.getElementById('f-state').value,
+        asset_name: document.getElementById('f-asset').value,
+        complaint_type: document.getElementById('f-type').value,
+        severity: severity.toUpperCase(),
+        description: document.getElementById('f-desc').value,
+        ref_number: ref,
+        submission_date: new Date().toLocaleDateString('en-GB', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })
+      };
+      const subject = '[FPAM Complaint] ' + params.complaint_type + ' — ' + params.asset_name;
+      const body = 'FPAM COMPLAINT SUBMISSION
+      '+' = '.repeat(40)+'
+      Reference: '+params.ref_number+'
+      Date: '+params.submission_date+'
+
+      COMPLAINANT
+      Name: '+params.complainant_name+'
+      Email: '+params.complainant_email+'
+      Phone: '+params.complainant_phone+'
 
 ASSET DETAILS
-State: '+params.state+'
-Asset: '+params.asset_name+'
+      State: '+params.state+'
+      Asset: '+params.asset_name+'
 
-COMPLAINT
-Type: '+params.complaint_type+'
-Severity: '+params.severity+'
+      COMPLAINT
+      Type: '+params.complaint_type+'
+      Severity: '+params.severity+'
 
-Description:
-'+params.description;
-  window.location.href='mailto:info@fpam.housing.gov.ng?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(body);
-  btn.style.display='none';
-  fb.className='success';fb.style.display='block';
-  fb.innerHTML='<i class="fa-solid fa-circle-check"></i> <strong>Complaint submitted!</strong> Reference: <strong>'+ref+'</strong>. Your email client should open. If not, email info@fpam.housing.gov.ng directly.';
-}
-</script></body></html>
+      Description:
+      '+params.description;
+      window.location.href = 'mailto:info@fpam.housing.gov.ng?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+      btn.style.display = 'none';
+      fb.className = 'success'; fb.style.display = 'block';
+      fb.innerHTML = '<i class="fa-solid fa-circle-check"></i> <strong>Complaint submitted!</strong> Reference: <strong>' + ref + '</strong>. Your email client should open. If not, email info@fpam.housing.gov.ng directly.';
+    }
+  </script>
+</body>
+
+</html>

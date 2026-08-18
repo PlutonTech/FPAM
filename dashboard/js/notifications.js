@@ -51,13 +51,36 @@ function _markAllRead() {
 
 function _newNotifId() { return 'N-' + Date.now() + '-' + Math.random().toString(36).slice(2,6); }
 
+// Pushes a notification, or — if a notification of the same type (+assetId,
+// for single-asset alerts) was already pushed within the dedup window —
+// updates that existing one in place instead of adding a duplicate. This is
+// what makes grouped alerts (see runAlertScan below) work correctly: a
+// re-scan that finds the underlying count changed (e.g. 14 assets missing
+// coordinates → 12) updates the same notification's text and nudges it back
+// to unread, rather than either spamming a new one per asset or going stale
+// for a full 24h.
 function pushNotification({ type, title, body, assetId, icon, color }) {
   // Never re-push something the user explicitly cleared
   if (_wasManuallyClearedKey(type, assetId || '')) return;
   const notifs = _getNotifications();
-  // Deduplicate: don't push same type+assetId within 24h
   const recent = Date.now() - 86400000;
-  if (notifs.some(n => n.type === type && n.assetId === (assetId||null) && n.ts > recent)) return;
+  const idx = notifs.findIndex(n => n.type === type && n.assetId === (assetId||null) && n.ts > recent);
+
+  if (idx !== -1) {
+    if (notifs[idx].body !== body) {
+      notifs[idx].body  = body;
+      notifs[idx].title = title;
+      notifs[idx].ts    = Date.now();
+      const readIds = _getReadIds();
+      if (readIds.has(notifs[idx].id)) {
+        readIds.delete(notifs[idx].id);
+        localStorage.setItem(_notifReadKey(), JSON.stringify([...readIds]));
+      }
+      _saveNotifications(notifs);
+      updateNotifBadge();
+    }
+    return;
+  }
 
   notifs.unshift({
     id:      _newNotifId(),
@@ -240,48 +263,70 @@ async function runAlertScan() {
   const today = new Date();
   const soon  = new Date(today.getTime() + 7*86400000);
 
+  // Bucket matching assets by alert type instead of pushing one notification
+  // per asset. With hundreds of assets sharing a data gap (missing GPS,
+  // overdue inspections, etc. — all known, common conditions on this
+  // registry), one-notification-per-asset blew straight past the 99+ badge
+  // cap on the very first scan. One notification per TYPE, naming the
+  // count, stays useful and bounded regardless of registry size.
+  const buckets = {
+    INSPECTION_OVERDUE: [],
+    INSPECTION_DUE:     [],
+    CRITICAL_CONDITION: [],
+    MISSING_COORDS:     [],
+  };
+
   list.forEach(a => {
-    const id = a.assetId || a.id;
+    if (a.nextInspection && new Date(a.nextInspection) < today) {
+      buckets.INSPECTION_OVERDUE.push(a);
+    } else if (a.nextInspection && new Date(a.nextInspection) <= soon) {
+      buckets.INSPECTION_DUE.push(a);
+    }
+    if (a.condition === 'Critical') buckets.CRITICAL_CONDITION.push(a);
+    if (!a.lat && !a.location?.coordinates?.[1]) buckets.MISSING_COORDS.push(a);
+  });
 
-    // Overdue inspections
-    if (_roleCanSee('INSPECTION_OVERDUE') && a.nextInspection && new Date(a.nextInspection) < today) {
-      const daysOver = Math.round((today - new Date(a.nextInspection)) / 86400000);
-      pushNotification({
-        type: 'INSPECTION_OVERDUE', assetId: id,
-        title: 'Inspection Overdue',
-        body: `${a.name||id} is ${daysOver} day${daysOver!==1?'s':''} overdue for inspection`,
-        icon: 'fa-calendar-xmark', color: '#e05555',
-      });
-    }
-    // Upcoming within 7 days
-    else if (_roleCanSee('INSPECTION_DUE') && a.nextInspection && new Date(a.nextInspection) <= soon) {
-      pushNotification({
-        type: 'INSPECTION_DUE', assetId: id,
-        title: 'Inspection Due Soon',
-        body: `${a.name||id} inspection due ${a.nextInspection.slice(0,10)}`,
-        icon: 'fa-calendar-clock', color: '#f0a500',
-      });
-    }
+  const GROUP_DEFS = {
+    INSPECTION_OVERDUE: {
+      title: 'Inspections Overdue', icon: 'fa-calendar-xmark', color: '#e05555',
+      body: (n, first) => n === 1
+        ? `${first.name || first.assetId} is overdue for inspection`
+        : `${n} assets are overdue for inspection`,
+    },
+    INSPECTION_DUE: {
+      title: 'Inspections Due Soon', icon: 'fa-calendar-clock', color: '#f0a500',
+      body: (n, first) => n === 1
+        ? `${first.name || first.assetId} inspection due ${(first.nextInspection||'').slice(0,10)}`
+        : `${n} assets have inspections due within 7 days`,
+    },
+    CRITICAL_CONDITION: {
+      title: 'Critical Assets', icon: 'fa-triangle-exclamation', color: '#e05555',
+      body: (n, first) => n === 1
+        ? `${first.name || first.assetId} is in Critical condition — immediate attention required`
+        : `${n} assets are in Critical condition — review needed`,
+    },
+    MISSING_COORDS: {
+      title: 'Missing GPS Coordinates', icon: 'fa-location-slash', color: '#5A6A7A',
+      body: (n, first) => n === 1
+        ? `${first.name || first.assetId} has no coordinates — capture GPS to place on map`
+        : `${n} assets have no coordinates — capture GPS to place them on the map`,
+    },
+  };
 
-    // Critical condition
-    if (_roleCanSee('CRITICAL_CONDITION') && a.condition === 'Critical') {
-      pushNotification({
-        type: 'CRITICAL_CONDITION', assetId: id,
-        title: 'Critical Asset',
-        body: `${a.name||id} is in Critical condition — immediate attention required`,
-        icon: 'fa-triangle-exclamation', color: '#e05555',
-      });
-    }
-
-    // No coordinates
-    if (_roleCanSee('MISSING_COORDS') && !a.lat && !a.location?.coordinates?.[1]) {
-      pushNotification({
-        type: 'MISSING_COORDS', assetId: id,
-        title: 'Missing GPS Coordinates',
-        body: `${a.name||id} has no coordinates — capture GPS to place on map`,
-        icon: 'fa-location-slash', color: '#5A6A7A',
-      });
-    }
+  Object.entries(buckets).forEach(([type, matches]) => {
+    if (!matches.length || !_roleCanSee(type)) return;
+    const def = GROUP_DEFS[type];
+    const first = matches[0];
+    pushNotification({
+      type,
+      // Single match still links straight to that asset, same as before;
+      // multiple matches link to nothing specific (there's no one asset to
+      // navigate to), same as the existing pending-approvals notification.
+      assetId: matches.length === 1 ? (first.assetId || first.id) : null,
+      title:   def.title,
+      body:    def.body(matches.length, first),
+      icon:    def.icon, color: def.color,
+    });
   });
 
   // Pending approvals — only for approvers
@@ -343,6 +388,21 @@ function initNotifications() {
   setTimeout(runAlertScan, 2000);
   // Re-scan every 10 minutes
   setInterval(runAlertScan, 600000);
+
+  // Cross-tab/page sync: localStorage writes in one open tab don't trigger
+  // anything in another already-open tab on their own — the 'storage' event
+  // is how the browser tells other tabs something changed. Without this,
+  // two pages open at once (or a page left open while another page's scan
+  // runs) can show two different unread counts until one of them reloads or
+  // runs its own next scan. Only react to this user's own notification/read
+  // keys, not unrelated localStorage writes from elsewhere in the app.
+  window.addEventListener('storage', (e) => {
+    if (e.key === _notifKey() || e.key === _notifReadKey()) {
+      updateNotifBadge();
+      const panel = document.getElementById('notif-panel');
+      if (panel) renderNotifPanel(panel);
+    }
+  });
 }
 
 if (document.readyState === 'loading') {

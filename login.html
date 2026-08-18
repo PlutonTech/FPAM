@@ -5,13 +5,13 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Sign In — FPAM AssetSpatial</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
   --navy:#0B2545;--blue:#4A90D9;--blue-lt:#6AAEE8;
-  --terra:#B54A2F;
+  --terra:#B54A2F;--gold:#D4A94C;--gold-lt:#EBCB84;
   --bg:#F4F6F9;--white:#fff;
   --text:#0B1829;--text2:#2C3E50;--text3:#5A6A7A;
   --border:#dde3ec;--border2:#c8d4e4;
@@ -19,6 +19,7 @@
   --ff-d:"Cormorant Garamond",Georgia,serif;
   --ff-b:"Inter",system-ui,sans-serif;
   --ff-m:"JetBrains Mono",monospace;
+  --ff-tech:"Rajdhani",var(--ff-b);
 }
 
 html, body { height:100%; }
@@ -29,6 +30,313 @@ body {
   display:flex;
   min-height:100vh;
   overflow:hidden;
+}
+
+/* ══════════════════════════════
+   LOADING SCREEN
+══════════════════════════════ */
+#loading-screen{
+  position:fixed;inset:0;z-index:9999;
+  background:radial-gradient(ellipse at 50% 0%, #12335c 0%, var(--navy) 45%, #061527 100%);
+  display:flex;align-items:center;justify-content:center;
+  overflow:hidden;
+  transition:opacity .6s ease, visibility .6s ease;
+}
+#loading-screen.hide{
+  opacity:0;visibility:hidden;pointer-events:none;
+}
+#loading-screen::before{
+  content:"";
+  position:absolute;inset:0;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(74,144,217,.18), transparent 55%),
+    radial-gradient(circle at 80% 80%, rgba(181,74,47,.14), transparent 55%);
+  z-index:0;
+}
+/* night skyline photo — faint silhouette emerging from the right, like the reference */
+.load-bg-photo{
+  position:absolute;
+  top:0;right:0;bottom:0;
+  width:52%;
+  background-image:url('images/bg_building_night.png');
+  background-size:cover;
+  background-position:center right;
+  opacity:.28;
+  filter:saturate(.6) brightness(.7) contrast(1.05);
+  -webkit-mask-image:linear-gradient(to left, rgba(0,0,0,.9) 0%, rgba(0,0,0,.45) 55%, transparent 100%);
+  mask-image:linear-gradient(to left, rgba(0,0,0,.9) 0%, rgba(0,0,0,.45) 55%, transparent 100%);
+  pointer-events:none;
+  z-index:0;
+}
+.load-bg-photo::after{
+  content:"";
+  position:absolute;inset:0;
+  background:linear-gradient(180deg, rgba(6,21,39,.55) 0%, rgba(6,21,39,.2) 35%, rgba(6,21,39,.8) 100%);
+}
+/* faint ministry seal watermark, centered */
+.load-bg-logo{
+  position:absolute;
+  top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  width:min(56vw,480px);
+  aspect-ratio:1;
+  background-image:url('images/logo_ministry.png');
+  background-size:contain;
+  background-repeat:no-repeat;
+  background-position:center;
+  opacity:.09;
+  filter:grayscale(1) brightness(2);
+  pointer-events:none;
+  z-index:0;
+}
+/* faint circuit / node pattern, evokes the reference poster's tech backdrop */
+.load-circuit{
+  position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(106,174,232,.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(106,174,232,.07) 1px, transparent 1px);
+  background-size:46px 46px;
+  -webkit-mask-image:radial-gradient(ellipse 75% 65% at 50% 40%, #000 0%, transparent 78%);
+  mask-image:radial-gradient(ellipse 75% 65% at 50% 40%, #000 0%, transparent 78%);
+  pointer-events:none;
+  z-index:0;
+}
+.load-circuit::before,.load-circuit::after{
+  content:"";
+  position:absolute;
+  width:6px;height:6px;
+  border-radius:50%;
+  background:var(--blue-lt);
+  box-shadow:0 0 8px 1px rgba(106,174,232,.7);
+  opacity:.5;
+  animation:nodePulse 3.4s ease-in-out infinite;
+}
+.load-circuit::before{ top:28%; left:22%; animation-delay:.2s; }
+.load-circuit::after{ top:64%; left:76%; animation-delay:1.6s; }
+@keyframes nodePulse{
+  0%,100%{opacity:.25;transform:scale(1)}
+  50%{opacity:.85;transform:scale(1.6)}
+}
+/* faint concentric ring accents, left & right, for a cinematic feel */
+.load-rings{
+  position:absolute;
+  border-radius:50%;
+  border:1px solid rgba(106,174,232,.14);
+  pointer-events:none;
+  z-index:0;
+}
+.load-rings.r1{ width:520px;height:520px; left:-180px; bottom:-160px; }
+.load-rings.r2{ width:360px;height:360px; left:-90px; bottom:-90px; border-color:rgba(106,174,232,.1); }
+.load-rings.r3{ width:640px;height:640px; right:-220px; top:-220px; border-color:rgba(106,174,232,.08); }
+
+.load-stage{
+  position:relative;
+  z-index:1;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  padding:0 24px;
+}
+/* ministry strap — small seal + name, sits above the wordmark like the poster's letterhead row */
+.load-badge{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  opacity:0;
+  animation:fadeSub .6s ease forwards;
+  animation-delay:.05s;
+  margin-bottom:clamp(20px,4vw,34px);
+}
+.load-badge img{
+  height:40px;width:40px;
+  object-fit:contain;
+  filter:drop-shadow(0 0 10px rgba(106,174,232,.3));
+}
+.load-badge-div{
+  width:1px;height:28px;
+  background:rgba(255,255,255,.22);
+}
+.load-badge-text{
+  font-family:var(--ff-tech);
+  font-weight:600;
+  font-size:11.5px;
+  letter-spacing:2.2px;
+  text-transform:uppercase;
+  line-height:1.5;
+  color:rgba(255,255,255,.65);
+  text-align:left;
+}
+.load-badge-text span{ display:block; }
+.load-badge-text .hi{ color:#fff; }
+/* soft glassy glow the wordmark sits in — no boxed panel, just ambient light */
+.load-glow{
+  position:absolute;
+  left:50%;top:50%;
+  transform:translate(-50%,-50%);
+  width:min(70vw,820px);
+  height:clamp(150px,22vw,280px);
+  background:radial-gradient(ellipse at center, rgba(106,174,232,.26), rgba(106,174,232,.08) 55%, transparent 75%);
+  filter:blur(4px);
+  pointer-events:none;
+  z-index:0;
+}
+.load-content{
+  position:relative;
+  z-index:1;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.load-logo-main{
+  width:min(72vw,560px);
+  height:auto;
+  object-fit:contain;
+  filter:drop-shadow(0 0 26px rgba(106,174,232,.4)) drop-shadow(0 14px 30px rgba(6,21,39,.6));
+  opacity:0;
+  transform:translateY(14px) scale(.97);
+  animation:logoIn 1s cubic-bezier(.2,.8,.2,1) forwards, markGlow 3.2s ease-in-out 1.1s infinite;
+}
+@keyframes logoIn{
+  to{opacity:1;transform:translateY(0) scale(1)}
+}
+@keyframes markGlow{
+  0%,100%{filter:drop-shadow(0 0 26px rgba(106,174,232,.4)) drop-shadow(0 14px 30px rgba(6,21,39,.6))}
+  50%{filter:drop-shadow(0 0 40px rgba(106,174,232,.7)) drop-shadow(0 14px 30px rgba(6,21,39,.6))}
+}
+/* gold-rule tagline directly under the wordmark, matching the poster's "One Platform..." strap */
+.load-tagline{
+  margin-top:clamp(16px,3vw,26px);
+  display:flex;align-items:center;gap:14px;
+  opacity:0;
+  animation:fadeSub .6s ease forwards;
+  animation-delay:.7s;
+}
+.load-tagline::before,.load-tagline::after{
+  content:"";width:clamp(20px,4vw,46px);height:1px;
+  background:linear-gradient(90deg, transparent, var(--gold));
+}
+.load-tagline::after{ background:linear-gradient(90deg, var(--gold), transparent); }
+.load-tagline span{
+  font-family:var(--ff-d);
+  font-style:italic;
+  font-weight:600;
+  font-size:clamp(13px,2vw,17px);
+  letter-spacing:.6px;
+  color:var(--gold-lt);
+  white-space:nowrap;
+}
+/* capability strip — echoes the poster's icon row, quiet + compact for a loading moment */
+.load-features{
+  margin-top:clamp(26px,5vw,46px);
+  display:flex;
+  align-items:flex-start;
+  justify-content:center;
+  gap:clamp(18px,3.4vw,40px);
+}
+.load-feat{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:9px;
+  opacity:0;
+  transform:translateY(10px);
+  animation:featIn .6s cubic-bezier(.2,.8,.2,1) forwards;
+}
+.load-feat:nth-child(1){ animation-delay:.95s; }
+.load-feat:nth-child(2){ animation-delay:1.08s; }
+.load-feat:nth-child(3){ animation-delay:1.21s; }
+.load-feat:nth-child(4){ animation-delay:1.34s; }
+@keyframes featIn{ to{opacity:1;transform:translateY(0)} }
+.load-feat i{
+  width:38px;height:38px;
+  display:flex;align-items:center;justify-content:center;
+  border-radius:50%;
+  border:1px solid rgba(106,174,232,.3);
+  background:rgba(106,174,232,.07);
+  color:var(--blue-lt);
+  font-size:14px;
+  animation:featPulse 2.8s ease-in-out infinite;
+}
+.load-feat:nth-child(1) i{ animation-delay:0s; }
+.load-feat:nth-child(2) i{ animation-delay:.35s; }
+.load-feat:nth-child(3) i{ animation-delay:.7s; }
+.load-feat:nth-child(4) i{ animation-delay:1.05s; }
+@keyframes featPulse{
+  0%,100%{box-shadow:0 0 0 rgba(106,174,232,0)}
+  50%{box-shadow:0 0 14px rgba(106,174,232,.45)}
+}
+.load-feat span{
+  font-family:var(--ff-tech);
+  font-weight:500;
+  font-size:10.5px;
+  letter-spacing:1.4px;
+  text-transform:uppercase;
+  color:rgba(255,255,255,.55);
+  white-space:nowrap;
+}
+.load-sub{
+  position:absolute;
+  bottom:14%;left:50%;
+  transform:translateX(-50%);
+  font-family:var(--ff-m);
+  font-size:9.5px;
+  letter-spacing:3px;
+  text-transform:uppercase;
+  color:rgba(255,255,255,.45);
+  display:flex;align-items:center;gap:10px;
+  opacity:0;
+  animation:fadeSub .6s ease forwards;
+  animation-delay:1.55s;
+  z-index:1;
+}
+.load-sub::before,.load-sub::after{
+  content:"";width:26px;height:1px;
+  background:rgba(255,255,255,.25);
+}
+@keyframes fadeSub{to{opacity:1}}
+.load-bar{
+  position:absolute;
+  bottom:9%;left:50%;
+  transform:translateX(-50%);
+  width:180px;height:2px;
+  background:rgba(255,255,255,.12);
+  border-radius:2px;
+  overflow:hidden;
+  z-index:1;
+}
+.load-bar::after{
+  content:"";
+  position:absolute;top:0;left:-40%;
+  width:40%;height:100%;
+  background:linear-gradient(90deg,transparent,var(--blue-lt),transparent);
+  animation:loadBar 1.1s ease-in-out infinite;
+}
+@keyframes loadBar{
+  0%{left:-40%}
+  100%{left:100%}
+}
+@media(max-width:600px){
+  .load-bg-photo{ width:100%; opacity:.16; }
+  .load-glow{ width:88vw; }
+  .load-logo-main{ width:min(84vw,340px); }
+  .load-badge{ margin-bottom:20px; }
+  .load-badge img{ height:32px; width:32px; }
+  .load-badge-text{ font-size:9.5px; letter-spacing:1.6px; }
+  .load-tagline span{
+    font-size:11.5px;
+    white-space:normal;
+    text-align:center;
+  }
+  .load-tagline::before,.load-tagline::after{ width:16px; }
+  .load-features{
+    flex-wrap:wrap;
+    row-gap:18px;
+    column-gap:22px;
+  }
+  .load-feat i{ width:32px;height:32px;font-size:12px; }
+  .load-feat span{ font-size:9px; letter-spacing:1px; }
+  .load-rings{ display:none; }
+  .load-circuit{ background-size:34px 34px; }
 }
 
 /* ══════════════════════════════
@@ -302,6 +610,39 @@ h1 {
 </head>
 <body>
 
+<!-- LOADING SCREEN -->
+<div id="loading-screen">
+  <div class="load-circuit"></div>
+  <div class="load-bg-photo"></div>
+  <div class="load-bg-logo"></div>
+  <div class="load-rings r1"></div>
+  <div class="load-rings r2"></div>
+  <div class="load-rings r3"></div>
+  <div class="load-stage">
+    <div class="load-badge">
+      <img src="images/logo_ministry.png" alt="Federal Ministry of Housing and Urban Development">
+      <div class="load-badge-div"></div>
+      <div class="load-badge-text">
+        <span class="hi">Federal Ministry of Housing</span>
+        <span>and Urban Development</span>
+      </div>
+    </div>
+    <div class="load-content">
+      <div class="load-glow"></div>
+      <img src="images/logo_fpamas.png" alt="FPAMAS — Federal Public Assets Maintenance Automation System" class="load-logo-main">
+    </div>
+    <!-- <div class="load-tagline"><span>One Platform, Complete Assets Intelligence</span></div> -->
+    <div class="load-features">
+      <div class="load-feat"><i class="fa-solid fa-building"></i><span>Asset Registry</span></div>
+      <div class="load-feat"><i class="fa-solid fa-clipboard-list"></i><span>Work Orders</span></div>
+      <div class="load-feat"><i class="fa-solid fa-gears"></i><span>Maintenance</span></div>
+      <div class="load-feat"><i class="fa-solid fa-magnifying-glass-chart"></i><span>Inspections</span></div>
+    </div>
+  </div>
+  <div class="load-sub">Initializing Platform</div>
+  <div class="load-bar"></div>
+</div>
+
 <!-- LEFT: PHOTO -->
 <div class="photo-side">
   <img src="images/photo_secretariat.jpg" alt="Federal Secretariat Complex, Abuja">
@@ -401,8 +742,30 @@ h1 {
 
 <script src="./dashboard/js/api.js"></script>
 <script>
+(function(){
+  const MIN_VISIBLE_MS = 2000;
+  const shownAt = Date.now();
+
+  function hideLoader() {
+    const elapsed = Date.now() - shownAt;
+    const wait = Math.max(0, MIN_VISIBLE_MS - elapsed);
+    setTimeout(() => {
+      const el = document.getElementById('loading-screen');
+      if (el) el.classList.add('hide');
+    }, wait);
+  }
+
+  if (document.readyState === 'complete') {
+    hideLoader();
+  } else {
+    window.addEventListener('load', hideLoader);
+  }
+})();
+
 if (localStorage.getItem('as_token')) {
-  window.location.href = './dashboard/dashboard.html';
+  let role;
+  try { role = JSON.parse(localStorage.getItem('as_user') || 'null')?.role; } catch {}
+  window.location.href = role === 'MDA Agent' ? './dashboard/mda_portal.html' : './dashboard/dashboard.html';
 }
 
 function togglePw() {
@@ -443,8 +806,25 @@ async function doLogin() {
   document.getElementById('btn-label').textContent = 'Signing in\u2026';
 
   try {
-    await apiLogin(email, password);
-    window.location.href = './dashboard/dashboard.html';
+    const result = await apiLogin(email, password);
+
+    // Route by role: MDA Agent gets the lightweight external portal, every
+    // other role gets the full dashboard. This page only loads api.js (not
+    // app.js), so there's no shared getCurrentUser() helper here — read the
+    // role from apiLogin's own resolved value first, and fall back to
+    // whatever api.js may have cached in localStorage under 'as_user'
+    // during login, to be robust to either return shape.
+    let role = result?.user?.role || result?.role;
+    if (!role) {
+      try {
+        const cached = JSON.parse(localStorage.getItem('as_user') || 'null');
+        role = cached?.role;
+      } catch { /* ignore parse errors, fall through to default redirect */ }
+    }
+
+    window.location.href = role === 'MDA Agent'
+      ? './dashboard/mda_portal.html'
+      : './dashboard/dashboard.html';
   } catch (e) {
     document.getElementById('login-alert-msg').textContent =
       e.message || 'Login failed. Check your credentials.';

@@ -300,6 +300,12 @@ async function submitCapture() {
     lga:              document.getElementById('cap-lga')?.value || '',
     address:          document.getElementById('cap-address')?.value || '',
     notes:            document.getElementById('cap-notes')?.value || '',
+    // Read from the hidden field that setAssessment() writes to (toggled by
+    // the Assessed/Unassessed buttons in the form). This was previously
+    // never included here, so whatever the user clicked was silently
+    // dropped and every capture fell back to the Asset schema's default
+    // of 'Unassessed' regardless of what the toggle showed on screen.
+    assessed:         document.getElementById('cap-assessed')?.value || 'Unassessed',
     captureDate:      document.getElementById('cap-date')?.value || new Date().toISOString().split('T')[0],
     installDate:      document.getElementById('cap-install-date')?.value || '',
     nextInspection:   document.getElementById('cap-next-inspection')?.value || '',

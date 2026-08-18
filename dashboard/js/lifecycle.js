@@ -153,40 +153,222 @@ function _doUnlinkParent(assetId, parentId) {
   if (el) renderRelationshipsTab(assetId, el);
 }
 
-function openLinkParentModal(assetId) {
-  _miniModal('Link Parent Asset',
+// ── LIFECYCLE TAB ──────────────────────────────────────────────────────────────
+// asset-view.html calls renderLifecycleTab(assetId, containerEl) when the
+// Lifecycle tab is opened, but this function did not exist anywhere in the
+// codebase — the call threw a silent ReferenceError, so the tab's spinner
+// placeholder was never replaced with real content and just spun forever.
+// The backend (routes/asset_extras_routes.js GET/POST .../lifecycle) and the
+// API helpers (apiGetLifecycle/apiLifecycleTransition in api_additions.js)
+// already worked fine; only this renderer was missing.
+const LC_STAGE_COLORS = {
+  Draft:                    '#5A6A7A',
+  Active:                   '#2DB87B',
+  'Under Maintenance':      '#f0a500',
+  'Under Review':           '#4A90D9',
+  'Scheduled for Disposal': '#e07000',
+  Decommissioned:           '#e05555',
+};
+
+async function renderLifecycleTab(assetId, containerEl) {
+  if (!containerEl) containerEl = document.getElementById('lifecycle-panel-content');
+  if (!containerEl) return;
+
+  containerEl.innerHTML = `<div style="text-align:center;padding:40px"><div class="spinner"></div></div>`;
+
+  let data;
+  try {
+    data = await apiGetLifecycle(assetId);
+  } catch (err) {
+    console.error('renderLifecycleTab: apiGetLifecycle failed for', assetId, err);
+    containerEl.innerHTML = `<div style="text-align:center;padding:40px;color:var(--text3,#5A6A7A);font-size:13px">
+      <i class="fa-solid fa-triangle-exclamation" style="font-size:22px;display:block;margin-bottom:10px;opacity:.5"></i>
+      Couldn't load lifecycle data.
+      <div style="margin-top:6px;font-family:'Courier New',monospace;font-size:11px;color:#e05555">${escHtml(err.message || String(err))}</div>
+      <div style="margin-top:10px"><button class="btn btn-ghost btn-xs" onclick="renderLifecycleTab('${assetId}')">Retry</button></div>
+    </div>`;
+    return;
+  }
+
+  const stage   = data.stage || 'Active';
+  const color   = LC_STAGE_COLORS[stage] || '#5A6A7A';
+  const allowed = data.allowedTransitions || [];
+  const history = data.history || [];
+  const docs    = data.documents || [];
+
+  containerEl.innerHTML = `
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;flex-wrap:wrap;gap:12px">
+      <div>
+        <div style="font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--text3);font-weight:700;margin-bottom:8px">Current Stage</div>
+        <span style="display:inline-flex;align-items:center;gap:7px;padding:7px 16px;border-radius:20px;background:${color}18;color:${color};font-weight:700;font-size:13px">
+          <span style="width:8px;height:8px;border-radius:50%;background:${color}"></span> ${escHtml(stage)}
+        </span>
+      </div>
+      ${allowed.length
+        ? `<div style="display:flex;gap:8px;flex-wrap:wrap">
+            ${allowed.map(s => `<button class="btn btn-secondary btn-sm" onclick="openLifecycleTransitionModal('${assetId}','${escHtml(s)}')">
+              <i class="fa-solid fa-arrow-right"></i> ${escHtml(s)}
+            </button>`).join('')}
+          </div>`
+        : `<div style="font-size:12px;color:var(--text3)">No further transitions available${stage === 'Decommissioned' ? ' — asset is decommissioned' : ''}</div>`}
+    </div>
+
+    <div style="margin-bottom:${docs.length ? '20px' : '0'}">
+      <div style="font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--text3);font-weight:700;margin-bottom:10px">Stage History</div>
+      ${history.length
+        ? history.slice().reverse().map(h => `
+          <div style="display:flex;gap:12px;padding:10px 0;border-bottom:1px solid var(--border,#E8ECF0)">
+            <div style="width:8px;height:8px;border-radius:50%;background:${LC_STAGE_COLORS[h.to] || '#4A90D9'};margin-top:5px;flex-shrink:0"></div>
+            <div style="flex:1;min-width:0">
+              <div style="font-size:13px;font-weight:600">${escHtml(h.from || '—')} → ${escHtml(h.to || '—')}</div>
+              <div style="font-size:11px;color:var(--text3);margin-top:2px">${h.at ? new Date(h.at).toLocaleString('en-NG') : ''}${h.by ? ' · ' + escHtml(h.by) : ''}</div>
+              ${h.note ? `<div style="font-size:12px;color:var(--text2);margin-top:4px">${escHtml(h.note)}</div>` : ''}
+              ${h.document ? `<div style="font-size:11px;color:var(--accent,#4A90D9);margin-top:2px"><i class="fa-solid fa-paperclip"></i> ${escHtml(h.document)}</div>` : ''}
+            </div>
+          </div>`).join('')
+        : `<div style="font-size:12px;color:var(--text3);padding:8px 0">No stage changes recorded yet.</div>`}
+    </div>
+
+    ${docs.length ? `
+    <div>
+      <div style="font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--text3);font-weight:700;margin-bottom:10px">Lifecycle Documents</div>
+      ${docs.map(d => `
+        <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;background:var(--surface2,var(--bg));border:1px solid var(--border,#E8ECF0);border-radius:8px;margin-bottom:6px">
+          <i class="fa-solid fa-file-lines" style="color:var(--text3)"></i>
+          <div style="flex:1;min-width:0;font-size:12px">${escHtml(d.name)} <span style="color:var(--text3)">— ${escHtml(d.stage)}</span></div>
+          <div style="font-size:10px;color:var(--text3)">${d.at ? new Date(d.at).toLocaleDateString('en-NG') : ''}</div>
+        </div>`).join('')}
+    </div>` : ''}`;
+}
+
+function openLifecycleTransitionModal(assetId, stage) {
+  _miniModal(`Move to "${stage}"`,
     `<div style="margin-bottom:14px">
-      <label style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:5px;color:var(--text2,#2C3E50)">Parent Asset ID</label>
-      <input id="link-parent-id" placeholder="e.g. AST-1001"
-        style="width:100%;padding:9px 13px;border:1px solid var(--border,#E8ECF0);border-radius:8px;font-family:var(--font,'DM Sans',sans-serif);font-size:13px;color:var(--text,#0B1829);background:var(--bg,#F4F6F9);outline:none">
-      <div style="font-size:11px;color:var(--text3,#5A6A7A);margin-top:5px">Enter the ID of the asset that contains this one</div>
+      <label style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:5px;color:var(--text2,#2C3E50)">Note (optional)</label>
+      <textarea id="lc-transition-note" rows="3" placeholder="Reason for this transition…"
+        style="width:100%;padding:9px 13px;border:1px solid var(--border,#E8ECF0);border-radius:8px;font-family:var(--font,'DM Sans',sans-serif);font-size:13px;color:var(--text,#0B1829);background:var(--bg,#F4F6F9);outline:none;resize:vertical;box-sizing:border-box"></textarea>
+    </div>
+    <div>
+      <label style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:5px;color:var(--text2,#2C3E50)">Document name (optional)</label>
+      <input id="lc-transition-doc" placeholder="e.g. Disposal Approval Memo"
+        style="width:100%;padding:9px 13px;border:1px solid var(--border,#E8ECF0);border-radius:8px;font-family:var(--font,'DM Sans',sans-serif);font-size:13px;color:var(--text,#0B1829);background:var(--bg,#F4F6F9);outline:none;box-sizing:border-box">
     </div>`,
+    async () => {
+      const note = document.getElementById('lc-transition-note')?.value.trim() || '';
+      const docu = document.getElementById('lc-transition-doc')?.value.trim() || '';
+      try {
+        await apiLifecycleTransition(assetId, stage, note, docu);
+        if (typeof toast === 'function') toast(`Moved to ${stage}`, 'fa-arrow-right');
+        if (typeof addAudit === 'function') addAudit('LIFECYCLE_TRANSITION', assetId, null, `Moved to ${stage}`);
+        const el = document.getElementById('lifecycle-panel-content');
+        if (el) renderLifecycleTab(assetId, el);
+      } catch (err) {
+        if (typeof toast === 'function') toast(err.message || 'Transition failed', 'fa-triangle-exclamation');
+      }
+    },
+    'Confirm'
+  );
+}
+
+// ── SEARCHABLE ASSET PICKER (Link Parent / Link Child modals) ────────────────
+// Replaces the old "type the raw asset ID" text field with a search box +
+// scrollable, clickable results list, reusing the same search index already
+// built for the global search bar (buildSearchIndex/enhancedSearch above).
+let _linkPickerSelectedId = null;
+
+function _linkPickerRowHtml(a, isSelected) {
+  const id = a.assetId || a.id || '';
+  return `<div class="link-picker-row" data-id="${escHtml(id)}" onclick="_linkPickerSelect(this.dataset.id)"
+    style="display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;cursor:pointer;margin-bottom:4px;
+      background:${isSelected ? 'var(--blue,#4A90D9)' : 'var(--surface2,var(--bg))'};
+      color:${isSelected ? '#fff' : 'inherit'}">
+    <div style="flex:1;min-width:0">
+      <div style="font-weight:600;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${escHtml(a.name || '—')}</div>
+      <div style="font-size:10px;font-family:'Courier New',monospace;${isSelected ? 'color:rgba(255,255,255,.85)' : 'color:var(--text3,#5A6A7A)'}">
+        ${escHtml(id)}${a.type ? ' · ' + escHtml(a.type) : ''}
+      </div>
+    </div>
+    ${isSelected ? '<i class="fa-solid fa-check"></i>' : ''}
+  </div>`;
+}
+
+async function _linkPickerRender() {
+  const listEl = document.getElementById('link-picker-list');
+  if (!listEl) return;
+  const excludeId = listEl.dataset.exclude || null;
+
+  if (!_searchIndexBuilt) {
+    listEl.innerHTML = `<div style="padding:16px;text-align:center;color:var(--text3,#5A6A7A);font-size:12px">
+      <div class="spinner" style="width:16px;height:16px;border-width:2px;margin:0 auto 8px"></div>Loading assets…</div>`;
+    await buildSearchIndex();
+  }
+
+  const q = document.getElementById('link-picker-search')?.value || '';
+  let results = q.trim() ? enhancedSearch(q) : _searchIndex.map(x => x.a);
+  results = results.filter(a => (a.assetId || a.id) !== excludeId).slice(0, 60);
+
+  listEl.innerHTML = results.length
+    ? results.map(a => _linkPickerRowHtml(a, (a.assetId || a.id) === _linkPickerSelectedId)).join('')
+    : `<div style="padding:16px;text-align:center;color:var(--text3,#5A6A7A);font-size:12px">No matching assets</div>`;
+}
+
+function _linkPickerSelect(id) {
+  _linkPickerSelectedId = id;
+  _linkPickerRender();
+  const label = document.getElementById('link-picker-selected-label');
+  if (label) label.textContent = 'Selected: ' + id;
+  const confirmBtn = document.getElementById('_mini-modal-confirm');
+  if (confirmBtn) confirmBtn.disabled = false;
+}
+
+function _linkPickerBodyHtml(excludeId) {
+  return `<div style="margin-bottom:10px">
+      <input id="link-picker-search" type="text" placeholder="Search by name or ID…" oninput="_linkPickerRender()"
+        style="width:100%;padding:9px 13px;border:1px solid var(--border,#E8ECF0);border-radius:8px;font-family:var(--font,'DM Sans',sans-serif);font-size:13px;color:var(--text,#0B1829);background:var(--bg,#F4F6F9);outline:none">
+    </div>
+    <div id="link-picker-list" data-exclude="${escHtml(excludeId)}"
+      style="max-height:280px;overflow-y:auto;border:1px solid var(--border,#E8ECF0);border-radius:8px;padding:6px;margin-bottom:8px">
+      <div style="padding:16px;text-align:center;color:var(--text3,#5A6A7A);font-size:12px">Loading assets…</div>
+    </div>
+    <div id="link-picker-selected-label" style="font-size:11px;color:var(--text3,#5A6A7A)">No asset selected</div>`;
+}
+
+function openLinkParentModal(assetId) {
+  _linkPickerSelectedId = null;
+  _miniModal('Link Parent Asset',
+    _linkPickerBodyHtml(assetId),
     () => {
-      const parentId = document.getElementById('link-parent-id')?.value.trim();
-      if (!parentId) return;
+      if (!_linkPickerSelectedId) return;
+      const parentId = _linkPickerSelectedId;
       linkAssets(parentId, assetId);
       if (typeof toast === 'function') toast(`Linked under ${parentId}`, 'fa-link');
       if (typeof addAudit === 'function') addAudit('ASSET_LINKED', assetId, null, `Linked under ${parentId}`);
       const el = document.getElementById('relationships-panel-content');
       if (el) renderRelationshipsTab(assetId, el);
-    }
+    },
+    'Link'
   );
+  const confirmBtn = document.getElementById('_mini-modal-confirm');
+  if (confirmBtn) confirmBtn.disabled = true;
+  _linkPickerRender();
 }
 
 function openLinkChildModal(parentId) {
+  _linkPickerSelectedId = null;
   _miniModal('Link Child Asset',
-    `<div style="margin-bottom:14px">
-      <label style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:5px;color:var(--text2,#2C3E50)">Child Asset ID</label>
-      <input id="link-child-id" placeholder="e.g. AST-1008"
-        style="width:100%;padding:9px 13px;border:1px solid var(--border,#E8ECF0);border-radius:8px;font-family:var(--font,'DM Sans',sans-serif);font-size:13px;color:var(--text,#0B1829);background:var(--bg,#F4F6F9);outline:none">
-      <div style="font-size:11px;color:var(--text3,#5A6A7A);margin-top:5px">Enter the ID of the asset that belongs under this one</div>
-    </div>`,
-    () => _doLinkChild(parentId)
+    _linkPickerBodyHtml(parentId),
+    () => {
+      if (!_linkPickerSelectedId) return;
+      _doLinkChild(parentId, _linkPickerSelectedId);
+    },
+    'Link'
   );
+  const confirmBtn = document.getElementById('_mini-modal-confirm');
+  if (confirmBtn) confirmBtn.disabled = true;
+  _linkPickerRender();
 }
 
-function _doLinkChild(parentId) {
-  const childId = document.getElementById('link-child-id')?.value.trim();
+function _doLinkChild(parentId, childId) {
   if (!childId) return;
   linkAssets(parentId, childId);
   if (typeof toast === 'function') toast(`Linked ${childId} as child of ${parentId}`, 'fa-link');

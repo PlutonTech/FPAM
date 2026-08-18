@@ -116,6 +116,24 @@ body { font-family: var(--font); background: var(--bg); color: var(--text);
 }
 #global-search-dropdown.open { display: block; }
 
+/* Export format dropdown */
+.export-menu-wrap { position: relative; }
+.export-menu-dropdown {
+  position: absolute; top: calc(100% + 6px); right: 0; min-width: 160px;
+  background: var(--card); border: 1px solid var(--border); border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0,0,0,.12); z-index: 100; display: none;
+  overflow: hidden; padding: 6px;
+}
+.export-menu-dropdown.open { display: block; }
+.export-menu-item {
+  display: flex; align-items: center; gap: 9px; padding: 8px 10px;
+  border-radius: 7px; font-size: 12.5px; font-weight: 500; color: var(--text2);
+  cursor: pointer; transition: background .12s;
+}
+.export-menu-item i { width: 14px; text-align: center; font-size: 11px; color: var(--text3); }
+.export-menu-item:hover { background: var(--blue-bg); color: var(--blue); }
+.export-menu-item:hover i { color: var(--blue); }
+
 /* Conn status */
 .conn-status { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--text3); }
 .conn-dot    { width: 7px; height: 7px; border-radius: 50%; background: var(--warn); transition: background .3s; }
@@ -364,9 +382,17 @@ table.data-table tbody tr:hover { background: var(--blue-bg); }
         <span class="conn-dot" id="conn-dot"></span>
         <span id="conn-label">Connecting…</span>
       </div>
-      <button class="btn btn-secondary btn-sm" onclick="exportAssets('csv')" data-require="canExport">
-        <i class="fa-solid fa-download"></i> Export
-      </button>
+      <div class="export-menu-wrap" id="export-menu-wrap" data-require="canExport">
+        <button class="btn btn-secondary btn-sm" onclick="toggleExportMenu(event)">
+          <i class="fa-solid fa-download"></i> Export <i class="fa-solid fa-chevron-down" style="font-size:9px;margin-left:1px"></i>
+        </button>
+        <div id="export-menu-dropdown" class="export-menu-dropdown">
+          <div class="export-menu-item" onclick="closeExportMenu();exportAssets('csv')"><i class="fa-solid fa-file-csv"></i> CSV</div>
+          <div class="export-menu-item" onclick="closeExportMenu();exportAssets('xlsx')"><i class="fa-solid fa-file-excel"></i> XLSX</div>
+          <div class="export-menu-item" onclick="closeExportMenu();exportAssets('geojson')"><i class="fa-solid fa-map"></i> GeoJSON</div>
+          <div class="export-menu-item" onclick="closeExportMenu();exportAssets('pdf')"><i class="fa-solid fa-file-pdf"></i> PDF</div>
+        </div>
+      </div>
       <a href="capture.html" class="btn btn-primary btn-sm" id="btn-new-asset" data-require="canCreate">
         <i class="fa-solid fa-plus"></i> New Asset
       </a>
@@ -484,6 +510,7 @@ table.data-table tbody tr:hover { background: var(--blue-bg); }
 </button>
         <button class="btn btn-secondary btn-sm" onclick="bulkExport('csv')"><i class="fa-solid fa-download"></i> Export CSV</button>
         <button class="btn btn-secondary btn-sm" onclick="bulkExport('xlsx')"><i class="fa-solid fa-file-excel"></i> Export XLSX</button>
+        <button class="btn btn-secondary btn-sm" onclick="bulkExport('pdf')"><i class="fa-solid fa-file-pdf"></i> Export PDF</button>
         <button class="btn btn-secondary btn-sm" onclick="bulkSetCondition()"><i class="fa-solid fa-pen"></i> Set Condition</button>
         <button class="btn btn-danger btn-sm" onclick="bulkDelete()"><i class="fa-solid fa-trash"></i> Delete</button>
         <button class="btn btn-ghost btn-sm" onclick="clearSelection()"><i class="fa-solid fa-xmark"></i></button>
@@ -568,6 +595,15 @@ table.data-table tbody tr:hover { background: var(--blue-bg); }
 <script src="js/bulk_update.js"></script>
 <script src="js/lifecycle.js"></script>
 <script>
+// ── EXPORT FORMAT MENU ────────────────────────────────────────────────────────
+function toggleExportMenu(e) {
+  e.stopPropagation();
+  document.getElementById('export-menu-dropdown')?.classList.toggle('open');
+}
+function closeExportMenu() {
+  document.getElementById('export-menu-dropdown')?.classList.remove('open');
+}
+
 function doLogout() {
   apiLogout().finally(() => { localStorage.removeItem('as_token'); window.location.href = '../login.html'; });
 }
@@ -665,6 +701,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   document.addEventListener('click', e => {
     const w = document.getElementById('global-search-wrap');
     if (w && !w.contains(e.target)) document.getElementById('global-search-dropdown')?.classList.remove('open');
+
+    const ew = document.getElementById('export-menu-wrap');
+    if (ew && !ew.contains(e.target)) closeExportMenu();
   });
   document.getElementById('modal-overlay')?.addEventListener('click', e => {
     if (e.target === e.currentTarget) closeModal();

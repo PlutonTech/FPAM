@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>News — FPAM &#8212; Federal Public Assets Maintenance</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0 }
+
+    :root {
+      --navy: #0B2545;
+      --navy2: #0e2d57;
+      --blue: #4A90D9;
+      --blue-lt: #6AAEE8;
+      --terra: #B54A2F;
+      --gold: #D4A017;
+      --white: #fff;
+      --bg: #F4F6F9;
+      --text: #0B1829;
+      --text3: #5A6A7A;
+      --border: #dde3ec;
+      --ff-d: "Cormorant Garamond", Georgia, serif;
+      --ff-b: "Inter", system-ui, sans-serif;
+      --ff-m: "JetBrains Mono", monospace;
+      --ticker-h: 34px;
+      --nav-h: 70px;
+      --top-offset: calc(var(--ticker-h) + var(--nav-h));
+    }
+
+    html { scroll-behavior: smooth; overflow-x: hidden; width: 100% }
+    body { font-family: var(--ff-b); color: var(--text); background: #fff; overflow-x: hidden; width: 100%; max-width: 100% }
+    ::-webkit-scrollbar { width: 4px }
+    ::-webkit-scrollbar-thumb { background: var(--blue); border-radius: 4px }
+    a { text-decoration: none; color: inherit }
+    img { display: block; max-width: 100% }
+
+    /* TICKER */
+    #top-ticker { position: fixed; top: 0; left: 0; right: 0; z-index: 600; height: var(--ticker-h); background: var(--navy); border-bottom: 1px solid rgba(74,144,217,.3); overflow: hidden; display: flex; align-items: center }
+    .tt-label { flex-shrink: 0; background: var(--blue); height: 100%; display: flex; align-items: center; padding: 0 16px; font-family: var(--ff-m); font-size: 8.5px; font-weight: 500; letter-spacing: 2px; text-transform: uppercase; color: #fff; gap: 7px; white-space: nowrap; border-right: 1px solid rgba(255,255,255,.12) }
+    .tt-track-wrap { flex: 1; overflow: hidden; position: relative }
+    .tt-track-wrap::before, .tt-track-wrap::after { content: ""; position: absolute; top: 0; bottom: 0; width: 36px; z-index: 2 }
+    .tt-track-wrap::before { left: 0; background: linear-gradient(to right, var(--navy), transparent) }
+    .tt-track-wrap::after { right: 0; background: linear-gradient(to left, var(--navy), transparent) }
+    .tt-track { display: flex; white-space: nowrap; animation: tt-scroll 55s linear infinite }
+    .tt-item { display: inline-flex; align-items: center; gap: 10px; padding: 0 34px; font-family: var(--ff-b); font-size: 11px; color: rgba(255,255,255,.62) }
+    .tt-sep { color: var(--blue); font-size: 8px; opacity: .6 }
+    @keyframes tt-scroll { from { transform: translateX(0) } to { transform: translateX(-50%) } }
+
+    /* NAV */
+    #nav { position: fixed; top: var(--ticker-h); left: 0; right: 0; z-index: 500; background: rgba(11,37,69,.97); backdrop-filter: blur(20px); box-shadow: 0 1px 0 rgba(255,255,255,.07) }
+    .nav-inner { display: flex; align-items: center; justify-content: space-between; padding: 0 44px; height: var(--nav-h); max-width: 1400px; margin: 0 auto }
+    .nav-logo { display: flex; align-items: center; gap: 8px; flex-shrink: 0 }
+    .nav-logo img { height: 46px; width: auto; filter: drop-shadow(0 1px 6px rgba(0,0,0,.4)); transition: transform .2s }
+    .nav-logo img:hover { transform: scale(1.05) }
+    .nav-logo-div { width: 1px; height: 34px; background: rgba(255,255,255,.25); margin: 0 4px; flex-shrink: 0 }
+    .nav-links { display: flex; align-items: center; gap: 26px }
+    .nav-links a { font-family: var(--ff-b); font-size: 12.5px; font-weight: 500; color: rgba(255,255,255,.78); transition: .15s; letter-spacing: .3px; padding: 4px 0; border-bottom: 1.5px solid transparent }
+    .nav-links a:hover, .nav-links a.active { color: #fff; border-bottom-color: var(--blue) }
+    .nav-actions { display: flex; align-items: center; gap: 10px; flex-shrink: 0 }
+    .nav-cta { background: var(--terra); color: #fff; padding: 8px 18px; border-radius: 6px; font-family: var(--ff-b); font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 7px; transition: .2s; white-space: nowrap }
+    .nav-cta:hover { background: #c55535; transform: translateY(-1px) }
+    .nav-login { background: transparent; color: #fff; padding: 8px 18px; border-radius: 6px; font-family: var(--ff-b); font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 7px; border: 1.5px solid rgba(255,255,255,.35); transition: .2s; white-space: nowrap }
+    .nav-login:hover { background: rgba(255,255,255,.1); border-color: #fff }
+    .nav-burger { display: none; background: none; border: none; color: #fff; font-size: 21px; cursor: pointer }
+    .nav-mob { display: none; position: fixed; top: var(--top-offset); left: 0; right: 0; background: rgba(11,37,69,.98); backdrop-filter: blur(20px); padding: 20px 32px; flex-direction: column; gap: 12px; z-index: 499; border-top: 1px solid rgba(255,255,255,.07) }
+    .nav-mob.open { display: flex }
+    .nav-mob a { font-family: var(--ff-b); color: rgba(255,255,255,.8); font-size: 14.5px; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,.06) }
+
+    /* SHARED */
+    .btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 26px; border-radius: 6px; font-family: var(--ff-b); font-size: 13px; font-weight: 600; cursor: pointer; border: none; transition: .22s; white-space: nowrap }
+    .btn-blue { background: var(--blue); color: #fff } .btn-blue:hover { background: var(--blue-lt); transform: translateY(-2px) }
+    .section { padding: 90px 0 } .section.alt { background: var(--bg) }
+    .container { max-width: 1180px; margin: 0 auto; padding: 0 36px }
+    .eyebrow { font-family: var(--ff-m); font-size: 9px; letter-spacing: 3px; text-transform: uppercase; color: var(--blue); margin-bottom: 12px; display: flex; align-items: center; gap: 8px }
+    .eyebrow::after { content: ""; flex: 0 0 28px; height: 1px; background: var(--blue); border-radius: 2px }
+    .s-title { font-family: var(--ff-d); font-size: clamp(26px,3vw,46px); font-weight: 600; color: var(--navy); line-height: 1.1; margin-bottom: 14px; letter-spacing: .3px }
+    .s-sub { font-family: var(--ff-b); font-size: 15px; font-weight: 300; color: var(--text3); line-height: 1.8; max-width: 540px }
+    .page-hero { position: relative; height: 300px; overflow: hidden; background: var(--navy); display: flex; align-items: center; margin-top: var(--top-offset) }
+    .page-hero-bg { position: absolute; inset: 0; background-size: cover; background-position: center; opacity: .22 }
+    .page-hero-overlay { position: absolute; inset: 0; background: linear-gradient(to right, rgba(11,37,69,.96) 40%, rgba(11,37,69,.5) 100%) }
+    .page-hero-content { position: relative; z-index: 1; padding: 0 60px }
+    .page-hero h1 { font-family: var(--ff-d); font-size: clamp(30px,4vw,52px); font-weight: 600; color: #fff; letter-spacing: .5px; margin-bottom: 10px }
+    .page-hero p { font-family: var(--ff-b); font-size: 14.5px; font-weight: 300; color: rgba(255,255,255,.6); max-width: 480px; line-height: 1.75 }
+    .breadcrumb { font-family: var(--ff-m); font-size: 8.5px; letter-spacing: 2px; text-transform: uppercase; color: var(--blue-lt); margin-bottom: 14px; display: flex; align-items: center; gap: 8px }
+    .reveal { opacity: 0; transform: translateY(24px); transition: opacity .7s ease, transform .7s ease }
+    .reveal.visible { opacity: 1; transform: none }
+    .rd1 { transition-delay: .1s } .rd2 { transition-delay: .2s } .rd3 { transition-delay: .32s }
+    @media (max-width: 960px) { .nav-links, .nav-actions { display: none } .nav-burger { display: block } .nav-inner { padding: 0 20px } .container { padding: 0 24px } .page-hero-content { padding: 0 28px } }
+
+    /* ARTICLE */
+    .article-layout { display: grid; grid-template-columns: 1fr 300px; gap: 56px; align-items: start }
+    .article-meta { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; padding-bottom: 22px; margin-bottom: 28px; border-bottom: 1px solid var(--border) }
+    .article-meta-item { display: flex; align-items: center; gap: 7px; font-family: var(--ff-b); font-size: 12px; color: var(--text3) }
+    .article-meta-item i { color: var(--blue); font-size: 11px }
+    .article-tag { background: rgba(74,144,217,.1); color: var(--blue); padding: 5px 12px; border-radius: 20px; font-family: var(--ff-m); font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase; font-weight: 600 }
+    .article-lead { font-family: var(--ff-b); font-size: 17px; font-weight: 400; color: var(--navy); line-height: 1.75; margin-bottom: 26px }
+    .article-body p { font-family: var(--ff-b); font-size: 14.5px; font-weight: 300; color: var(--text3); line-height: 1.95; margin-bottom: 20px }
+    .article-body h3 { font-family: var(--ff-d); font-size: 21px; font-weight: 600; color: var(--navy); margin: 34px 0 14px; letter-spacing: .2px }
+    .article-quote { border-left: 3px solid var(--blue); background: var(--bg); padding: 18px 24px; margin: 24px 0; border-radius: 0 6px 6px 0 }
+    .article-quote p { font-family: var(--ff-d); font-size: 18px; font-style: italic; font-weight: 500; color: var(--navy); line-height: 1.6; margin: 0 }
+    .article-share { display: flex; align-items: center; gap: 10px; margin-top: 40px; padding-top: 24px; border-top: 1px solid var(--border) }
+    .article-share span { font-family: var(--ff-m); font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text3) }
+    .share-btn { width: 34px; height: 34px; border-radius: 50%; background: var(--bg); display: flex; align-items: center; justify-content: center; color: var(--navy); font-size: 13px; transition: .2s }
+    .share-btn:hover { background: var(--blue); color: #fff }
+
+    /* SIDEBAR */
+    .article-sidebar { position: sticky; top: calc(var(--top-offset) + 24px) }
+    .sb-card { background: var(--bg); border-radius: 8px; padding: 24px; margin-bottom: 20px }
+    .sb-t { font-family: var(--ff-m); font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--blue); margin-bottom: 14px; font-weight: 600 }
+    .sb-fact { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--border); font-family: var(--ff-b); font-size: 12.5px }
+    .sb-fact:last-child { border-bottom: none }
+    .sb-fact-l { color: var(--text3) }
+    .sb-fact-v { color: var(--navy); font-weight: 600; text-align: right }
+    .sb-cta { background: var(--navy); border-radius: 8px; padding: 24px; color: #fff }
+    .sb-cta h4 { font-family: var(--ff-d); font-size: 19px; font-weight: 600; margin-bottom: 8px }
+    .sb-cta p { font-family: var(--ff-b); font-size: 12.5px; font-weight: 300; color: rgba(255,255,255,.65); line-height: 1.7; margin-bottom: 16px }
+    @media (max-width: 960px) { .article-layout { grid-template-columns: 1fr } .article-sidebar { position: static } }
+
+    /* FOOTER */
+    footer { background: #04080f; padding: 56px 0 24px; color: rgba(255,255,255,.5) }
+    .fg-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; margin-bottom: 44px }
+    .fb-logo { display: flex; align-items: center; gap: 10px; margin-bottom: 14px }
+    .fb-logo img { height: 44px; width: auto; filter: drop-shadow(0 2px 8px rgba(0,0,0,.4)) }
+    .fb-logo-div { width: 1px; height: 32px; background: rgba(255,255,255,.12) }
+    footer p { font-family: var(--ff-b); font-size: 12.5px; font-weight: 300; line-height: 1.8; max-width: 270px }
+    .fc-t { font-family: var(--ff-b); font-size: 12px; font-weight: 600; letter-spacing: .5px; text-transform: uppercase; color: #fff; margin-bottom: 16px }
+    footer ul { list-style: none }
+    footer ul li { margin-bottom: 10px }
+    footer ul a { font-family: var(--ff-b); font-size: 13px; font-weight: 300; color: rgba(255,255,255,.5); transition: .2s }
+    footer ul a:hover { color: var(--blue-lt) }
+    .f-bottom { display: flex; justify-content: space-between; align-items: center; padding-top: 24px; border-top: 1px solid rgba(255,255,255,.08); flex-wrap: wrap; gap: 14px }
+    .f-bottom p { font-family: var(--ff-m); font-size: 9px; letter-spacing: 1.5px; color: rgba(255,255,255,.3) }
+    .f-soc { display: flex; gap: 10px }
+    .f-soc a { width: 34px; height: 34px; border-radius: 50%; background: rgba(255,255,255,.06); display: flex; align-items: center; justify-content: center; font-size: 13px; transition: .2s }
+    .f-soc a:hover { background: var(--blue); color: #fff }
+    @media (max-width: 960px) { .fg-grid { grid-template-columns: 1fr 1fr } }
+    @media (max-width: 560px) { .fg-grid { grid-template-columns: 1fr } }
+  </style>
+</head>
+
+<body>
+
+  <div id="top-ticker">
+    <div class="tt-label"><i class="fa-solid fa-tower-broadcast"></i> Latest</div>
+    <div class="tt-track-wrap"><div class="tt-track" id="tt-track">
+      <span class="tt-item">FPAM Unveils Framework to Strengthen Maintenance of Public Assets Nationwide <span class="tt-sep">&#9670;</span></span>
+      <span class="tt-item">Presidential Executive Order No. 11 &#8212; All MDAs Now Under Mandatory Maintenance Framework <span class="tt-sep">&#9670;</span></span>
+      <span class="tt-item">Director Arc. Chioma Wogu-Ogbonna Inaugurates New Asset Inventory Portal <span class="tt-sep">&#9670;</span></span>
+      <span class="tt-item">FPAM Targets 250+ Housing Estates for Comprehensive Upkeep Under &#8358;12B 2025 Programme <span class="tt-sep">&#9670;</span></span>
+      <span class="tt-item">FPAM Commissions Renovation of Federal Secretariat Complex Phase I <span class="tt-sep">&#9670;</span></span>
+      <span class="tt-item">500 Housing Units Rehabilitated Across 6 States Under 2024 Maintenance Programme <span class="tt-sep">&#9670;</span></span>
+      <span class="tt-item">FPAM Adopts Digital Maintenance Management System Nationwide <span class="tt-sep">&#9670;</span></span>
+      <span class="tt-item">Safety First: FPAM Launches Nationwide Structural Compliance Drive Across 31 MDAs <span class="tt-sep">&#9670;</span></span>
+      <!-- duplicate set for seamless scroll loop -->
+      <span class="tt-item">FPAM Unveils Framework to Strengthen Maintenance of Public Assets Nationwide <span class="tt-sep">&#9670;</span></span>
+      <span class="tt-item">Presidential Executive Order No. 11 &#8212; All MDAs Now Under Mandatory Maintenance Framework <span class="tt-sep">&#9670;</span></span>
+      <span class="tt-item">Director Arc. Chioma Wogu-Ogbonna Inaugurates New Asset Inventory Portal <span class="tt-sep">&#9670;</span></span>
+      <span class="tt-item">FPAM Targets 250+ Housing Estates for Comprehensive Upkeep Under &#8358;12B 2025 Programme <span class="tt-sep">&#9670;</span></span>
+    </div></div>
+  </div>
+
+  <nav id="nav">
+    <div class="nav-inner">
+      <a class="nav-logo" href="index.html">
+        <img src="images/logo_ministry.png" alt="Federal Ministry">
+        <div class="nav-logo-div"></div>
+        <img src="images/logo_fpam.png" alt="FPAM">
+        <div style="margin-left:10px;display:flex;flex-direction:column;justify-content:center">
+          <div style="font-family:'Cormorant Garamond',Georgia,serif;font-size:22px;font-weight:700;color:#fff;letter-spacing:3px;line-height:1">FPAM</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:7px;color:rgba(255,255,255,.4);letter-spacing:1.5px;text-transform:uppercase;margin-top:2px">Federal Public Assets Maintenance</div>
+        </div>
+      </a>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="news.html" class="active">News</a>
+        <a href="contact.html">Contact</a>
+        <a href="gallery.html">Gallery</a>
+        <a href="assets.html">Asset</a>
+      </div>
+      <div class="nav-actions">
+        <a href="complaint.html" class="nav-cta"><i class="fa-solid fa-file-pen"></i> Log a Complaint</a>
+        <a href="login.html" class="nav-login"><i class="fa-solid fa-right-to-bracket"></i> Login</a>
+      </div>
+      <button class="nav-burger" onclick="toggleMenu()"><i class="fa-solid fa-bars"></i></button>
+    </div>
+    <div class="nav-mob" id="nav-mob">
+      <a href="index.html" onclick="toggleMenu()">Home</a>
+      <a href="about.html" onclick="toggleMenu()">About</a>
+      <a href="news.html" class="active" onclick="toggleMenu()">News</a>
+      <a href="contact.html" onclick="toggleMenu()">Contact</a>
+      <a href="gallery.html" onclick="toggleMenu()">Gallery</a>
+      <a href="assets.html" onclick="toggleMenu()">Asset</a>
+      <a href="complaint.html" onclick="toggleMenu()">Log a Complaint</a>
+      <a href="login.html" onclick="toggleMenu()" style="color:var(--blue-lt)"><i class="fa-solid fa-right-to-bracket"></i> Login</a>
+    </div>
+  </nav>
+  <script>function toggleMenu(){document.getElementById('nav-mob').classList.toggle('open')}</script>
+
+  <div class="page-hero">
+    <div class="page-hero-bg" style="background-image:url('images/photo_secretariat.jpg')"></div>
+    <div class="page-hero-overlay"></div>
+    <div class="page-hero-content">
+      <div class="breadcrumb"><a href="index.html">Home</a><i class="fa-solid fa-chevron-right"></i>News</div>
+      <h1>News &amp; Press Releases</h1>
+      <p>Official statements, programme updates, and announcements from the Federal Public Assets Maintenance Department.</p>
+    </div>
+  </div>
+
+  <section class="section">
+    <div class="container">
+      <div class="article-layout">
+
+        <!-- ARTICLE -->
+        <article class="reveal">
+          <div class="article-tag" style="margin-bottom:16px;display:inline-block">Press Release</div>
+          <h1 style="font-family:var(--ff-d);font-size:clamp(26px,3.2vw,42px);font-weight:600;color:var(--navy);line-height:1.15;letter-spacing:.2px;margin-bottom:20px">
+            FPAM Unveils Comprehensive Framework to Strengthen Maintenance of Public Assets Nationwide
+          </h1>
+
+          <div class="article-meta">
+            <div class="article-meta-item"><i class="fa-solid fa-calendar-days"></i> Federal Ministry of Housing &amp; Urban Development</div>
+            <div class="article-meta-item"><i class="fa-solid fa-user"></i> Badamasi S. Haiba, Fsca, mnipr &#8212; Director, Press &amp; Public Relations</div>
+          </div>
+
+          <div class="article-body">
+            <p class="article-lead">The Federal Government has unveiled a comprehensive framework aimed at strengthening the maintenance and preservation of public assets across the country, driven by the Federal Ministry of Housing and Urban Development through its Department of Federal Public Assets Maintenance (FPAM).</p>
+
+            <p>According to a statement signed by Badamasi S. Haiba, Fsca, mnipr, Director, Press and Public Relations, the initiative centres on a newly developed framework containing Standard Operating Procedures (SOPs) intended to ensure effective, uniform, and sustainable maintenance of federal public assets nationwide.</p>
+
+            <p>As part of the rollout, the Ministry has commenced engagements with Ministries, Departments and Agencies (MDAs) to facilitate implementation of the SOPs, providing a harmonized approach to asset maintenance and preservation across the Federal Public Service.</p>
+
+            <h3>A Statutory Mandate</h3>
+            <p>FPAM, a department under the Ministry of Housing and Urban Development, is statutorily responsible for the oversight of maintenance functions of federal government assets. The department was established through Presidential Executive Order No. 11, officially gazetted on April 6, 2022.</p>
+
+            <p>To ensure seamless implementation of the framework, FPAM has introduced and distributed a set of compliance forms and a comprehensive maintenance manual to MDAs. These documents form part of a certification and oversight process designed to ensure proper documentation, traceability, accountability, and alignment with established maintenance standards and protocols.</p>
+
+            <h3>Institutionalizing a Proactive Maintenance Culture</h3>
+            <p>Speaking on the initiative, the Director of FPAM, Arc. Chioma Wogu-Ogbonna, explained that the objective of the framework is to institutionalize a proactive maintenance culture within MDAs, prevent premature deterioration of government assets, and promote value-for-money through structured and standardized maintenance practices.</p>
+
+            <div class="article-quote">
+              <p>&#8220;The SOPs and compliance tools were developed to reflect measurable outcomes, quality assurance, and consistency in asset management across government institutions.&#8221;</p>
+            </div>
+
+            <p>Arc. Chioma appreciated the Permanent Secretary of the Federal Ministry of Housing and Urban Development, Dr. Shuaib Belgore, for his unwavering leadership and institutional support, describing the initiative as a major breakthrough in the Federal Government&#8217;s effort to safeguard public assets nationwide. According to the Director, the Permanent Secretary&#8217;s support has been instrumental in translating the department&#8217;s mandate into actionable policies and operational frameworks.</p>
+
+            <h3>Permanent Secretary Reaffirms Commitment</h3>
+            <p>In his remarks, Dr. Belgore reaffirmed the Ministry&#8217;s commitment to strengthening asset maintenance culture within the public service, stressing that effective preservation of public assets is critical to sustainability, service delivery, and prudent management of public resources.</p>
+
+            <p>He emphasized the need for Permanent Secretaries across MDAs to work closely with FPAM and ensure that agencies under their supervision align with the department&#8217;s regulatory and operational mandates as the central instrument for public assets preservation.</p>
+
+            <h3>New Tools to Drive Awareness and Efficiency</h3>
+            <p>To further drive awareness and operational efficiency, FPAM has also unveiled innovative tools, including a smart card embedded with a QR Code, which provides instant access to the department&#8217;s activities and mandate on an internet-based platform. In addition, the department has rebranded its operational bus with the FPAM logo to support outreach, monitoring, and engagement activities nationwide.</p>
+
+            <p>In recognition of his leadership and support, the FPAM Department presented an Award Plaque to the Permanent Secretary, Dr. Shuaib Belgore, underscoring his role in advancing the maintenance framework and positioning FPAM to unlock its vast untapped potential.</p>
+
+            <p>The Ministry reiterated that the successful implementation of the framework would ensure the longevity of government assets, promote accountability, and entrench a sustainable maintenance culture for national development.</p>
+          </div>
+
+          <div class="article-share">
+            <span>Share</span>
+            <a class="share-btn" href="#" title="Share on X"><i class="fa-brands fa-x-twitter"></i></a>
+            <a class="share-btn" href="#" title="Share on Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+            <a class="share-btn" href="#" title="Share on LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+            <a class="share-btn" href="mailto:?subject=FPAM%20Press%20Release" title="Share by Email"><i class="fa-solid fa-envelope"></i></a>
+          </div>
+        </article>
+
+        <!-- SIDEBAR -->
+        <aside class="article-sidebar reveal rd1">
+          <div class="sb-card">
+            <div class="sb-t">At a Glance</div>
+            <div class="sb-fact"><span class="sb-fact-l">Department</span><span class="sb-fact-v">FPAM</span></div>
+            <div class="sb-fact"><span class="sb-fact-l">Parent Ministry</span><span class="sb-fact-v">FMHUD</span></div>
+            <div class="sb-fact"><span class="sb-fact-l">Established By</span><span class="sb-fact-v">Exec. Order No. 11</span></div>
+            <div class="sb-fact"><span class="sb-fact-l">Gazetted</span><span class="sb-fact-v">April 6, 2022</span></div>
+            <div class="sb-fact"><span class="sb-fact-l">Director</span><span class="sb-fact-v">Arc. C. Wogu-Ogbonna</span></div>
+          </div>
+          <div class="sb-cta">
+            <h4>Track Assets Under This Framework</h4>
+            <p>Explore FPAM&#8217;s asset registry and see how the SOPs are being applied across MDAs nationwide.</p>
+            <a href="assets.html" class="btn btn-blue" style="width:100%;justify-content:center"><i class="fa-solid fa-layer-group"></i> View Assets</a>
+          </div>
+        </aside>
+
+      </div>
+    </div>
+  </section>
+
+  <footer><div class="container">
+    <div class="fg-grid">
+      <div>
+        <div class="fb-logo">
+          <img src="images/logo_ministry.png" alt="Ministry">
+          <div class="fb-logo-div"></div>
+          <img src="images/logo_fpam.png" alt="FPAM">
+        </div>
+        <p>Federal Public Assets Maintenance Department &#8212; agency of the Federal Ministry of Housing &amp; Urban Development.</p>
+        <div style="margin-top:14px;font-family:var(--ff-m);font-size:9px;color:rgba(255,255,255,.18);letter-spacing:1.5px">&#169; 2025 FPAM &#183; FEDERAL GOVERNMENT OF NIGERIA</div>
+      </div>
+      <div><div class="fc-t">Navigate</div><ul>
+        <li><a href="index.html">Home</a></li><li><a href="about.html">About</a></li>
+        <li><a href="news.html">News</a></li><li><a href="contact.html">Contact</a></li>
+        <li><a href="gallery.html">Gallery</a></li><li><a href="assets.html">Asset</a></li>
+      </ul></div>
+      <div><div class="fc-t">Resources</div><ul>
+        <li><a href="#">Asset Directory</a></li><li><a href="#">Compliance Forms</a></li>
+        <li><a href="#">Maintenance Reports</a></li><li><a href="#">Housing Policy</a></li>
+        <li><a href="complaint.html">Log a Complaint</a></li>
+      </ul></div>
+      <div><div class="fc-t">Contact</div><ul>
+        <li><a href="#">Federal Secretariat Complex</a></li>
+        <li><a href="#">Phase III, Shehu Shagari Way, Abuja</a></li>
+        <li><a href="mailto:info@fpam.housing.gov.ng">info@fpam.housing.gov.ng</a></li>
+        <li><a href="#">+234 800 000 0000</a></li>
+      </ul></div>
+    </div>
+    <div class="f-bottom">
+      <p>FEDERAL MINISTRY OF HOUSING &amp; URBAN DEVELOPMENT &#183; ALL RIGHTS RESERVED</p>
+      <div class="f-soc">
+        <a href="#"><i class="fa-brands fa-x-twitter"></i></a><a href="#"><i class="fa-brands fa-facebook-f"></i></a>
+        <a href="#"><i class="fa-brands fa-instagram"></i></a><a href="#"><i class="fa-brands fa-youtube"></i></a>
+        <a href="#"><i class="fa-brands fa-linkedin-in"></i></a>
+      </div>
+    </div>
+  </div></footer>
+
+  <script>
+    document.querySelectorAll('.reveal').forEach(el=>{
+      new IntersectionObserver(([e])=>{if(e.isIntersecting)el.classList.add('visible');},{threshold:.1}).observe(el);
+    });
+  </script>
+
+</body>
+</html>

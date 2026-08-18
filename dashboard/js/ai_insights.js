@@ -14,7 +14,11 @@ async function generateAIInsights() {
     <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:1.5px">Analysing your asset portfolio…</div>
   </div>`;
 
-  const types = ['Infrastructure','Land / Property','Utility','Environmental','Equipment'];
+  const types = [
+    'Infrastructure','Land / Property','Utility','Environmental','Equipment','Monument',
+    'Administrative Office','Residential','Hospital','School','Laboratory',
+    'Warehouse','Court','Security Facility',
+  ];
   const conds = ['Good','Fair','Poor','Critical'];
   const portfolio = {
     total:    assets.length,

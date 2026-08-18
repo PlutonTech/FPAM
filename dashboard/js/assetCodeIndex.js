@@ -67,6 +67,14 @@ const TYPE_CODES = {
   'Environmental':   'ENV',
   'Equipment':       'EQP',
   'Monument':        'MON',
+  'Administrative Office': 'ADM',
+  'Residential':           'RES',
+  'Hospital':              'HOS',
+  'School':                'SCH',
+  'Laboratory':            'LAB',
+  'Warehouse':             'WHS',
+  'Court':                 'CRT',
+  'Security Facility':     'SEC',
 };
 
 // ── MDA short code extractor ──────────────────────────────────────────────────
@@ -158,6 +166,89 @@ function parseAssetCode(code) {
   };
 }
 
+// ── Child / secondary asset codes ──────────────────────────────────────────────
+// Format: {PARENT CODE}-C{SEQ}   e.g. FGN-FMOE-EQP-001-2026-0007-C01
+// The parent's own base code is never modified — the child code is simply
+// the parent code with a "-Cxx" tail appended, so stripping that tail
+// always returns exactly the parent code with no lookup required.
+const CHILD_MARKER = 'C';
+
+function formatChildSeq(n) {
+  return String(n).padStart(2, '0');
+}
+
+/**
+ * Build a child/component asset code from its parent's base code.
+ * @param {object} opts
+ * @param {string} opts.parentCode - the parent's own base FGN-... code
+ * @param {number} opts.seq        - sequence among this parent's children (1-based)
+ * @returns {string} e.g. "FGN-FMOE-EQP-001-2026-0007-C01"
+ */
+function buildChildCode({ parentCode, seq }) {
+  if (!parentCode) return null;
+  return `${parentCode}-${CHILD_MARKER}${formatChildSeq(seq || 1)}`;
+}
+
+/**
+ * True if `code` is a child/component code (ends in -Cxx).
+ */
+function isChildCode(code) {
+  return typeof code === 'string' && /-C\d{2,}$/.test(code);
+}
+
+/**
+ * Parse a child code back into its parent code + child sequence.
+ * @param {string} code - e.g. "FGN-FMOE-EQP-001-2026-0007-C01"
+ * @returns {object|null} { parentCode, seq, raw } or null if not a child code
+ */
+function parseChildCode(code) {
+  if (!isChildCode(code)) return null;
+  const m = code.match(/^(.*)-C(\d{2,})$/);
+  if (!m) return null;
+  return { parentCode: m[1], seq: parseInt(m[2], 10), raw: code };
+}
+
+// ── Inspection visit codes ─────────────────────────────────────────────────────
+// Format: {ASSET CODE}-INSP-{VISIT}   e.g. FGN-FMWH-INF-008-2026-0031-INSP-01
+// Derived and stored on the Inspection record itself, never written back
+// onto the asset's own code — the asset's base (or child) code stays
+// permanent. The initial field capture never generates a visit code; the
+// counter only starts once a formal follow-up inspection is Approved (see
+// routes/inspection_routes.js POST /:id/approve).
+const INSPECTION_MARKER = 'INSP';
+
+function formatVisitSeq(n) {
+  return String(n).padStart(2, '0');
+}
+
+/**
+ * Build a derived inspection-visit code.
+ * @param {object} opts
+ * @param {string} opts.assetCode - the asset's own base (or child) code
+ * @param {number} opts.visitSeq  - which visit this is for this specific asset (1-based)
+ * @returns {string} e.g. "FGN-FMWH-INF-008-2026-0031-INSP-01"
+ */
+function buildInspectionCode({ assetCode, visitSeq }) {
+  if (!assetCode) return null;
+  return `${assetCode}-${INSPECTION_MARKER}-${formatVisitSeq(visitSeq || 1)}`;
+}
+
+function isInspectionCode(code) {
+  return typeof code === 'string' && new RegExp(`-${INSPECTION_MARKER}-\\d{2,}$`).test(code);
+}
+
+/**
+ * Parse an inspection code back into its asset code + visit number.
+ * @param {string} code - e.g. "FGN-FMWH-INF-008-2026-0031-INSP-01"
+ * @returns {object|null} { assetCode, visitSeq, raw } or null if not an inspection code
+ */
+function parseInspectionCode(code) {
+  if (!isInspectionCode(code)) return null;
+  const m = code.match(new RegExp(`^(.*)-${INSPECTION_MARKER}-(\\d{2,})$`));
+  if (!m) return null;
+  return { assetCode: m[1], visitSeq: parseInt(m[2], 10), raw: code };
+}
+
 // ── Exports ───────────────────────────────────────────────────────────────────
 // Works as both a Node.js CommonJS module and a browser global
 const AssetCodeIndex = {
@@ -171,6 +262,14 @@ const AssetCodeIndex = {
   buildAssetCode,
   parseAssetCode,
   formatSeq,
+  buildChildCode,
+  parseChildCode,
+  isChildCode,
+  formatChildSeq,
+  buildInspectionCode,
+  parseInspectionCode,
+  isInspectionCode,
+  formatVisitSeq,
 };
 
 if (typeof module !== 'undefined' && module.exports) {

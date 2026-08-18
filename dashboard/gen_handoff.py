@@ -158,7 +158,7 @@ def cover_page():
     # Title box
     title_data = [[Paragraph('AssetSpatial', ParagraphStyle('t', fontName='Helvetica-Bold',
                    fontSize=38, textColor=WHITE, alignment=TA_CENTER, leading=44))],
-                  [Paragraph('Federal Public Asset Management Platform',
+                  [Paragraph('Federal Public Asset Maintenance Platform',
                    ParagraphStyle('t2', fontName='Helvetica-Bold', fontSize=14,
                    textColor=BLUE, alignment=TA_CENTER, leading=18))],
                   [Paragraph('Technical Handoff &amp; Platform Documentation',
