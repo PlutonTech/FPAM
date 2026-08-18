@@ -24,6 +24,8 @@ const FORM_LABELS = {
   CERTIFICATION_REQUEST:              'Certification Request Submission',
   EQUIPMENT_CALIBRATION_CERTIFICATE:  'Equipment Calibration / Inspection Certificate Submission',
   EQUIPMENT_DISPOSAL_DECOMMISSIONING: 'Equipment & Material Disposal / Decommissioning Compliance',
+  SECURITY_SERVICES_COST_TEMPLATE:    'Security Services Cost Template',
+  JANITORIAL_SERVICES_COST_TEMPLATE:  'Janitorial & Horticulture Services Cost Template',
 };
 
 const FORM_ICONS = {
@@ -42,6 +44,8 @@ const FORM_ICONS = {
   CERTIFICATION_REQUEST:              'fa-certificate',
   EQUIPMENT_CALIBRATION_CERTIFICATE:  'fa-gauge',
   EQUIPMENT_DISPOSAL_DECOMMISSIONING: 'fa-trash-can',
+  SECURITY_SERVICES_COST_TEMPLATE:    'fa-user-shield',
+  JANITORIAL_SERVICES_COST_TEMPLATE:  'fa-broom',
 };
 
 // FormRequest.js field name that holds this form type's data
@@ -61,6 +65,8 @@ const FORM_DATA_FIELD = {
   CERTIFICATION_REQUEST:              'certificationRequest',
   EQUIPMENT_CALIBRATION_CERTIFICATE:  'calibrationSubmission',
   EQUIPMENT_DISPOSAL_DECOMMISSIONING: 'disposalDecommissioning',
+  SECURITY_SERVICES_COST_TEMPLATE:    'securityServicesCost',
+  JANITORIAL_SERVICES_COST_TEMPLATE:  'janitorialServicesCost',
 };
 
 const RATING4 = ['Very Good', 'Good', 'Fair', 'Poor'];
@@ -422,6 +428,43 @@ const FORM_FIELDS = {
     { key: 'supportingDocsChecklist.disposalCommitteeApproval',  label: 'Disposal Committee Approval', type: 'checkbox' },
   ],
 
+  // ── 016: Security Services Cost Template ────────────────────────────────────
+  // Lightweight summary + required attachment, not a field-for-field
+  // digitization of the full worksheet — see FormRequest.js's comment on
+  // this sub-schema for why.
+  SECURITY_SERVICES_COST_TEMPLATE: [
+    { key: 'facilityName',             label: 'Facility Name',                type: 'text' },
+    { key: 'contactPerson',            label: 'Contact Person',               type: 'text' },
+    { key: 'contactPhoneEmail',        label: 'Telephone / Email',            type: 'text' },
+    { key: 'periodCovered',            label: 'Period Covered',               type: 'text' },
+    { key: 'proposedStaffCount',       label: 'Proposed Security Staff Count', type: 'number' },
+    { key: 'totalPersonnelCostAnnual', label: 'Total Personnel Cost (₦/year)', type: 'number' },
+    { key: 'totalEquipmentCostAnnual', label: 'Total Equipment & Tools Cost (₦/year)', type: 'number' },
+    { key: 'contingency',              label: 'Contingency (₦)',              type: 'number' },
+    { key: 'projectAdministration',    label: 'Project Administration (₦)',   type: 'number' },
+    { key: 'grandTotalAnnual',         label: 'Grand Total, incl. VAT (₦/year)', type: 'number' },
+    { key: 'grandTotalMonthly',        label: 'Grand Total (₦/month)',        type: 'number' },
+    { key: 'remarks',                  label: 'Remarks',                      type: 'textarea' },
+  ],
+
+  // ── 017: Janitorial Services Cost Template ──────────────────────────────────
+  JANITORIAL_SERVICES_COST_TEMPLATE: [
+    { key: 'facilityName',                       label: 'Facility Name',              type: 'text' },
+    { key: 'contactPerson',                      label: 'Contact Person',             type: 'text' },
+    { key: 'contactPhoneEmail',                  label: 'Telephone / Email',          type: 'text' },
+    { key: 'periodCovered',                      label: 'Period Covered',             type: 'text' },
+    { key: 'proposedStaffCount',                 label: 'Proposed Janitorial/Horticulture Staff Count', type: 'number' },
+    { key: 'totalStaffCostAnnual',                label: 'Total Staff Payment Cost (₦/year)', type: 'number' },
+    { key: 'totalCleaningConsumablesCostAnnual',  label: 'Total Cleaning Consumables Cost (₦/year)', type: 'number' },
+    { key: 'mechanicalServicesCostAnnual',        label: 'Mechanical Maintenance Services Cost (₦/year)', type: 'number' },
+    { key: 'electricalServicesCostAnnual',        label: 'Electrical Maintenance Services Cost (₦/year)', type: 'number' },
+    { key: 'contingency',                          label: 'Contingency (₦)',           type: 'number' },
+    { key: 'projectAdministration',                label: 'Project Administration (₦)', type: 'number' },
+    { key: 'grandTotalAnnual',                     label: 'Grand Total, incl. VAT (₦/year)', type: 'number' },
+    { key: 'grandTotalMonthly',                    label: 'Grand Total (₦/month)',     type: 'number' },
+    { key: 'remarks',                              label: 'Remarks',                   type: 'textarea' },
+  ],
+
 };
 
 // Forms that make sense linked to one specific existing asset (shows an
@@ -432,4 +475,32 @@ const FORM_LINKS_TO_ASSET = {
   ASSET_CONDITION_ASSESSMENT: true,
   EQUIPMENT_CALIBRATION_CERTIFICATE: true,
   EQUIPMENT_DISPOSAL_DECOMMISSIONING: true,
+  // Both new templates are facility-wide cost estimates, not tied to one
+  // specific asset already in the registry — same reasoning as 002.
+  SECURITY_SERVICES_COST_TEMPLATE: false,
+  JANITORIAL_SERVICES_COST_TEMPLATE: false,
 };
+
+// Forms where the completed source document itself (not just the summary
+// fields above) is expected as an attachment before submission is considered
+// complete. form_renderer.js / mda_portal.html can use this to show a
+// stronger "attach the completed worksheet" prompt for these specific types.
+const FORM_REQUIRES_ATTACHMENT = {
+  SECURITY_SERVICES_COST_TEMPLATE: true,
+  JANITORIAL_SERVICES_COST_TEMPLATE: true,
+};
+
+// ── Exports ───────────────────────────────────────────────────────────────────
+// Dual-environment, same pattern as utils/assetCodeIndex.js — this file is
+// loaded as a plain <script> tag by mda_portal.html/form_requests.html
+// (globals), but also needed by form_requests_routes.js on the backend to
+// avoid keeping a second, separately-maintained copy of FORM_DATA_FIELD
+// (which is exactly how SECURITY_SERVICES_COST_TEMPLATE/
+// JANITORIAL_SERVICES_COST_TEMPLATE almost went missing from one side —
+// see the comment on FIELD_MAP in form_requests_routes.js).
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = {
+    FORM_LABELS, FORM_ICONS, FORM_DATA_FIELD, FORM_FIELDS,
+    FORM_LINKS_TO_ASSET, FORM_REQUIRES_ATTACHMENT,
+  };
+}
