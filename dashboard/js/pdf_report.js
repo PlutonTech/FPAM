@@ -20,7 +20,7 @@ async function generatePDFReport() {
   const doc        = new jsPDF({ orientation:'portrait', unit:'mm', format:'a4' });
   const W = 210, L = 16, R = 16, CW = W - L - R;
   const today = new Date().toLocaleDateString('en-NG', { day:'2-digit', month:'long', year:'numeric' });
-  const orgName = (typeof settings !== 'undefined' && settings.org) || 'AssetSpatial Platform';
+  const orgName = (typeof settings !== 'undefined' && settings.org) || 'FPAMAS Platform';
 
   const conds = ['Good','Fair','Poor','Critical'];
   const condRGB = [[0,135,83],[230,167,0],[255,107,53],[214,69,69]];
@@ -144,10 +144,10 @@ async function generatePDFReport() {
 
   // Footer
   doc.setTextColor(60,100,80); doc.setFontSize(7);
-  doc.text(`AssetSpatial Platform · Generated ${today} · Federal Republic of Nigeria`, W/2, 290, { align:'center' });
+  doc.text(`FPAMAS Platform · Generated ${today} · Federal Republic of Nigeria`, W/2, 290, { align:'center' });
 
   // Save
-  const filename = `AssetSpatial_Report_${new Date().toISOString().slice(0,10)}.pdf`;
+  const filename = `FPAMAS_Report_${new Date().toISOString().slice(0,10)}.pdf`;
   doc.save(filename);
   toast('PDF report downloaded');
   addAudit('EXPORT', 'ALL', null, `PDF report generated — ${allAssets.length} assets`);

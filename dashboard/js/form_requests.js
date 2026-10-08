@@ -4,6 +4,7 @@
 let _allRequests = [];
 let _currentReviewReq = null;
 let _pickedFormTypeFpam = null;
+let _nrSelectedFilesFpam = [];   // files picked in the FPAM-side New Request modal
 
 document.addEventListener('DOMContentLoaded', async () => {
   buildFormTypeGrid();
@@ -87,10 +88,38 @@ function buildFormTypeGrid() {
 
 function pickFormTypeFpam(formType) {
   _pickedFormTypeFpam = formType;
+  _nrSelectedFilesFpam = [];
   closeModal('picker-modal');
   document.getElementById('nr-title').textContent = FORM_LABELS[formType];
-  document.getElementById('nr-fields').innerHTML = renderFormFields(formType, {}, false);
+  document.getElementById('nr-fields').innerHTML =
+    renderTemplateDownloadLink(formType) + renderFormFields(formType, {}, false) + renderAttachmentPickerFpam(formType);
   openModal('new-request-modal');
+}
+
+// Same shape as mda_portal.js's renderAttachmentPicker/onNrFilesPicked —
+// duplicated rather than shared since these are two independent pages.
+function renderAttachmentPickerFpam(formType) {
+  const required = typeof FORM_REQUIRES_ATTACHMENT !== 'undefined' && FORM_REQUIRES_ATTACHMENT[formType];
+  return `
+    <div style="grid-column:1/-1;margin-top:10px;padding-top:14px;border-top:1px solid var(--border)">
+      <label style="font-size:12px;font-weight:600;color:var(--navy);display:block;margin-bottom:6px">
+        Supporting Documents ${required ? '<span style="color:var(--danger)">* required</span>' : '<span style="color:var(--text3);font-weight:400">(optional)</span>'}
+      </label>
+      <input type="file" id="nr-file-input-fpam" multiple onchange="onNrFilesPickedFpam(this.files)"
+        style="font-size:12.5px;border:1px solid var(--border);border-radius:6px;padding:6px;width:100%">
+      <div id="nr-file-list-fpam" style="margin-top:8px;font-size:12px;color:var(--text2)"></div>
+    </div>
+  `;
+}
+
+function onNrFilesPickedFpam(fileList) {
+  _nrSelectedFilesFpam = Array.from(fileList);
+  const listEl = document.getElementById('nr-file-list-fpam');
+  if (!listEl) return;
+  const esc = s => String(s || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  listEl.innerHTML = _nrSelectedFilesFpam.length
+    ? _nrSelectedFilesFpam.map(f => `<div><i class="fa-solid fa-paperclip"></i> ${esc(f.name)} (${(f.size/1024).toFixed(0)} KB)</div>`).join('')
+    : '';
 }
 
 async function submitNewRequest() {
@@ -98,13 +127,32 @@ async function submitNewRequest() {
   const mda = document.getElementById('nr-mda').value;
   if (!mda) { toast('Select an MDA', 'fa-triangle-exclamation', true); return; }
 
+  const required = typeof FORM_REQUIRES_ATTACHMENT !== 'undefined' && FORM_REQUIRES_ATTACHMENT[_pickedFormTypeFpam];
+  if (required && !_nrSelectedFilesFpam.length) {
+    toast('Please attach the completed PDF/document before submitting', 'fa-triangle-exclamation', true);
+    return;
+  }
+
   const data = collectFormData(_pickedFormTypeFpam, document.getElementById('nr-fields'));
   const field = FORM_DATA_FIELD[_pickedFormTypeFpam];
 
   try {
-    await apiCreateFormRequest({ formType: _pickedFormTypeFpam, mda, status: 'Submitted', [field]: data });
+    const created = await apiCreateFormRequest({ formType: _pickedFormTypeFpam, mda, status: 'Submitted', [field]: data });
+    const requestId = created.request?._id;
+
+    if (requestId && _nrSelectedFilesFpam.length) {
+      const results = await Promise.allSettled(
+        _nrSelectedFilesFpam.map(f => apiUploadFormAttachment(requestId, f))
+      );
+      const failed = results.filter(r => r.status === 'rejected').length;
+      if (failed) {
+        toast(`Request created, but ${failed} attachment(s) failed to upload`, 'fa-triangle-exclamation', true);
+      }
+    }
+
     toast('Request created', 'fa-circle-check');
     closeModal('new-request-modal');
+    _nrSelectedFilesFpam = [];
     await loadRequests();
   } catch (e) {
     toast('Could not create request: ' + e.message, 'fa-triangle-exclamation', true);
@@ -112,6 +160,78 @@ async function submitNewRequest() {
 }
 
 // ── REVIEW ────────────────────────────────────────────────────────────────────
+// "Download Reference Template" — same static-link approach as
+// mda_portal.js's copy of this function (kept separate since these are two
+// independent pages with no shared JS file between them). See the comment
+// on FORM_TEMPLATE_FILE in form_field_defs.js for why this is a plain
+// relative link rather than a backend route.
+function renderTemplateDownloadLink(formType) {
+  const path = typeof FORM_TEMPLATE_FILE !== 'undefined' ? FORM_TEMPLATE_FILE[formType] : null;
+  if (!path) return '';
+  return `
+    <div style="grid-column:1/-1;margin-bottom:14px">
+      <a href="${path}" target="_blank" rel="noopener" download
+        style="display:inline-flex;align-items:center;gap:8px;font-size:12.5px;font-weight:600;color:var(--blue);text-decoration:none;padding:8px 14px;border:1px solid var(--blue);border-radius:8px">
+        <i class="fa-solid fa-file-arrow-down"></i> Download Reference Template (blank PDF)
+      </a>
+    </div>
+  `;
+}
+
+// Read-only viewer for whatever the MDA attached — the reviewer's job here
+// is downloading and checking the document, not uploading. Same underlying
+// GET /:id/attachments/:attachmentId route mda_portal.js uses to download.
+function renderReviewAttachments(req) {
+  const attachments = req.attachments || [];
+  if (!attachments.length) {
+    return `<div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--border);font-size:12px;color:var(--text3)">No supporting documents attached.</div>`;
+  }
+  const esc = s => String(s || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  return `
+    <div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--border)">
+      <label style="font-size:12px;font-weight:600;color:var(--navy);display:block;margin-bottom:8px">Supporting Documents</label>
+      ${attachments.map(a => `
+        <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--bg);border-radius:8px;margin-bottom:6px">
+          <i class="fa-solid fa-paperclip" style="color:var(--text3)"></i>
+          <div style="flex:1;min-width:0;font-size:12.5px">
+            ${esc(a.originalname || a.filename)}${a.label ? ` <span style="color:var(--text3)">— ${esc(a.label)}</span>` : ''}
+          </div>
+          <div style="font-size:10.5px;color:var(--text3)">${a.sizeBytes ? (a.sizeBytes/1024).toFixed(0) + ' KB' : ''}</div>
+          <button class="btn btn-ghost btn-xs" title="View in browser" onclick="viewReviewAttachment('${req._id}','${a._id}')">
+            <i class="fa-solid fa-eye"></i>
+          </button>
+          <button class="btn btn-ghost btn-xs" title="Download" onclick="downloadReviewAttachment('${req._id}','${a._id}','${esc(a.originalname || a.filename)}')">
+            <i class="fa-solid fa-download"></i>
+          </button>
+        </div>`).join('')}
+    </div>
+  `;
+}
+
+async function viewReviewAttachment(requestId, attachmentId) {
+  try {
+    const blob = await apiFetchFormAttachmentBlob(requestId, attachmentId);
+    const url = URL.createObjectURL(blob);
+    window.open(url, '_blank');
+    setTimeout(() => URL.revokeObjectURL(url), 60000);
+  } catch (e) {
+    toast('Could not open file: ' + e.message, 'fa-triangle-exclamation', true);
+  }
+}
+
+async function downloadReviewAttachment(requestId, attachmentId, filename) {
+  try {
+    const blob = await apiFetchFormAttachmentBlob(requestId, attachmentId);
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = filename || 'attachment';
+    a.click();
+    URL.revokeObjectURL(url);
+  } catch (e) {
+    toast('Download failed: ' + e.message, 'fa-triangle-exclamation', true);
+  }
+}
+
 async function openReview(id) {
   try {
     const r = await apiGetFormRequest(id);
@@ -119,7 +239,10 @@ async function openReview(id) {
     const field = FORM_DATA_FIELD[_currentReviewReq.formType];
 
     document.getElementById('rv-title').textContent = `${FORM_LABELS[_currentReviewReq.formType]} — ${_currentReviewReq.mda}`;
-    document.getElementById('rv-form-fields').innerHTML = renderFormFields(_currentReviewReq.formType, _currentReviewReq[field] || {}, true);
+    document.getElementById('rv-form-fields').innerHTML =
+      renderTemplateDownloadLink(_currentReviewReq.formType)
+      + renderFormFields(_currentReviewReq.formType, _currentReviewReq[field] || {}, true)
+      + renderReviewAttachments(_currentReviewReq);
     document.getElementById('rv-remarks').value = _currentReviewReq.reviewRemarks || '';
 
     const footer = document.getElementById('rv-footer');

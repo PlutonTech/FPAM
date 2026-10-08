@@ -344,6 +344,66 @@ async function runAlertScan() {
     } catch {}
   }
 
+  // ── MY_SUBMISSION_DECIDED — tells a submitter what happened to their OWN
+  // captures/requests, not just reviewers what's waiting. Nothing in the
+  // system notified the actual submitter before this; the only existing
+  // approval-related alert (PENDING_APPROVALS above) is for reviewers.
+  //
+  // This can't just check "is it Approved/Rejected" the way the buckets
+  // above check "is it currently Critical" — this system only ever looks
+  // at present-moment state, with no stored history of what a user has
+  // already been shown. Without a recency window, the very first scan
+  // after this ships would notify every user about every decision ever
+  // made on their submissions, including ones from months ago they already
+  // know about. Restricting to `reviewedAt` within the last 3 days avoids
+  // that flood while still catching anything genuinely new. Each decided
+  // item gets its OWN notification (not grouped like the buckets above) —
+  // "Mosque was approved" and "Guest House was rejected" are two different
+  // pieces of information a person needs, not an interchangeable count.
+  {
+    const RECENT_MS = 3 * 86400000;
+    const myId = _userId();
+
+    const myDecidedAssets = list.filter(a =>
+      String(a.capturedBy) === myId &&
+      ['Approved', 'Rejected'].includes(a.approvalStatus) &&
+      a.reviewedAt && (today - new Date(a.reviewedAt)) < RECENT_MS
+    );
+    myDecidedAssets.forEach(a => {
+      const approved = a.approvalStatus === 'Approved';
+      pushNotification({
+        type: 'MY_ASSET_DECIDED', assetId: a.assetId || a.id,
+        title: approved ? 'Capture Approved' : 'Capture Rejected',
+        body: `${a.name || a.assetId} was ${approved ? 'approved' : 'rejected'}${a.rejectionReason ? ' — ' + a.rejectionReason : ''}`,
+        icon: approved ? 'fa-circle-check' : 'fa-circle-xmark',
+        color: approved ? '#2DB87B' : '#e05555',
+      });
+    });
+
+    try {
+      const fr = await apiGetFormRequests();
+      const myDecidedForms = (fr.requests || []).filter(r =>
+        String(r.submittedBy?._id || r.submittedBy) === myId &&
+        ['Approved', 'Rejected'].includes(r.status) &&
+        r.reviewedAt && (today - new Date(r.reviewedAt)) < RECENT_MS
+      );
+      myDecidedForms.forEach(r => {
+        const approved = r.status === 'Approved';
+        const label = (typeof FORM_LABELS !== 'undefined' && FORM_LABELS[r.formType]) || r.formType;
+        pushNotification({
+          // assetId doubles as the generic per-item dedup key across this
+          // whole notification system — using the form request's own _id
+          // here since it isn't tied to an asset.
+          type: 'MY_FORM_DECIDED', assetId: r._id,
+          title: approved ? 'Form Request Approved' : 'Form Request Rejected',
+          body: `${label} was ${approved ? 'approved' : 'rejected'}${r.reviewRemarks ? ' — ' + r.reviewRemarks : ''}`,
+          icon: approved ? 'fa-circle-check' : 'fa-circle-xmark',
+          color: approved ? '#2DB87B' : '#e05555',
+        });
+      });
+    } catch {}
+  }
+
   updateNotifBadge();
 }
 
@@ -379,6 +439,18 @@ function injectNotifBell() {
   if (actions) actions.insertBefore(btn, actions.firstChild);
   else header.appendChild(btn);
 }
+
+// ── ROLE / DIVISION NAV GATING — handled by app.js, not here ────────────────
+// The real frontend app.js (only made available partway through this
+// session — earlier work here had to route around not having it) already
+// has a complete, more robust applyRoleGates() that processes the exact
+// same data-require-role / data-division attributes, plus a hardcoded
+// navGates map for a few specific pages, plus button-level disabling for
+// delete/edit/create/export actions. An earlier version of this file had
+// a duplicate, simpler implementation of just the nav-hiding piece — removed
+// once app.js turned out to already cover it, to avoid two independent
+// implementations of the same gating logic silently drifting apart over
+// time (exactly the class of bug this whole session kept finding).
 
 // ── INIT ──────────────────────────────────────────────────────────────────────
 function initNotifications() {

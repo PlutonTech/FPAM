@@ -1,7 +1,7 @@
 'use strict';
 
 /**
- * AssetSpatial — Asset Coding / Indexing System
+ * FPAMAS — Asset Coding / Indexing System
  * Format: FGN-{MDA}-{TYPE}-{BRANCH}-{YEAR}-{SEQ}
  *
  * Example: FGN-FMWH-INF-001-2024-0031

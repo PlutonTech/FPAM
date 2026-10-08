@@ -491,7 +491,7 @@ def mongo_import_instructions():
 ║       --file output/assets.json \\                                ║
 ║       --jsonArray                                                ║
 ║                                                                  ║
-║  2. MONGOOSE (Node.js / AssetSpatial backend)                    ║
+║  2. MONGOOSE (Node.js / FPAMAS backend)                    ║
 ║     const data = require('./output/assets.json');                ║
 ║     await Asset.insertMany(data, { ordered: false });            ║
 ║                                                                  ║

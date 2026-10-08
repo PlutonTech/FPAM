@@ -1,5 +1,5 @@
 """
-add_divisions_nav.py — AssetSpatial
+add_divisions_nav.py — FPAMAS
 Adds a "Divisions" section to the sidebar nav of every app HTML page.
 
 The section shows all 5 FPAM divisions. Built modules link to their page.
@@ -111,7 +111,7 @@ def main():
         sys.exit(1)
 
     mode = 'DRY RUN' if DRY_RUN else 'FIX MODE'
-    print(f'\n AssetSpatial — Add Divisions Nav [{mode}]')
+    print(f'\n FPAMAS — Add Divisions Nav [{mode}]')
     print(f' {len(pages)} pages\n' + '─' * 55)
 
     n_changed = 0

@@ -1,5 +1,5 @@
 """
-fix_navbars.py — AssetSpatial
+fix_navbars.py — FPAMAS
 Ensures every app HTML page has the correct, up-to-date sidebar nav.
 
 Usage:
@@ -8,7 +8,7 @@ Usage:
     python fix_navbars.py --fix --backup   # backs up each file before changing
 
 Run from the folder that contains your HTML files, e.g.:
-    cd C:/Users/Hp/Downloads/fpam/assetspatial-frontend
+    cd C:/Users/Hp/Downloads/fpam/FPAMAS-frontend
     python fix_navbars.py --fix
 """
 
@@ -200,7 +200,7 @@ def main():
         sys.exit(1)
 
     mode = 'DRY RUN (no files changed)' if DRY_RUN else 'FIX MODE'
-    print(f'\n AssetSpatial — Navbar Checker [{mode}]')
+    print(f'\n FPAMAS — Navbar Checker [{mode}]')
     print(f' Found {len(pages)} app pages\n')
     print('─' * 60)
 

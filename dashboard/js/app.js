@@ -1,5 +1,5 @@
 /**
- * AssetSpatial — Shared App Logic
+ * FPAMAS — Shared App Logic
  * State management, navigation, helpers, toast, dark mode
  */
 
@@ -13,7 +13,7 @@ const LS = {
 let assets   = LS.get('asdm_assets')   || [];
 let users    = LS.get('asdm_users')    || [];
 let auditLog = LS.get('asdm_audit')    || [];
-let settings = LS.get('asdm_settings') || { name: 'AssetSpatial', org: 'Federal Government of Nigeria' };
+let settings = LS.get('asdm_settings') || { name: 'FPAMAS', org: 'Federal Government of Nigeria' };
 let assetCounter = LS.get('asdm_counter') || 1000;
 
 // Clear old seed assets (AST-1001 to AST-1005) from localStorage —
@@ -28,11 +28,11 @@ if (assets.some(a => ['AST-1001','AST-1002','AST-1003','AST-1004','AST-1005'].in
 // a different response shape — the fallback showed fake data instead of errors.
 if (users.length === 0) {
   users = [
-    { id:'USR-1000', name:'Admin User',  role:'System Admin', email:'admin@assetspatial.gov.ng', color:'#00c864' },
-    { id:'USR-1001', name:'Emeka Obi',   role:'Field Agent',  email:'emeka@assetspatial.gov.ng', color:'#3b9eff' },
-    { id:'USR-1002', name:'Aisha Bello', role:'Supervisor',   email:'aisha@assetspatial.gov.ng', color:'#f0b400' },
-    { id:'USR-1003', name:'Chidi Eze',   role:'GIS Analyst',  email:'chidi@assetspatial.gov.ng', color:'#e05555' },
-    { id:'USR-1004', name:'Ngozi Adamu', role:'Sub-Head',     email:'ngozi@assetspatial.gov.ng', color:'#14b8a6' },
+    { id:'USR-1000', name:'Admin User',  role:'System Admin', email:'admin@FPAMAS.gov.ng', color:'#00c864' },
+    { id:'USR-1001', name:'Emeka Obi',   role:'Field Agent',  email:'emeka@FPAMAS.gov.ng', color:'#3b9eff' },
+    { id:'USR-1002', name:'Aisha Bello', role:'Supervisor',   email:'aisha@FPAMAS.gov.ng', color:'#f0b400' },
+    { id:'USR-1003', name:'Chidi Eze',   role:'GIS Analyst',  email:'chidi@FPAMAS.gov.ng', color:'#e05555' },
+    { id:'USR-1004', name:'Ngozi Adamu', role:'Sub-Head',     email:'ngozi@FPAMAS.gov.ng', color:'#14b8a6' },
   ];
   LS.set('asdm_users', users);
 }
@@ -125,7 +125,7 @@ function nav(elOrPage) {
   const titleEl = document.getElementById('hdr-title');
   const bcEl    = document.getElementById('hdr-bc');
   if (titleEl) titleEl.textContent = meta.title || page;
-  if (bcEl)    bcEl.textContent = 'AssetSpatial / ' + (meta.bc || page);
+  if (bcEl)    bcEl.textContent = 'FPAMAS / ' + (meta.bc || page);
 
   // Close mobile sidebar
   document.getElementById('sidebar')?.classList.remove('open');

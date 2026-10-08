@@ -481,13 +481,48 @@ const FORM_LINKS_TO_ASSET = {
   JANITORIAL_SERVICES_COST_TEMPLATE: false,
 };
 
-// Forms where the completed source document itself (not just the summary
-// fields above) is expected as an attachment before submission is considered
-// complete. form_renderer.js / mda_portal.html can use this to show a
-// stronger "attach the completed worksheet" prompt for these specific types.
+// Attaching the completed PDF/Word document is now compulsory for every
+// form type, not just the two cost templates — one flag per type kept
+// (rather than a single hardcoded `true`) so a future form type can be
+// made optional without touching the submit-time validation logic itself.
 const FORM_REQUIRES_ATTACHMENT = {
-  SECURITY_SERVICES_COST_TEMPLATE: true,
-  JANITORIAL_SERVICES_COST_TEMPLATE: true,
+  MAINTENANCE_COMPLIANCE_DECLARATION: true,
+  ASSET_INVENTORY_DECLARATION:        true,
+  PREVENTIVE_MAINTENANCE_SCHEDULE:    true,
+  MAINTENANCE_ACTIVITY_REPORT:        true,
+  MAINTENANCE_INCIDENT_REPORT:        true,
+  MAINTENANCE_WORK_ORDER:             true,
+  ASSET_CONDITION_ASSESSMENT:         true,
+  SERVICE_PROVIDER_CERTIFICATION:     true,
+  BUDGET_ALLOCATION_UTILIZATION:      true,
+  TRAINING_CAPACITY_BUILDING:         true,
+  HSE_COMPLIANCE_CHECKLIST:           true,
+  AUDIT_RESPONSE_CORRECTIVE_ACTION:   true,
+  CERTIFICATION_REQUEST:              true,
+  EQUIPMENT_CALIBRATION_CERTIFICATE:  true,
+  EQUIPMENT_DISPOSAL_DECOMMISSIONING: true,
+  SECURITY_SERVICES_COST_TEMPLATE:    true,
+  JANITORIAL_SERVICES_COST_TEMPLATE:  true,
+};
+
+// Blank reference template each form type is based on — shown as a
+// "Download Reference Template" link at the top of the form (both when
+// filling one out and when viewing a submitted one), so a filer can check
+// the original document, print it, or fill it out on paper first. Points
+// to a plain static file living alongside this project's other frontend
+// assets (a "templates/" folder next to js/, css/, etc.) — no backend
+// route needed, this Express app doesn't serve static frontend files at
+// all (confirmed: no express.static() anywhere in app.js), so a normal
+// relative link is exactly right here, same as any other static asset.
+//
+// Only the two new types have a real file right now (from the actual
+// blank worksheets this was built from) — the other 15 need their own
+// blank PDF/Word template supplied and dropped into templates/ before
+// their download link will have anything to point to. Until then, the
+// button is hidden for those types rather than link to a 404.
+const FORM_TEMPLATE_FILE = {
+  SECURITY_SERVICES_COST_TEMPLATE:   'templates/SECURITY_SERVICES_COST_TEMPLATE.pdf',
+  JANITORIAL_SERVICES_COST_TEMPLATE: 'templates/JANITORIAL_SERVICES_COST_TEMPLATE.pdf',
 };
 
 // ── Exports ───────────────────────────────────────────────────────────────────
@@ -501,6 +536,6 @@ const FORM_REQUIRES_ATTACHMENT = {
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = {
     FORM_LABELS, FORM_ICONS, FORM_DATA_FIELD, FORM_FIELDS,
-    FORM_LINKS_TO_ASSET, FORM_REQUIRES_ATTACHMENT,
+    FORM_LINKS_TO_ASSET, FORM_REQUIRES_ATTACHMENT, FORM_TEMPLATE_FILE,
   };
 }

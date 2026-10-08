@@ -1,9 +1,9 @@
 """
-Convert old assets.json → AssetSpatial schema → MongoDB
+Convert old assets.json → FPAMAS schema → MongoDB
 =========================================================
 - Only converts assets that have a photo URL (image.source_url present)
 - Skips assets with no photo — exports them to output/no_photo_assets.csv
-- Database: assetspatial
+- Database: FPAMAS
 - Collection: assets
 - Photos: photos.files / photos.chunks (GridFS)
 
@@ -11,7 +11,7 @@ Usage:
     pip install pymongo Pillow requests openpyxl
 
     python convert_assets.py
-    python convert_assets.py --uri "mongodb+srv://user:pass@cluster/assetspatial"
+    python convert_assets.py --uri "mongodb+srv://user:pass@cluster/FPAMAS"
     python convert_assets.py --user 6a13fa46903aed268a008af6
 """
 
@@ -27,7 +27,7 @@ import requests
 
 # ── CONFIG ────────────────────────────────────────────────────────────────────
 MONGODB_URI     = "mongodb://localhost:27017"
-DB_NAME         = "assetspatial"
+DB_NAME         = "FPAMAS"
 COLLECTION_NAME = "assets"
 JSON_IN         = Path("output/assets.json")
 IMAGES_DIR      = Path("output/images")
@@ -132,7 +132,7 @@ def upload_to_gridfs(fs, img_bytes, asset_id, asset_code, uploaded_by_oid):
 
 
 def transform(old, photo_doc, uploaded_by_oid):
-    """Build the full AssetSpatial asset document."""
+    """Build the full FPAMAS asset document."""
     asset_id   = old.get("_id")
     sn         = old.get("sn")
     asset_code = make_asset_code(sn)

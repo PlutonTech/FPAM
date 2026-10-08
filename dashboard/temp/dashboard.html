@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Dashboard — AssetSpatial</title>
+<title>Dashboard — FPAMAS</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800;1,9..40,400;1,9..40,500&display=swap" rel="stylesheet">
@@ -433,7 +433,7 @@ table.rt tbody tr:hover { background: rgba(74,144,217,.04); }
   <div class="logo">
     <div class="logo-icon"><i class="fa-solid fa-map-location-dot"></i></div>
     <div>
-      <div class="logo-mark">AssetSpatial</div>
+      <div class="logo-mark">FPAMAS</div>
       <div class="logo-sub">Federal Registry</div>
     </div>
   </div>
@@ -445,7 +445,7 @@ table.rt tbody tr:hover { background: rgba(74,144,217,.04); }
     <div class="nav-section">Management</div>
     <a class="nav-item" href="capture.html"><i class="fa-solid fa-location-crosshairs"></i>Field Capture</a>
     <a class="nav-item" href="approvals.html" data-require-role="Sub-Head,Supervisor,System Admin"><i class="fa-solid fa-stamp"></i>Approvals</a>
-    <a class="nav-item" href="inspections.html"><i class="fa-solid fa-clipboard-check"></i>Inspections</a>
+    <a class="nav-item" href="inspections.html" data-require-role="System Admin,Supervisor,Sub-Head,GIS Analyst"><i class="fa-solid fa-clipboard-check"></i>Inspections</a>
     <a class="nav-item" href="analytics.html"><i class="fa-solid fa-chart-bar"></i>Analytics</a>
     <a class="nav-item" href="users.html"><i class="fa-solid fa-users"></i>Users<span class="nav-badge" id="nb-users">0</span></a>
     <div class="nav-section">Data Tools</div>
@@ -639,7 +639,7 @@ table.rt tbody tr:hover { background: rgba(74,144,217,.04); }
     <div class="wcard" style="margin-bottom:24px">
       <div class="wcard-hd">
         <div class="wcard-title"><i class="fa-solid fa-clipboard-check" style="color:var(--blue);margin-right:8px"></i>Inspections</div>
-        <a href="inspections.html" class="btn btn-ghost btn-xs">View All</a>
+        <a href="inspections.html" class="btn btn-ghost btn-xs" data-require-role="System Admin,Supervisor,Sub-Head,GIS Analyst">View All</a>
       </div>
       <div style="padding:14px" id="inspection-widget">
         <div style="text-align:center;padding:20px"><div class="spinner"></div></div>

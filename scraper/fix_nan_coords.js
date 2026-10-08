@@ -3,7 +3,7 @@ const { MongoClient } = require('mongodb');
 const client = new MongoClient(process.env.MONGO_URI || 'mongodb://localhost:27017');
 
 async function run() {
-  const col = client.db('assetspatial').collection('assets');
+  const col = client.db('FPAMAS').collection('assets');
   // Can't query nan directly — find all zero-coord scraped assets and check
   const all = await col.find({ 'location.coordinates': [0, 0], assetId: /^FGN-/ }).toArray();
   // Also find any that errored — they'll have no photos and wrong coords

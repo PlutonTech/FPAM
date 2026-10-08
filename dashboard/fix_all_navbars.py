@@ -1,5 +1,5 @@
 """
-fix_all_navbars.py — AssetSpatial
+fix_all_navbars.py — FPAMAS
 Replaces the entire <nav class="sidebar-nav"> block on every app HTML page with
 the canonical, up-to-date nav that includes:
   - data-division attributes on scoped pages
@@ -179,7 +179,7 @@ def main():
     missing = [name for name in APP_PAGES if not Path(name).exists()]
 
     mode = 'DRY RUN' if DRY_RUN else 'FIX MODE'
-    print(f'\n AssetSpatial — Fix All Navbars [{mode}]')
+    print(f'\n FPAMAS — Fix All Navbars [{mode}]')
     print(f' {len(pages)} pages found'
           + (f', {len(missing)} missing: {", ".join(missing)}' if missing else ''))
     print('─' * 60)

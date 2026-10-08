@@ -1,5 +1,5 @@
 /**
- * AssetSpatial — API Client
+ * FPAMAS — API Client
  * All communication with the Node.js backend.
  * Falls back gracefully to localStorage when backend is unreachable.
  */
@@ -324,6 +324,26 @@ async function apiIssueCertificate(id, certificateBlob, certificateNumber = '') 
   fd.append('certificate', certificateBlob, `certificate-${id}.pdf`);
   if (certificateNumber) fd.append('certificateNumber', certificateNumber);
   return apiFetchRaw(`/form-requests/${id}/issue-certificate`, { method: 'POST', body: fd });
+}
+
+// Uploads one supporting document/attachment to a FormRequest — the
+// completed cost worksheet, calibration certificate, etc. `label` is
+// optional free text shown alongside the file in the attachments list
+// (e.g. "Completed Security Cost Worksheet").
+async function apiUploadFormAttachment(requestId, file, label = '') {
+  const fd = new FormData();
+  fd.append('file', file);
+  if (label) fd.append('label', label);
+  return apiFetchRaw(`/form-requests/${requestId}/attachments`, { method: 'POST', body: fd });
+}
+
+// Downloads one attachment as a blob (auth header required, same reason as
+// apiFetchCertificateBlob below — can't just be a plain <a href> link).
+async function apiFetchFormAttachmentBlob(requestId, attachmentId) {
+  const url = `${API_BASE}/form-requests/${requestId}/attachments/${attachmentId}`;
+  const r = await fetch(url, { headers: authHeaders() });
+  if (!r.ok) throw new Error(`HTTP ${r.status}`);
+  return r.blob();
 }
 
 async function apiMarkPhysicalCertificateIssued(id) {

@@ -1,5 +1,5 @@
 """
-Generate AssetSpatial — Technical Handoff & Platform Documentation PDF
+Generate FPAMAS — Technical Handoff & Platform Documentation PDF
 """
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.units import mm
@@ -12,7 +12,7 @@ from reportlab.platypus import (
 from reportlab.lib import colors
 import datetime
 
-OUTPUT = '/mnt/user-data/outputs/AssetSpatial_Handoff_Documentation.pdf'
+OUTPUT = '/mnt/user-data/outputs/FPAMAS_Handoff_Documentation.pdf'
 
 # ── Colours ───────────────────────────────────────────────────────────────────
 NAVY   = colors.HexColor('#0B2545')
@@ -114,7 +114,7 @@ def on_page(canvas, doc):
     canvas.rect(0, h - 18*mm, w, 18*mm, fill=1, stroke=0)
     canvas.setFillColor(WHITE)
     canvas.setFont('Helvetica-Bold', 9)
-    canvas.drawString(15*mm, h - 11*mm, 'AssetSpatial')
+    canvas.drawString(15*mm, h - 11*mm, 'FPAMAS')
     canvas.setFont('Helvetica', 8)
     canvas.setFillColor(colors.HexColor('#A0B8D8'))
     canvas.drawString(15*mm, h - 16*mm, 'Technical Handoff Documentation — FPAM / FMHUD')
@@ -156,7 +156,7 @@ def cover_page():
                        textColor=TEXT3, alignment=TA_CENTER, leading=14, spaceAfter=4)))
     items.append(gap(20))
     # Title box
-    title_data = [[Paragraph('AssetSpatial', ParagraphStyle('t', fontName='Helvetica-Bold',
+    title_data = [[Paragraph('FPAMAS', ParagraphStyle('t', fontName='Helvetica-Bold',
                    fontSize=38, textColor=WHITE, alignment=TA_CENTER, leading=44))],
                   [Paragraph('Federal Public Asset Maintenance Platform',
                    ParagraphStyle('t2', fontName='Helvetica-Bold', fontSize=14,
@@ -184,13 +184,13 @@ def cover_page():
         ('Backend',         'Node.js/Express — Port 3001 — MongoDB 7 — GridFS — Bull — Socket.io'),
         ('Frontend',        'Vanilla HTML/CSS/JS — 16 app pages — Leaflet — Chart.js — Font Awesome 6.5'),
         ('Auth',            'JWT (Bearer token) — localStorage key: as_token'),
-        ('Default Admin',   'admin@assetspatial.gov.ng / ChangeMe123!'),
+        ('Default Admin',   'admin@FPAMAS.gov.ng / ChangeMe123!'),
         ('Classification',  'CONFIDENTIAL — Internal Development Use Only'),
     ])
     items.append(meta)
     items.append(gap(20))
     items.append(Paragraph(
-        'This document is the complete technical reference for the AssetSpatial platform. '
+        'This document is the complete technical reference for the FPAMAS platform. '
         'It is structured to allow a new developer or AI assistant to fully understand the '
         'platform\'s purpose, architecture, data models, and build status, and to continue '
         'development of the remaining three FPAM divisions without re-explaining prior work.',
@@ -205,9 +205,9 @@ story += cover_page()
 # 1. PLATFORM PURPOSE & MANDATE
 # ══════════════════════════════════════════════════════════════════════
 story += section_header('1. Platform Purpose & Mandate',
-                        'Why AssetSpatial exists and what it must do')
+                        'Why FPAMAS exists and what it must do')
 story.append(Paragraph(
-    'AssetSpatial is a full-stack web platform commissioned by the <b>Facility and Property '
+    'FPAMAS is a full-stack web platform commissioned by the <b>Facility and Property '
     'Asset Management (FPAM) Directorate</b> of the <b>Federal Ministry of Housing and Urban '
     'Development (FMHUD)</b>. Its primary mandate is the digitisation of Nigeria\'s federal '
     'public asset management framework — replacing paper-based records with a centralised, '
@@ -228,7 +228,7 @@ story += [numbered(1, 'Designate a Maintenance Desk Officer to liaise with FPAM'
           numbered(4, 'Grant FPAM access for periodic compliance inspections and reviews')]
 story.append(gap())
 
-story.append(Paragraph('1.2 What AssetSpatial Digitises', S['h2']))
+story.append(Paragraph('1.2 What FPAMAS Digitises', S['h2']))
 story.append(Paragraph(
     'Every workflow the FPAM Directorate manages manually — asset capture, condition assessment, '
     'M&E progress reporting, clearance certification, inspection scheduling, maintenance logging, '
@@ -319,7 +319,7 @@ story.append(Paragraph('3.1 Backend Stack', S['h2']))
 story.append(info_table([
     ('Runtime',         'Node.js v20 LTS — npm run dev starts nodemon'),
     ('Framework',       'Express.js 4.x — all routes mounted under /api/'),
-    ('Database',        'MongoDB 7 (Mongoose ODM) — mongodb://localhost:27017/assetspatial'),
+    ('Database',        'MongoDB 7 (Mongoose ODM) — mongodb://localhost:27017/FPAMAS'),
     ('File Storage',    'GridFS via MongoDB — photos, documents, Excel files per asset'),
     ('Cache / Queues',  'Redis optional (graceful fallback) + Bull queues for OCR and Excel processing'),
     ('Realtime',        'Socket.io 4.x — live asset updates, notifications'),
@@ -743,8 +743,8 @@ story.append(info_table([
     ('Production API',  'https://fpambacend.onrender.com/api (Render deployment)'),
     ('Production Web',  'https://fpam.vercel.app (Vercel deployment)'),
     ('Planned Domain',  'https://fpam.fmhud.gov.ng'),
-    ('Database (local)','mongodb://localhost:27017/assetspatial'),
-    ('Default Admin',   'admin@assetspatial.gov.ng / ChangeMe123!'),
+    ('Database (local)','mongodb://localhost:27017/FPAMAS'),
+    ('Default Admin',   'admin@FPAMAS.gov.ng / ChangeMe123!'),
     ('Node version',    'v20.19.6'),
     ('MongoDB version', '7.x'),
     ('Redis',           'Optional — platform runs without it (graceful fallback)'),
@@ -753,7 +753,7 @@ story.append(gap(10))
 
 story.append(Paragraph('10.1 Key Environment Variables (src/config/.env)', S['h2']))
 story.append(code_block(
-'MONGO_URI=mongodb://localhost:27017/assetspatial\n'
+'MONGO_URI=mongodb://localhost:27017/FPAMAS\n'
 'JWT_SECRET=your_jwt_secret_here\n'
 'PORT=3001\n'
 'NODE_ENV=development\n'
@@ -779,7 +779,7 @@ story.append(KeepTogether([
     hr(),
     gap(4),
     Paragraph(
-        '<b>AssetSpatial — Technical Handoff Documentation</b><br/>'
+        '<b>FPAMAS — Technical Handoff Documentation</b><br/>'
         'Federal Public Assets Maintenance (FPAM) Directorate · '
         'Federal Ministry of Housing and Urban Development (FMHUD)<br/>'
         'CONFIDENTIAL — For internal development use only · '

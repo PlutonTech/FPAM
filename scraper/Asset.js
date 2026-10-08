@@ -1,6 +1,6 @@
 /**
  * FPAM Asset Schema — matches fpam_scraper.py output exactly
- * Drop this into your AssetSpatial backend models folder
+ * Drop this into your FPAMAS backend models folder
  * 
  * Usage:
  *   const Asset = require('./models/Asset');

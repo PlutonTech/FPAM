@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Interactive As-Built Floor Plan — Prototype</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pannellum/2.5.6/pannellum.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pannellum/2.5.6/pannellum.js"></script>
+<style>
+  :root{
+    --ink:#1c2b24;
+    --paper:#f4f1ea;
+    --line:#c7bfae;
+    --accent:#2f5d4c;
+    --accent-soft:#e6ebe4;
+    --room-fill:#ffffff;
+    --room-hover:#dce8de;
+    --room-selected:#2f5d4c;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:'Georgia', 'Iowan Old Style', serif;
+    background:var(--paper);
+    color:var(--ink);
+  }
+  header{
+    padding:22px 28px 14px;
+    border-bottom:1px solid var(--line);
+  }
+  header h1{
+    margin:0 0 4px;
+    font-size:22px;
+    font-weight:600;
+    letter-spacing:0.2px;
+  }
+  header p{
+    margin:0;
+    font-family:'Helvetica Neue',Arial,sans-serif;
+    font-size:13px;
+    color:#5b6b60;
+    max-width:640px;
+    line-height:1.5;
+  }
+  .layout{
+    display:grid;
+    grid-template-columns:1fr 360px;
+    min-height:calc(100vh - 90px);
+  }
+  .plan-pane{
+    padding:24px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:auto;
+  }
+  svg{
+    width:100%;
+    max-width:920px;
+    height:auto;
+  }
+  .room{
+    fill:var(--room-fill);
+    stroke:var(--ink);
+    stroke-width:1.2;
+    cursor:pointer;
+    transition:fill 0.15s ease;
+  }
+  .room:hover{ fill:var(--room-hover); }
+  .room.selected{ fill:var(--room-selected); }
+  .room-label{
+    font-family:'Helvetica Neue',Arial,sans-serif;
+    font-size:9px;
+    fill:#3b473f;
+    pointer-events:none;
+    text-anchor:middle;
+  }
+  .room.selected + .room-label,
+  .room.selected ~ text.room-label{ fill:var(--paper); }
+
+  aside{
+    border-left:1px solid var(--line);
+    background:#fffefb;
+    padding:24px 22px;
+    overflow-y:auto;
+    font-family:'Helvetica Neue',Arial,sans-serif;
+  }
+  aside h2{
+    margin:0 0 2px;
+    font-size:18px;
+    font-family:Georgia,serif;
+  }
+  .tag{
+    display:inline-block;
+    font-size:11px;
+    color:var(--accent);
+    background:var(--accent-soft);
+    padding:2px 8px;
+    border-radius:3px;
+    margin-bottom:14px;
+  }
+  .pano{
+    width:100%;
+    height:200px;
+    border-radius:4px;
+    overflow:hidden;
+    border:1px solid var(--line);
+    margin-bottom:16px;
+    background:#111;
+  }
+  .field{
+    margin-bottom:14px;
+  }
+  .field-label{
+    font-size:10.5px;
+    text-transform:uppercase;
+    letter-spacing:0.06em;
+    color:#8a8f7f;
+    margin-bottom:4px;
+  }
+  .field-value{
+    font-size:13.5px;
+    line-height:1.5;
+  }
+  ul.inv{
+    margin:4px 0 0;
+    padding-left:18px;
+    font-size:13px;
+    line-height:1.7;
+  }
+  .empty-state{
+    color:#8a8f7f;
+    font-size:13.5px;
+    line-height:1.6;
+    padding-top:40px;
+    text-align:center;
+  }
+  .note{
+    margin-top:24px;
+    padding-top:16px;
+    border-top:1px dashed var(--line);
+    font-size:11.5px;
+    color:#8a8f7f;
+    line-height:1.5;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Federal Secretariat, Lafia — Ground Floor (Prototype)</h1>
+  <p>Click any room to open its record: description, tags, inventory, and a 360° capture. This is a working mechanics demo — swap the SVG polygons for your traced CAD geometry and the mock data below for your PIM/database records.</p>
+</header>
+
+<div class="layout">
+  <div class="plan-pane">
+    <svg viewBox="0 0 900 460" xmlns="http://www.w3.org/2000/svg">
+      <!-- Corridor spine -->
+      <rect x="60" y="200" width="780" height="60" fill="#efe9db" stroke="var(--ink)" stroke-width="1"/>
+      <text x="450" y="234" class="room-label" font-size="10">MAIN CORRIDOR</text>
+
+      <!-- Reception -->
+      <rect id="reception" class="room" x="60" y="90" width="140" height="100"/>
+      <text x="130" y="145" class="room-label">RECEPTION</text>
+
+      <!-- Banking Hall -->
+      <rect id="banking" class="room" x="210" y="90" width="150" height="100"/>
+      <text x="285" y="145" class="room-label">BANKING HALL</text>
+
+      <!-- Post Office -->
+      <rect id="postoffice" class="room" x="370" y="90" width="150" height="100"/>
+      <text x="445" y="145" class="room-label">POST OFFICE</text>
+
+      <!-- Head of Unit A -->
+      <rect id="hou-a" class="room" x="530" y="90" width="130" height="100"/>
+      <text x="595" y="145" class="room-label">HEAD OF UNIT</text>
+
+      <!-- Waiting Area -->
+      <rect id="waiting" class="room" x="670" y="90" width="170" height="100"/>
+      <text x="755" y="145" class="room-label">WAITING AREA</text>
+
+      <!-- Store -->
+      <rect id="store" class="room" x="60" y="270" width="120" height="90"/>
+      <text x="120" y="320" class="room-label">STORE</text>
+
+      <!-- Secretary Pool -->
+      <rect id="secretary" class="room" x="190" y="270" width="150" height="90"/>
+      <text x="265" y="320" class="room-label">SECRETARY</text>
+
+      <!-- MV Panel Room -->
+      <rect id="mvpanel" class="room" x="350" y="270" width="130" height="90"/>
+      <text x="415" y="320" class="room-label">MV PANEL ROOM</text>
+
+      <!-- Male WC -->
+      <rect id="wc-male" class="room" x="490" y="270" width="90" height="90"/>
+      <text x="535" y="320" class="room-label">MALE WC</text>
+
+      <!-- Female WC -->
+      <rect id="wc-female" class="room" x="590" y="270" width="90" height="90"/>
+      <text x="635" y="320" class="room-label">FEMALE WC</text>
+
+      <!-- PABX/FAP -->
+      <rect id="pabx" class="room" x="690" y="270" width="150" height="90"/>
+      <text x="765" y="320" class="room-label">PABX / FAP ROOM</text>
+    </svg>
+  </div>
+
+  <aside id="panel">
+    <div class="empty-state">Select a room on the plan to view its record.</div>
+  </aside>
+</div>
+
+<script>
+// ---- Mock "PIM" records — in a real build this comes from your database/API ----
+const rooms = {
+  reception: {
+    name: "Reception",
+    tag: "00-001",
+    description: "Main entrance reception desk serving all ground-floor units.",
+    tags: ["Public-facing", "Furnished"],
+    inventory: ["Reception desk", "Visitor bench x2", "Signage board"],
+    pano: "https://pannellum.org/images/alma.jpg"
+  },
+  banking: {
+    name: "Banking Hall",
+    tag: "00-002",
+    description: "Banking hall with teller counters and customer waiting bay.",
+    tags: ["Public-facing", "Fire hose reel box present"],
+    inventory: ["Teller counters x4", "Queue barriers", "ATM enclosure"],
+    pano: "https://pannellum.org/images/cerro-toco-0.jpg"
+  },
+  postoffice: {
+    name: "Post Office Hall",
+    tag: "00-003",
+    description: "Postal service counter and sorting area.",
+    tags: ["Public-facing"],
+    inventory: ["Service counter", "Mail sorting racks", "Parcel scale"],
+    pano: "https://pannellum.org/images/jfk.jpg"
+  },
+  "hou-a": {
+    name: "Head of Unit",
+    tag: "00-004",
+    description: "Head of Unit office with adjoining secretary bay.",
+    tags: ["Furnishing at shaded offices only"],
+    inventory: ["Executive desk", "Visitor chairs x2", "Filing cabinet"],
+    pano: "https://pannellum.org/images/alma.jpg"
+  },
+  waiting: {
+    name: "Waiting Area",
+    tag: "00-005",
+    description: "Shared waiting area serving adjacent offices.",
+    tags: ["Public-facing"],
+    inventory: ["Bench seating x3", "Notice board"],
+    pano: "https://pannellum.org/images/cerro-toco-0.jpg"
+  },
+  store: {
+    name: "Store",
+    tag: "00-006",
+    description: "General storage room, ground floor.",
+    tags: ["Restricted access"],
+    inventory: ["Shelving units x6", "Filing boxes"],
+    pano: "https://pannellum.org/images/jfk.jpg"
+  },
+  secretary: {
+    name: "Secretary Pool",
+    tag: "00-007",
+    description: "Open secretarial bay supporting multiple units.",
+    tags: ["Furnished"],
+    inventory: ["Workstations x5", "Printer station"],
+    pano: "https://pannellum.org/images/alma.jpg"
+  },
+  mvpanel: {
+    name: "MV Panel Room",
+    tag: "00-008",
+    description: "Medium-voltage electrical panel room. Restricted access.",
+    tags: ["Electrical", "Restricted access", "No furnishing"],
+    inventory: ["MV switchgear panel", "Fire extinguisher"],
+    pano: "https://pannellum.org/images/cerro-toco-0.jpg"
+  },
+  "wc-male": {
+    name: "Male WC / Shower",
+    tag: "00-009",
+    description: "Male toilet and shower facility.",
+    tags: ["Sanitary"],
+    inventory: ["WC x3", "Urinal x2", "Shower stall"],
+    pano: "https://pannellum.org/images/jfk.jpg"
+  },
+  "wc-female": {
+    name: "Female WC",
+    tag: "00-010",
+    description: "Female toilet facility.",
+    tags: ["Sanitary"],
+    inventory: ["WC x3", "Wash basin x2"],
+    pano: "https://pannellum.org/images/alma.jpg"
+  },
+  pabx: {
+    name: "PABX / FAP Room",
+    tag: "00-011",
+    description: "Telecoms and fire alarm panel room.",
+    tags: ["Restricted access", "MEP"],
+    inventory: ["PABX rack", "Fire alarm panel", "UPS unit"],
+    pano: "https://pannellum.org/images/cerro-toco-0.jpg"
+  }
+};
+
+let viewer = null;
+const panel = document.getElementById('panel');
+
+document.querySelectorAll('.room').forEach(el => {
+  el.addEventListener('click', () => {
+    document.querySelectorAll('.room').forEach(r => r.classList.remove('selected'));
+    el.classList.add('selected');
+    renderRoom(rooms[el.id]);
+  });
+});
+
+function renderRoom(r){
+  if(!r) return;
+  panel.innerHTML = `
+    <h2>${r.name}</h2>
+    <span class="tag">Room ${r.tag}</span>
+    <div class="pano" id="pano"></div>
+    <div class="field">
+      <div class="field-label">Description</div>
+      <div class="field-value">${r.description}</div>
+    </div>
+    <div class="field">
+      <div class="field-label">Tags</div>
+      <div class="field-value">${r.tags.join(' · ')}</div>
+    </div>
+    <div class="field">
+      <div class="field-label">Inventory</div>
+      <ul class="inv">${r.inventory.map(i => `<li>${i}</li>`).join('')}</ul>
+    </div>
+    <div class="note">360° image and inventory list are placeholder data. In production these load from your PIM database keyed by room tag ${r.tag}.</div>
+  `;
+  if(viewer) viewer.destroy();
+  viewer = pannellum.viewer('pano', {
+    type: 'equirectangular',
+    panorama: r.pano,
+    autoLoad: true,
+    showControls: false
+  });
+}
+</script>
+</body>
+</html>

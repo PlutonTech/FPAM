@@ -1130,7 +1130,7 @@ function openQRModal(assetId) {
     type: _qrAsset.type,
     lat:  _qrAsset.lat || _qrAsset.location?.coordinates?.[1],
     lng:  _qrAsset.lng || _qrAsset.location?.coordinates?.[0],
-    app:  'AssetSpatial',
+    app:  'FPAMAS',
     url:  `${location.origin}/assets.html?id=${assetId}`,
   });
 
@@ -1183,7 +1183,7 @@ function _drawQRFallback(ctx, assetId) {
   ctx.fillStyle = '#fff'; ctx.fillRect(0,0,200,200);
   ctx.fillStyle = '#0f2e1c';
   ctx.font = 'bold 12px monospace'; ctx.textAlign = 'center';
-  ctx.fillText('AssetSpatial', 100, 80);
+  ctx.fillText('FPAMAS', 100, 80);
   ctx.font = '11px monospace';
   ctx.fillText(assetId, 100, 100);
   ctx.font = '9px monospace'; ctx.fillStyle = '#4a6b5a';

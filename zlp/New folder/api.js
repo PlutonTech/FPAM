@@ -1,5 +1,5 @@
 /**
- * AssetSpatial — API Client
+ * FPAMAS — API Client
  * All communication with the Node.js backend.
  * Falls back gracefully to localStorage when backend is unreachable.
  */

@@ -1,7 +1,7 @@
 """
 import_no_photo.py
 ==================
-Inserts the no_photo_assets.xlsx/csv into MongoDB assetspatial.assets
+Inserts the no_photo_assets.xlsx/csv into MongoDB FPAMAS.assets
 without photos. Condition set to "Unknown", status "Active".
 
 Usage:
@@ -9,7 +9,7 @@ Usage:
 
     python import_no_photo.py
     python import_no_photo.py --file output/no_photo_assets.xlsx
-    python import_no_photo.py --uri "mongodb+srv://user:pass@cluster/assetspatial"
+    python import_no_photo.py --uri "mongodb+srv://user:pass@cluster/FPAMAS"
 """
 
 import sys, argparse, logging
@@ -21,7 +21,7 @@ from pymongo import MongoClient
 from bson import ObjectId
 
 MONGODB_URI     = "mongodb://localhost:27017"
-DB_NAME         = "assetspatial"
+DB_NAME         = "FPAMAS"
 COLLECTION_NAME = "assets"
 
 logging.basicConfig(level=logging.INFO,

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Asset Detail — AssetSpatial</title>
+<title>Asset Detail — FPAMAS</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800;1,9..40,400&display=swap" rel="stylesheet">
@@ -468,7 +468,7 @@ table.maint-table tbody tr:hover { background: var(--blue-bg); }
   <div class="logo">
     <div class="logo-icon"><i class="fa-solid fa-map-location-dot"></i></div>
     <div>
-      <div class="logo-mark">AssetSpatial</div>
+      <div class="logo-mark">FPAMAS</div>
       <div class="logo-sub">Federal Registry</div>
     </div>
   </div>
@@ -480,11 +480,11 @@ table.maint-table tbody tr:hover { background: var(--blue-bg); }
     <div class="nav-section">Management</div>
     <a class="nav-item" href="capture.html" data-division="Assets &amp; Condition"><i class="fa-solid fa-location-crosshairs"></i>Field Capture</a>
     <a class="nav-item" href="approvals.html" data-require-role="Sub-Head,Supervisor,System Admin"><i class="fa-solid fa-stamp"></i>Approvals</a>
-    <a class="nav-item" href="inspections.html" data-division="Assets &amp; Condition"><i class="fa-solid fa-clipboard-check"></i>Inspections</a>
+    <a class="nav-item" href="inspections.html" data-require-role="System Admin,Supervisor,Sub-Head,GIS Analyst" data-division="Assets &amp; Condition"><i class="fa-solid fa-clipboard-check"></i>Inspections</a>
     <a class="nav-item" href="me.html" data-division="Monitoring &amp; Evaluation"><i class="fa-solid fa-chart-line"></i>M&amp;E Reports</a>
     <a class="nav-item" href="analytics.html"><i class="fa-solid fa-chart-bar"></i>Analytics</a>
     <a class="nav-item" href="users.html"><i class="fa-solid fa-users"></i>Users<span class="nav-badge" id="nb-users">0</span></a>
-    <a class="nav-item" href="form_requests.html"><i class="fa-solid fa-file-circle-check"></i>Form Requests</a>
+    <a class="nav-item" href="form_requests.html" data-require-role="System Admin,Supervisor,Sub-Head,GIS Analyst"><i class="fa-solid fa-file-circle-check"></i>Form Requests</a>
     <div class="nav-section">Divisions</div>
     <a class="nav-item active" href="assets.html" data-division="Assets &amp; Condition"><i class="fa-solid fa-database"></i>Assets &amp; Condition</a>
     <a class="nav-item" href="me.html" data-division="Monitoring &amp; Evaluation"><i class="fa-solid fa-chart-line"></i>Monitoring &amp; Evaluation</a>
@@ -525,7 +525,7 @@ table.maint-table tbody tr:hover { background: var(--blue-bg); }
     </button>
     <div class="header-breadcrumb">
       <div class="page-label" id="header-asset-name">Asset Detail</div>
-      <div class="sub-label">AssetSpatial / Asset Registry / Detail</div>
+      <div class="sub-label">FPAMAS / Asset Registry / Detail</div>
     </div>
     <div class="header-actions" id="header-actions">
       <!-- populated after load -->
@@ -875,7 +875,7 @@ function renderAssetView(a) {
   const hasCoords = lat && lng && !isNaN(lat) && !isNaN(lng);
 
   document.getElementById('header-asset-name').textContent = a.name || id;
-  document.title = (a.name || id) + ' — AssetSpatial';
+  document.title = (a.name || id) + ' — FPAMAS';
 
   document.getElementById('header-actions').innerHTML = `
     <a href="https://www.google.com/maps/search/?api=1&query=${lat},${lng}" target="_blank"

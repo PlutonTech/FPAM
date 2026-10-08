@@ -1,4 +1,4 @@
-# AssetSpatial — Feature Upgrade Integration Guide
+# FPAMAS — Feature Upgrade Integration Guide
 
 All 10 features are self-contained JS files. They add functionality
 without modifying any existing file. Integration = copy files + add
