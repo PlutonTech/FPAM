@@ -118,12 +118,9 @@ export function AreaChart({ points, height = 190, color = '#4A90D9', unit = '' }
     setHover(Math.min(points.length - 1, Math.max(0, i)));
   };
 
-  let tip: Tip | null = null;
-  if (hover != null && wrap.current && svg.current) {
-    const r = svg.current.getBoundingClientRect();
-    const scale = r.width / W || 1;
-    tip = { x: x(hover) * scale, y: y(points[hover].value) * scale, value: `${points[hover].value}${unit}`, label: points[hover].label };
-  }
+  // The SVG is drawn at 1:1 pixel scale, so chart coordinates are tooltip coordinates.
+  const tip: Tip | null = hover == null ? null
+    : { x: x(hover), y: y(points[hover].value), value: `${points[hover].value}${unit}`, label: points[hover].label };
 
   return (
     <div className="area-wrap" ref={wrap}>
