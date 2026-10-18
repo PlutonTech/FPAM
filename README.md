@@ -30,6 +30,7 @@ npm run lint
 | Exports — filtered CSV/XLSX/GeoJSON/PDF, selected rows, percentage export | Done |
 | **Asset View** — overview, photos (upload/delete), map, maintenance log, documents, valuation, condition history | Done |
 | Asset View — relationships, lifecycle, audit, inventory, M&E tabs | Not yet |
+| MDA portal (`mda_portal.html`) and M&E reports (`me.html`) | Not yet — separate from the main dashboard |
 | **Dashboard** — KPIs from the verified registry, pending-approval and inspection alerts, recent captures, activity feed, condition/type/30-day charts (each with a table view) | Done |
 | **Live Map** — canvas markers coloured by condition, type/condition filters, legend, road/satellite, locate me, fit all, search, asset panel | Done (no 3D view yet) |
 | **Approvals** — pending/approved/rejected queue, approve, reject with reason, re-approve rejected, no self-review, sidebar badge | Done |
@@ -37,7 +38,13 @@ npm run lint
 | **Field Capture** — all fields incl. assessed/sector/area/next inspection, type-specific fields, GPS or click-the-map location, photos/documents/spreadsheets, inline validation | Done |
 | **Users & roles** — list/search/filter, add, edit (all six roles), per-user allow/deny/default overrides, deactivate/reactivate, password reset, role-default matrix | Done (System Admin only) |
 | **Audit log** — server-side paging, action/record type/ID/date filters, CSV export | Done |
-| Analytics, Form Requests, OCR, Excel Import, File DB, Settings, Guidelines | Placeholder pages linking to the legacy dashboard |
+| **Analytics** — page-wide filters (period, state, type, MDA), KPIs, data-driven findings, trend/condition/type/state/MDA/geometry charts with table views, spend and value tables, print | Done |
+| **Form requests** — all 17 form types from shared definitions, review (under review/defer/reject/approve with remarks), attachments, certificate issue with the number on the PDF, download, physical-copy tracking, new request for an MDA | Done |
+| **OCR** — scan, poll, extracted text, suggested fields, hand-off to Field Capture | Done |
+| **Excel import** — column auto-matching, defaults, per-row validation, bulk asset creation with progress and CSV report; attach a sheet to an asset | Done |
+| **File database** — every photo/document/spreadsheet across assets, filter, search, open, download, delete, photo grid | Done |
+| **Settings** — platform settings and feature toggles; MDA list with add/edit/deactivate/reactivate/CSV import | Done (System Admin to edit) |
+| **Guidelines** — legacy content and PDFs | Done |
 
 ## Layout
 

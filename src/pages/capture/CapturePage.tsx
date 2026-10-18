@@ -1,10 +1,10 @@
 import { useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { CircleMarker, MapContainer, TileLayer, useMap, useMapEvents } from 'react-leaflet';
 import * as assetsApi from '../../api/assets';
 import { errorMessage } from '../../api/client';
 import { useToast } from '../../components/Toast';
-import { ASSET_TYPES, CONDITIONS, GEOM_TYPES, NIGERIA_STATES, SECTORS } from '../../lib/assets';
+import { ASSET_TYPES, CONDITIONS, GEOM_TYPES, NIGERIA_STATES, SECTORS, normalizeState } from '../../lib/assets';
 import { TYPE_FIELDS } from './typeFields';
 
 const ABUJA: [number, number] = [9.0765, 7.3986];
@@ -42,7 +42,23 @@ function FileList({ files, onRemove, icon }: { files: File[]; onRemove: (i: numb
 export default function CapturePage() {
   const toast = useToast();
   const navigate = useNavigate();
-  const [form, setForm] = useState<Form>(EMPTY);
+  const location = useLocation();
+  // Optional pre-fill handed over from the OCR scanner.
+  const [form, setForm] = useState<Form>(() => {
+    const p = (location.state as { prefill?: Record<string, unknown> } | null)?.prefill;
+    if (!p) return EMPTY;
+    const pick = <T extends readonly string[]>(list: T, v: unknown) =>
+      list.find(x => x.toLowerCase() === String(v ?? '').trim().toLowerCase()) || '';
+    const c = Array.isArray(p.coordinates) ? (p.coordinates as number[]) : null;   // [lng, lat]
+    return {
+      ...EMPTY,
+      name: typeof p.name === 'string' ? p.name : '',
+      state: normalizeState(p.state as string) || '',
+      condition: pick(CONDITIONS, p.condition) || EMPTY.condition,
+      type: pick(ASSET_TYPES, p.type),
+      ...(c && c.length === 2 ? { lng: String(c[0]), lat: String(c[1]) } : {}),
+    };
+  });
   const [typeData, setTypeData] = useState<Record<string, string>>({});
   const [mdas, setMdas] = useState<string[]>([]);
   const [errors, setErrors] = useState<Partial<Record<keyof Form | 'location', string>>>({});

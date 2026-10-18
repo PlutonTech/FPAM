@@ -6,14 +6,15 @@ import type { User } from '../types';
 // The backend enforces the real permissions; these only decide what the UI shows.
 export type Perm =
   | 'canCreate' | 'canEdit' | 'canDelete' | 'canExport' | 'canViewAll'
-  | 'canManageUsers' | 'canViewAudit' | 'canManageSettings' | 'canApprove' | 'canEditInventory';
+  | 'canManageUsers' | 'canViewAudit' | 'canManageSettings' | 'canApprove' | 'canEditInventory'
+  | 'canSubmitFormRequests' | 'canReviewFormRequests';
 
 const ROLE_DEFAULTS: Record<string, Partial<Record<Perm, boolean>>> = {
-  'System Admin': { canCreate: true,  canEdit: true,  canDelete: true,  canExport: true,  canViewAll: true,  canManageUsers: true,  canViewAudit: true,  canManageSettings: true,  canApprove: true,  canEditInventory: true },
-  'Supervisor':   { canCreate: true,  canEdit: true,  canDelete: true,  canExport: true,  canViewAll: true,  canManageUsers: false, canViewAudit: true,  canManageSettings: false, canApprove: true,  canEditInventory: true },
-  'Sub-Head':     { canCreate: true,  canEdit: false, canDelete: false, canExport: false, canViewAll: true,  canManageUsers: false, canViewAudit: false, canManageSettings: false, canApprove: true,  canEditInventory: true },
-  'GIS Analyst':  { canCreate: false, canEdit: false, canDelete: false, canExport: true,  canViewAll: true,  canManageUsers: false, canViewAudit: true,  canManageSettings: false, canApprove: false, canEditInventory: false },
-  'Field Agent':  { canCreate: true,  canEdit: false, canDelete: false, canExport: false, canViewAll: false, canManageUsers: false, canViewAudit: false, canManageSettings: false, canApprove: false, canEditInventory: true },
+  'System Admin': { canCreate: true,  canEdit: true,  canDelete: true,  canExport: true,  canViewAll: true,  canManageUsers: true,  canViewAudit: true,  canManageSettings: true,  canApprove: true,  canEditInventory: true, canSubmitFormRequests: true,  canReviewFormRequests: true },
+  'Supervisor':   { canCreate: true,  canEdit: true,  canDelete: true,  canExport: true,  canViewAll: true,  canManageUsers: false, canViewAudit: true,  canManageSettings: false, canApprove: true,  canEditInventory: true, canSubmitFormRequests: true,  canReviewFormRequests: true },
+  'Sub-Head':     { canCreate: true,  canEdit: false, canDelete: false, canExport: false, canViewAll: true,  canManageUsers: false, canViewAudit: false, canManageSettings: false, canApprove: true,  canEditInventory: true, canSubmitFormRequests: true,  canReviewFormRequests: true },
+  'GIS Analyst':  { canCreate: false, canEdit: false, canDelete: false, canExport: true,  canViewAll: true,  canManageUsers: false, canViewAudit: true,  canManageSettings: false, canApprove: false, canEditInventory: false, canSubmitFormRequests: true,  canReviewFormRequests: false },
+  'Field Agent':  { canCreate: true,  canEdit: false, canDelete: false, canExport: false, canViewAll: false, canManageUsers: false, canViewAudit: false, canManageSettings: false, canApprove: false, canEditInventory: true, canSubmitFormRequests: true,  canReviewFormRequests: false },
 };
 
 export function permsFor(user: User | null): Partial<Record<Perm, boolean>> {

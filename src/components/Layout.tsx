@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../auth/AuthContext';
 import { approvalsSummary } from '../api/misc';
@@ -96,7 +96,10 @@ export default function Layout() {
         <button className="menu-btn" onClick={() => setOpen(true)} aria-label="Open menu">
           <i className="fa-solid fa-bars" />
         </button>
-        <Outlet />
+        {/* Pages are lazy-loaded; only the content area waits, the sidebar stays put. */}
+        <Suspense fallback={<div className="page loading"><i className="fa-solid fa-spinner fa-spin" /> Loading…</div>}>
+          <Outlet />
+        </Suspense>
       </div>
     </div>
   );

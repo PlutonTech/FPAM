@@ -1,0 +1,86 @@
+/* Scoped copy of fpam-real/dashboard/guidelines.html styles (generated). */
+.guidelines {
+  --blue: #4A90D9; --blue-lt: #6AAEE8; --blue-bg: rgba(74,144,217,.08); --blue-bd: rgba(74,144,217,.18);
+  --card: #ffffff; --green-bg: rgba(45,184,123,.08); --green-bd: rgba(45,184,123,.2);
+  --red-bg: rgba(224,85,85,.08); --red-bd: rgba(224,85,85,.2);
+}
+.guidelines *, .guidelines *::before, .guidelines *::after {box-sizing:border-box;margin:0;padding:0}
+.guidelines ::-webkit-scrollbar {width:5px;height:5px}
+.guidelines ::-webkit-scrollbar-track {background:transparent}
+.guidelines ::-webkit-scrollbar-thumb {background:#d0d8e4;border-radius:10px}
+.guidelines .user-card-sb {display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08)}
+.guidelines .user-av {width:34px;height:34px;border-radius:50%;background:var(--blue);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;flex-shrink:0}
+.guidelines .user-nm {font-size:13px;font-weight:600;color:#fff}
+.guidelines .user-rl {font-size:10px;color:rgba(255,255,255,.45);margin-top:1px}
+.guidelines .icon-btn {width:28px;height:28px;border-radius:7px;background:rgba(255,255,255,.08);border:none;color:rgba(255,255,255,.55);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:12px;transition:all .15s}
+.guidelines .icon-btn:hover {background:rgba(255,255,255,.15);color:#fff}
+.guidelines .header-title h2 {font-size:20px;font-weight:700;color:var(--text)}
+.guidelines .header-title p {font-size:12.5px;color:var(--text3);margin-top:1px}
+.guidelines .guide-hero {background:var(--navy);border-radius:16px;padding:36px 40px;margin-bottom:28px;display:flex;align-items:center;justify-content:space-between;gap:24px;position:relative;overflow:hidden}
+.guidelines .guide-hero::before {content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(74,144,217,.15) 0%,transparent 60%);pointer-events:none}
+.guidelines .guide-hero-text h1 {font-size:26px;font-weight:800;color:#fff;line-height:1.2;margin-bottom:10px}
+.guidelines .guide-hero-text p {font-size:14px;color:rgba(255,255,255,.6);max-width:480px;line-height:1.7}
+.guidelines .guide-hero-badge {background:rgba(74,144,217,.2);border:1px solid rgba(74,144,217,.35);border-radius:12px;padding:20px 24px;text-align:center;flex-shrink:0}
+.guidelines .guide-hero-badge .badge-icon {font-size:32px;color:var(--blue-lt);margin-bottom:8px}
+.guidelines .guide-hero-badge .badge-label {font-size:11px;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:1px;font-weight:600}
+.guidelines .guide-hero-badge .badge-title {font-size:14px;color:#fff;font-weight:700;margin-top:2px}
+.guidelines .quick-nav {display:flex;gap:8px;flex-wrap:wrap;margin-bottom:28px}
+.guidelines .quick-nav a {display:inline-flex;align-items:center;gap:6px;padding:7px 14px;background:var(--card);border:1px solid var(--border);border-radius:8px;font-size:12px;font-weight:600;color:var(--text2);text-decoration:none;transition:all .15s}
+.guidelines .quick-nav a:hover {border-color:var(--blue);color:var(--blue);background:var(--blue-bg)}
+.guidelines .quick-nav a i {font-size:11px;color:var(--blue)}
+.guidelines .guide-section {margin-bottom:32px}
+.guidelines .guide-section-header {display:flex;align-items:center;gap:12px;margin-bottom:16px;padding-bottom:12px;border-bottom:2px solid var(--border)}
+.guidelines .guide-section-icon {width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.guidelines .guide-section-title {font-size:17px;font-weight:800;color:var(--text)}
+.guidelines .guide-section-sub {font-size:12px;color:var(--text3);margin-top:2px}
+.guidelines .card-grid {display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
+.guidelines .guide-card {background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px 20px;transition:box-shadow .15s}
+.guidelines .guide-card:hover {box-shadow:0 4px 16px rgba(0,0,0,.08)}
+.guidelines .guide-card-title {font-size:13px;font-weight:700;color:var(--text);margin-bottom:6px;display:flex;align-items:center;gap:8px}
+.guidelines .guide-card-title i {color:var(--blue);font-size:13px}
+.guidelines .guide-card-body {font-size:12.5px;color:var(--text3);line-height:1.65}
+.guidelines .steps {display:flex;flex-direction:column;gap:0}
+.guidelines .step {display:flex;gap:16px;padding:16px 0;border-bottom:1px solid var(--border)}
+.guidelines .step:last-child {border-bottom:none}
+.guidelines .step-num {width:32px;height:32px;border-radius:50%;background:var(--navy);color:#fff;font-size:13px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
+.guidelines .step-content {flex:1}
+.guidelines .step-label {font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px}
+.guidelines .step-desc {font-size:12.5px;color:var(--text3);line-height:1.6}
+.guidelines .step-tag {display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:5px;margin-top:6px}
+.guidelines .step-tag.mda {background:rgba(74,144,217,.12);color:#0d5291}
+.guidelines .step-tag.fpam {background:rgba(11,37,69,.1);color:var(--navy)}
+.guidelines .dodont {display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:4px}
+.guidelines .dodont-col {border-radius:10px;padding:16px;font-size:12.5px}
+.guidelines .dodont-col.do {background:var(--green-bg);border:1px solid var(--green-bd)}
+.guidelines .dodont-col.dont {background:var(--red-bg);border:1px solid var(--red-bd)}
+.guidelines .dodont-header {font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.guidelines .dodont-col.do .dodont-header {color:var(--success)}
+.guidelines .dodont-col.dont .dodont-header {color:var(--danger)}
+.guidelines .dodont-item {display:flex;align-items:flex-start;gap:7px;margin-bottom:7px;color:var(--text2);line-height:1.5}
+.guidelines .dodont-item:last-child {margin-bottom:0}
+.guidelines .dodont-item i {font-size:10px;margin-top:3px;flex-shrink:0}
+.guidelines .dodont-col.do .dodont-item i {color:var(--success)}
+.guidelines .dodont-col.dont .dodont-item i {color:var(--danger)}
+.guidelines .maint-cats {display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.guidelines .maint-cat {background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px 20px}
+.guidelines .maint-cat-label {font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;display:flex;align-items:center;gap:7px}
+.guidelines .maint-cat.routine .maint-cat-label {color:var(--blue)}
+.guidelines .maint-cat.major .maint-cat-label {color:var(--warn)}
+.guidelines .maint-cat-item {display:flex;align-items:flex-start;gap:8px;margin-bottom:7px;font-size:12.5px;color:var(--text2);line-height:1.5}
+.guidelines .maint-cat-item i {font-size:10px;margin-top:3px;flex-shrink:0}
+.guidelines .maint-cat.routine .maint-cat-item i {color:var(--blue)}
+.guidelines .maint-cat.major .maint-cat-item i {color:var(--warn)}
+.guidelines .maint-cat-note {font-size:11px;color:var(--text3);margin-top:10px;padding-top:10px;border-top:1px solid var(--border);font-style:italic}
+.guidelines .forms-table {width:100%;border-collapse:collapse;font-size:12.5px}
+.guidelines .forms-table th {padding:10px 14px;text-align:left;font-size:11px;font-weight:700;color:var(--text2);border-bottom:2px solid var(--border);text-transform:uppercase;letter-spacing:.5px;background:var(--bg)}
+.guidelines .forms-table td {padding:11px 14px;color:var(--text);border-bottom:1px solid var(--border);vertical-align:top}
+.guidelines .forms-table tr:last-child td {border-bottom:none}
+.guidelines .forms-table tr:hover td {background:var(--blue-bg)}
+.guidelines .freq-tag {display:inline-block;font-size:10px;font-weight:600;padding:2px 8px;border-radius:5px;background:var(--blue-bg);color:var(--blue)}
+.guidelines .form-num {width:28px;height:28px;background:var(--navy);color:#fff;border-radius:7px;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center}
+.guidelines .kpi-row {display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+.guidelines .kpi-pill {background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:8px 14px;font-size:12px;color:var(--text2);display:flex;align-items:center;gap:7px}
+.guidelines .kpi-pill i {color:var(--blue);font-size:11px}
+.guidelines #toast {position:fixed;bottom:24px;right:24px;background:var(--navy);color:#fff;padding:12px 18px;border-radius:10px;font-size:13px;display:flex;align-items:center;gap:8px;box-shadow:0 8px 32px rgba(0,0,0,.2);z-index:999;transform:translateY(80px);opacity:0;transition:all .3s}
+.guidelines #toast.show {transform:translateY(0);opacity:1}
+.guidelines a.guide-card:hover { border-color: var(--accent) !important; box-shadow: 0 4px 16px rgba(74,144,217,.15); }
