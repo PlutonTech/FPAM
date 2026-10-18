@@ -1,32 +1,53 @@
-# React + TypeScript + Vite
+# FPAMAS — React dashboard
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+A React + TypeScript rewrite of the FPAMAS dashboard (`fpam-real/dashboard`). It talks to the
+same backend (`assetspatial-backend`) and runs alongside the existing site.
 
-Currently, two official plugins are available:
+## Run it
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
-
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the Oxlint configuration
-
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
-
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+```bash
+npm install
+npm run dev          # http://localhost:5173
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+By default it uses the live API at `https://fpambacend.onrender.com/api`. To point at a local
+backend, copy `.env.example` to `.env.local` and set `VITE_API_BASE`
+(e.g. `http://localhost:5000/api`). The backend already allows any `localhost` origin.
+
+```bash
+npm run build        # type-check + production build into dist/
+npm run lint
+```
+
+## What's ported
+
+| Area | Status |
+|---|---|
+| Login, logout, session expiry → back to login | Done |
+| Sidebar layout, role-based nav, permission checks (`can('canEdit')` …) | Done |
+| **Asset Registry** — search, all filters (kept in the URL), sorting, stats bar, pagination, row selection | Done |
+| Registry actions — edit, delete, bulk delete, set condition, Excel/CSV bulk update, completeness report, deferred maintenance report | Done |
+| Exports — filtered CSV/XLSX/GeoJSON/PDF, selected rows, percentage export | Done |
+| **Asset View** — overview, photos (upload/delete), map, maintenance log, documents, valuation, condition history | Done |
+| Asset View — relationships, lifecycle, audit, inventory, M&E tabs | Not yet |
+| Dashboard, Map, Capture, Approvals, Inspections, Analytics, Users, Form Requests, OCR, Excel Import, File DB, Audit, Settings, Guidelines | Placeholder pages linking to the legacy dashboard |
+
+## Layout
+
+```
+src/
+  api/          client.ts (fetch wrapper, auth header, errors), assets.ts (endpoints)
+  auth/         AuthContext (user, login/logout, can()), permissions.ts (role defaults)
+  components/   Layout/sidebar, Modal, Toast, Tags, AuthedImage
+  lib/assets.ts enums mirrored from the backend schema, risk score, completeness, formatting
+  pages/
+    registry/   RegistryPage + modals, URL-backed filters (useRegistryFilters)
+    asset-view/ AssetViewPage + tabs
+```
+
+Notes:
+- Photos and documents are behind Bearer auth, so they're fetched as blobs (`AuthedImage`).
+- Permission checks in the UI only hide controls; the backend is what actually enforces them.
+- Enum lists in `lib/assets.ts` must stay in sync with `assetspatial-backend/src/models/Asset.js`.
+- The new export endpoints (filtered export, `POST /assets/export/bulk`) need the backend branch
+  `fix/asset-registry-audit` deployed.
