@@ -35,7 +35,9 @@ npm run lint
 | **Approvals** — pending/approved/rejected queue, approve, reject with reason, re-approve rejected, no self-review, sidebar badge | Done |
 | **Inspections** — open/overdue/awaiting-review/due views, schedule (also from Asset View), start, submit report, approve/reject, report & history view, assets due by schedule | Done |
 | **Field Capture** — all fields incl. assessed/sector/area/next inspection, type-specific fields, GPS or click-the-map location, photos/documents/spreadsheets, inline validation | Done |
-| Analytics, Users, Form Requests, OCR, Excel Import, File DB, Audit, Settings, Guidelines | Placeholder pages linking to the legacy dashboard |
+| **Users & roles** — list/search/filter, add, edit (all six roles), per-user allow/deny/default overrides, deactivate/reactivate, password reset, role-default matrix | Done (System Admin only) |
+| **Audit log** — server-side paging, action/record type/ID/date filters, CSV export | Done |
+| Analytics, Form Requests, OCR, Excel Import, File DB, Settings, Guidelines | Placeholder pages linking to the legacy dashboard |
 
 ## Layout
 

@@ -2,8 +2,9 @@ import { useEffect, useState } from 'react';
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../auth/AuthContext';
 import { approvalsSummary } from '../api/misc';
+import type { Perm } from '../auth/permissions';
 
-interface NavItem { to: string; label: string; icon: string; roles?: string[]; badge?: 'approvals' }
+interface NavItem { to: string; label: string; icon: string; roles?: string[]; perm?: Perm; badge?: 'approvals' }
 interface NavSection { title: string; items: NavItem[] }
 
 // Same structure as the legacy sidebar. Pages not yet ported open a
@@ -19,7 +20,7 @@ const NAV: NavSection[] = [
     { to: '/approvals',     label: 'Approvals',     icon: 'fa-stamp', badge: 'approvals', roles: ['Sub-Head', 'Supervisor', 'System Admin'] },
     { to: '/inspections',   label: 'Inspections',   icon: 'fa-clipboard-check', roles: ['System Admin', 'Supervisor', 'Sub-Head', 'GIS Analyst'] },
     { to: '/analytics',     label: 'Analytics',     icon: 'fa-chart-bar' },
-    { to: '/users',         label: 'Users',         icon: 'fa-users' },
+    { to: '/users',         label: 'Users',         icon: 'fa-users', roles: ['System Admin'] },
     { to: '/form-requests', label: 'Form Requests', icon: 'fa-file-circle-check', roles: ['System Admin', 'Supervisor', 'Sub-Head', 'GIS Analyst'] },
   ]},
   { title: 'Data Tools', items: [
@@ -28,7 +29,7 @@ const NAV: NavSection[] = [
     { to: '/filedb', label: 'File Database', icon: 'fa-folder-open' },
   ]},
   { title: 'System', items: [
-    { to: '/audit',      label: 'Audit Log',  icon: 'fa-clock-rotate-left' },
+    { to: '/audit',      label: 'Audit Log',  icon: 'fa-clock-rotate-left', perm: 'canViewAudit' },
     { to: '/settings',   label: 'Settings',   icon: 'fa-sliders' },
     { to: '/guidelines', label: 'Guidelines', icon: 'fa-book-open' },
   ]},
@@ -62,7 +63,7 @@ export default function Layout() {
         </div>
         <nav className="nav">
           {NAV.map(section => {
-            const items = section.items.filter(i => !i.roles || i.roles.includes(user?.role || ''));
+            const items = section.items.filter(i => (!i.roles || i.roles.includes(user?.role || '')) && (!i.perm || can(i.perm)));
             if (!items.length) return null;
             return (
               <div key={section.title}>

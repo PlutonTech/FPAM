@@ -12,6 +12,8 @@ import MapPage from './pages/MapPage';
 import ApprovalsPage from './pages/ApprovalsPage';
 import InspectionsPage from './pages/inspections/InspectionsPage';
 import CapturePage from './pages/capture/CapturePage';
+import UsersPage from './pages/users/UsersPage';
+import AuditPage from './pages/AuditPage';
 
 function RequireAuth({ children }: { children: ReactNode }) {
   const { user } = useAuth();
@@ -23,9 +25,9 @@ function RequireAuth({ children }: { children: ReactNode }) {
 // Pages not yet ported: [route, title, legacy html file]
 const LEGACY: [string, string, string][] = [
   ['analytics', 'Analytics', 'analytics.html'],
-  ['users', 'Users', 'users.html'], ['form-requests', 'Form Requests', 'form_requests.html'],
+  ['form-requests', 'Form Requests', 'form_requests.html'],
   ['ocr', 'OCR Scanner', 'ocr.html'], ['excel', 'Excel Import', 'excel.html'],
-  ['filedb', 'File Database', 'filedb.html'], ['audit', 'Audit Log', 'audit.html'],
+  ['filedb', 'File Database', 'filedb.html'],
   ['settings', 'Settings', 'settings.html'], ['guidelines', 'Guidelines', 'guidelines.html'],
 ];
 
@@ -43,6 +45,8 @@ export default function App() {
               <Route path="approvals" element={<ApprovalsPage />} />
               <Route path="inspections" element={<InspectionsPage />} />
               <Route path="capture" element={<CapturePage />} />
+              <Route path="users" element={<UsersPage />} />
+              <Route path="audit" element={<AuditPage />} />
               <Route path="assets" element={<RegistryPage />} />
               <Route path="assets/:id" element={<AssetViewPage />} />
               {LEGACY.map(([path, title, file]) => (

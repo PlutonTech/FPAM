@@ -333,3 +333,12 @@ textarea.form-control { min-height: 80px; resize: vertical; }
 .file-chip span { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .file-chip button { background: none; color: var(--text3); }
 .capture-submit .btn + .btn { margin-top: 8px; }
+
+/* ── Users & audit ─────────────────────────────────────────────────────── */
+.data-table .avatar { width: 30px; height: 30px; font-size: 11px; }
+.temp-pw { flex: 1; font-family: var(--mono); font-size: 16px; padding: 10px 12px; background: var(--surface2); border: 1px solid var(--border2); border-radius: 8px; user-select: all; }
+.perm-grid { display: flex; flex-direction: column; }
+.perm-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 9px 0; border-bottom: 1px solid var(--border); flex-wrap: wrap; }
+.perm-row .seg-btn { padding: 5px 10px; font-size: 12px; }
+.perm-matrix td:first-child { font-weight: 600; font-size: 12px; }
+select[multiple].form-control { padding: 4px; }
