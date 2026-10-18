@@ -308,16 +308,28 @@ async function doEditUser(id) {
 // alias
 const saveEditUser = doEditUser;
 
-function openPermissionsModal(u) {
+async function openPermissionsModal(u) {
+  // Role defaults come from the server so the starting state is accurate.
+  if (!window._roleConfigs && u.role !== 'System Admin') {
+    try {
+      const data = await apiGetRoleConfigs();
+      window._roleConfigs = Object.fromEntries((data.configs || []).map(c => [c.role, c.defaults || {}]));
+    } catch { /* falls back to ROLE_PERMS below */ }
+  }
   const PERMS  = ['canCreate','canEdit','canDelete','canApprove','canExport','canViewAll','canManageUsers','canViewAudit','canManageSettings'];
   const LABELS = { canCreate:'Create Assets', canEdit:'Edit Assets', canDelete:'Delete Assets', canApprove:'Approve Captures', canExport:'Export Data', canViewAll:'View All Assets', canManageUsers:'Manage Users', canViewAudit:'View Audit Log', canManageSettings:'Manage Settings' };
   const current = u.permissions || {};
+  const base = u.role === 'System Admin'
+    ? Object.fromEntries(PERMS.map(p => [p, true]))
+    : (window._roleConfigs?.[u.role] || (window.ROLE_PERMS || {})[u.role] || {});
+  window._permBase = base;
+  const effective = p => (typeof current[p] === 'boolean' ? current[p] : !!base[p]);
   openModal(`Permissions — ${u.name}`,
-    `<div style="margin-bottom:10px;font-size:12px;color:var(--text2)">Override default role permissions for this user. Checked = granted.</div>
+    `<div style="margin-bottom:10px;font-size:12px;color:var(--text2)">Boxes start at what this user gets from the <b>${escHtml(u.role)}</b> role. Change a box to override it for this user only.</div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
       ${PERMS.map(p=>`<div style="display:flex;align-items:center;justify-content:space-between;background:var(--surface2);border-radius:6px;padding:8px 12px">
         <span style="font-size:12px;color:var(--text2)">${LABELS[p]||p}</span>
-        <input type="checkbox" id="perm-${p}" ${current[p]===true?'checked':''} style="accent-color:var(--accent);width:16px;height:16px;cursor:pointer">
+        <input type="checkbox" id="perm-${p}" ${effective(p)?'checked':''} style="accent-color:var(--accent);width:16px;height:16px;cursor:pointer">
       </div>`).join('')}
     </div>`,
     `<button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
@@ -327,8 +339,12 @@ function openPermissionsModal(u) {
 
 async function doSavePermissions(id) {
   const PERMS = ['canCreate','canEdit','canDelete','canApprove','canExport','canViewAll','canManageUsers','canViewAudit','canManageSettings'];
+  const base = window._permBase || {};
   const perms = {};
-  PERMS.forEach(p => { perms[p] = document.getElementById(`perm-${p}`)?.checked ?? false; });
+  PERMS.forEach(p => {
+    const checked = document.getElementById(`perm-${p}`)?.checked ?? false;
+    if (checked !== !!base[p]) perms[p] = checked;   // store only real overrides
+  });
   try {
     await apiUpdatePermissions(id, perms);
     // Update local array AND reload cards so the serialized onclick data is fresh
@@ -375,7 +391,9 @@ async function resetPasswordPrompt(id) {
 async function loadRoleConfigs() {
   try {
     const data = await apiGetRoleConfigs();
-    renderRoleConfigCards(data.configs || data || []);
+    const configs = data.configs || data || [];
+    window._roleConfigs = Object.fromEntries(configs.map(c => [c.role, c.defaults || {}]));
+    renderRoleConfigCards(configs);
   } catch {
     // Show default placeholder
     const roleMap = { 'Field Agent':'field', 'Supervisor':'super', 'GIS Analyst':'gis' };
@@ -389,17 +407,17 @@ async function loadRoleConfigs() {
 }
 
 async function saveRoleConfig(role) {
-  const PERMS = ['canCreate','canEdit','canDelete','canExport','canViewAll','canManageUsers','canViewAudit','canManageSettings'];
-  const cfg = {};
-  PERMS.forEach(p => {
-    const el = document.querySelector(`[data-perm-role="${role}"][data-perm-key="${p}"]`);
-    if (el) cfg[p] = el.checked;
+  const cfg = { ...(window._roleConfigs?.[role] || {}) };
+  document.querySelectorAll(`[data-perm-role="${role}"][data-perm-key]`).forEach(el => {
+    cfg[el.dataset.permKey] = el.checked;
   });
   try {
     await apiUpdateRoleConfig(role, { defaults: cfg });
+    window._roleConfigs = { ...(window._roleConfigs || {}), [role]: cfg };
     toast(`${role} permissions saved`);
-  } catch {
-    toast(`Saved locally`);
+  } catch (e) {
+    toast(`Save failed: ${e.message || 'check connection'}`, 'fa-circle-xmark', true);
+    return;
   }
   addAudit('ROLE_CONFIG_CHANGED', role, null, `${role} defaults updated`);
 }
