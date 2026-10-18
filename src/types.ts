@@ -71,6 +71,8 @@ export interface Asset {
   assessed?: 'Assessed' | 'Unassessed';
   approvalStatus?: 'Pending' | 'Approved' | 'Rejected';
   capturedBy?: UserRef | string | null;
+  submittedBy?: UserRef | string | null;
+  rejectionReason?: string;
   agent?: string;
   nextInspection?: string;
   lastInspection?: string;

@@ -12,7 +12,7 @@ export default function LoginPage() {
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
 
-  const from = (location.state as { from?: string } | null)?.from || '/assets';
+  const from = (location.state as { from?: string } | null)?.from || '/dashboard';
   if (user) return <Navigate to={from} replace />;
 
   async function submit(e: FormEvent) {

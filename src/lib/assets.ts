@@ -130,3 +130,29 @@ export function computeCompleteness(list: Asset[]) {
 export function scoreColor(pct: number): string {
   return pct >= 80 ? 'var(--success)' : pct >= 50 ? 'var(--warn)' : 'var(--danger)';
 }
+
+export function timeAgo(raw?: string | null): string {
+  if (!raw) return '—';
+  const t = new Date(raw).getTime();
+  if (isNaN(t)) return '—';
+  const s = Math.round((Date.now() - t) / 1000);
+  if (s < 60) return 'just now';
+  const m = Math.round(s / 60); if (m < 60) return `${m}m ago`;
+  const h = Math.round(m / 60); if (h < 24) return `${h}h ago`;
+  const d = Math.round(h / 24); if (d < 30) return `${d}d ago`;
+  return formatDate(raw);
+}
+
+/** ₦1.2B / ₦340.5M / ₦12,000 */
+export function compactNaira(n?: number | null): string {
+  if (!n) return '—';
+  if (n >= 1e9) return `₦${(n / 1e9).toFixed(1)}B`;
+  if (n >= 1e6) return `₦${(n / 1e6).toFixed(1)}M`;
+  return formatNaira(n);
+}
+
+// Status colours (good / warning / serious / critical). Always shown with a
+// text label beside them — never as the only cue.
+export const CONDITION_COLORS: Record<string, string> = {
+  Good: '#0ca30c', Fair: '#fab219', Poor: '#ec835a', Critical: '#d03b3b',
+};

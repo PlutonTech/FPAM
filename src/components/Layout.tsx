@@ -1,8 +1,9 @@
-import { useState } from 'react';
-import { NavLink, Outlet, useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../auth/AuthContext';
+import { approvalsSummary } from '../api/misc';
 
-interface NavItem { to: string; label: string; icon: string; roles?: string[] }
+interface NavItem { to: string; label: string; icon: string; roles?: string[]; badge?: 'approvals' }
 interface NavSection { title: string; items: NavItem[] }
 
 // Same structure as the legacy sidebar. Pages not yet ported open a
@@ -15,7 +16,7 @@ const NAV: NavSection[] = [
   ]},
   { title: 'Management', items: [
     { to: '/capture',       label: 'Field Capture', icon: 'fa-location-crosshairs' },
-    { to: '/approvals',     label: 'Approvals',     icon: 'fa-stamp', roles: ['Sub-Head', 'Supervisor', 'System Admin'] },
+    { to: '/approvals',     label: 'Approvals',     icon: 'fa-stamp', badge: 'approvals', roles: ['Sub-Head', 'Supervisor', 'System Admin'] },
     { to: '/inspections',   label: 'Inspections',   icon: 'fa-clipboard-check', roles: ['System Admin', 'Supervisor', 'Sub-Head', 'GIS Analyst'] },
     { to: '/analytics',     label: 'Analytics',     icon: 'fa-chart-bar' },
     { to: '/users',         label: 'Users',         icon: 'fa-users' },
@@ -34,9 +35,18 @@ const NAV: NavSection[] = [
 ];
 
 export default function Layout() {
-  const { user, logout } = useAuth();
+  const { user, logout, can } = useAuth();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
+  const [pending, setPending] = useState(0);
+  const location = useLocation();
+
+  // Pending-approvals badge; refreshed on navigation so it drops after reviewing.
+  const canApprove = can('canApprove');
+  useEffect(() => {
+    if (!canApprove) return;
+    approvalsSummary().then(s => setPending(s.pending)).catch(() => {});
+  }, [canApprove, location.pathname]);
 
   const initials = (user?.name || 'U').split(/\s+/).map(p => p[0]).join('').slice(0, 2).toUpperCase();
 
@@ -60,6 +70,7 @@ export default function Layout() {
                 {items.map(i => (
                   <NavLink key={i.to} to={i.to} className="nav-item" onClick={() => setOpen(false)}>
                     <i className={`fa-solid ${i.icon}`} />{i.label}
+                    {i.badge === 'approvals' && pending > 0 && <span className="nav-badge">{pending}</span>}
                   </NavLink>
                 ))}
               </div>

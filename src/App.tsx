@@ -7,6 +7,9 @@ import LoginPage from './pages/LoginPage';
 import PlaceholderPage from './pages/PlaceholderPage';
 import RegistryPage from './pages/registry/RegistryPage';
 import AssetViewPage from './pages/asset-view/AssetViewPage';
+import DashboardPage from './pages/DashboardPage';
+import MapPage from './pages/MapPage';
+import ApprovalsPage from './pages/ApprovalsPage';
 
 function RequireAuth({ children }: { children: ReactNode }) {
   const { user } = useAuth();
@@ -17,8 +20,7 @@ function RequireAuth({ children }: { children: ReactNode }) {
 
 // Pages not yet ported: [route, title, legacy html file]
 const LEGACY: [string, string, string][] = [
-  ['dashboard', 'Dashboard', 'dashboard.html'], ['map', 'Live Map', 'map.html'],
-  ['capture', 'Field Capture', 'capture.html'], ['approvals', 'Approvals', 'approvals.html'],
+  ['capture', 'Field Capture', 'capture.html'],
   ['inspections', 'Inspections', 'inspections.html'], ['analytics', 'Analytics', 'analytics.html'],
   ['users', 'Users', 'users.html'], ['form-requests', 'Form Requests', 'form_requests.html'],
   ['ocr', 'OCR Scanner', 'ocr.html'], ['excel', 'Excel Import', 'excel.html'],
@@ -34,13 +36,16 @@ export default function App() {
           <Routes>
             <Route path="/login" element={<LoginPage />} />
             <Route element={<RequireAuth><Layout /></RequireAuth>}>
-              <Route index element={<Navigate to="/assets" replace />} />
+              <Route index element={<Navigate to="/dashboard" replace />} />
+              <Route path="dashboard" element={<DashboardPage />} />
+              <Route path="map" element={<MapPage />} />
+              <Route path="approvals" element={<ApprovalsPage />} />
               <Route path="assets" element={<RegistryPage />} />
               <Route path="assets/:id" element={<AssetViewPage />} />
               {LEGACY.map(([path, title, file]) => (
                 <Route key={path} path={path} element={<PlaceholderPage title={title} legacyPage={file} />} />
               ))}
-              <Route path="*" element={<Navigate to="/assets" replace />} />
+              <Route path="*" element={<Navigate to="/dashboard" replace />} />
             </Route>
           </Routes>
         </ToastProvider>

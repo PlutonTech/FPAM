@@ -30,7 +30,10 @@ npm run lint
 | Exports — filtered CSV/XLSX/GeoJSON/PDF, selected rows, percentage export | Done |
 | **Asset View** — overview, photos (upload/delete), map, maintenance log, documents, valuation, condition history | Done |
 | Asset View — relationships, lifecycle, audit, inventory, M&E tabs | Not yet |
-| Dashboard, Map, Capture, Approvals, Inspections, Analytics, Users, Form Requests, OCR, Excel Import, File DB, Audit, Settings, Guidelines | Placeholder pages linking to the legacy dashboard |
+| **Dashboard** — KPIs from the verified registry, pending-approval and inspection alerts, recent captures, activity feed, condition/type/30-day charts (each with a table view) | Done |
+| **Live Map** — canvas markers coloured by condition, type/condition filters, legend, road/satellite, locate me, fit all, search, asset panel | Done (no 3D view yet) |
+| **Approvals** — pending/approved/rejected queue, approve, reject with reason, re-approve rejected, no self-review, sidebar badge | Done |
+| Capture, Inspections, Analytics, Users, Form Requests, OCR, Excel Import, File DB, Audit, Settings, Guidelines | Placeholder pages linking to the legacy dashboard |
 
 ## Layout
 
