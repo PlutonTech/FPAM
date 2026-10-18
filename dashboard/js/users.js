@@ -151,7 +151,7 @@ function openCreateUser() {
       <div class="form-group">
         <label class="form-label">Role *</label>
         <select class="form-control" id="nu-role" onchange="onRoleChange('nu', this.value)">
-          <option>Field Agent</option><option>Supervisor</option><option>GIS Analyst</option><option>System Admin</option><option>MDA Agent</option>
+          <option>Field Agent</option><option>Sub-Head</option><option>Supervisor</option><option>GIS Analyst</option><option>System Admin</option><option>MDA Agent</option>
         </select>
       </div>
       <div class="form-group" id="nu-division-wrap">
@@ -248,7 +248,7 @@ function openEditUser(u) {
       <div class="form-group full"><label class="form-label">Name</label><input class="form-control" id="eu-name" value="${escHtml(u.name)}"></div>
       <div class="form-group"><label class="form-label">Role</label>
         <select class="form-control" id="eu-role" onchange="onRoleChange('eu', this.value)">
-          ${['Field Agent','Supervisor','GIS Analyst','System Admin','MDA Agent'].map(r=>`<option ${u.role===r?'selected':''}>${r}</option>`).join('')}
+          ${['Field Agent','Sub-Head','Supervisor','GIS Analyst','System Admin','MDA Agent'].map(r=>`<option ${u.role===r?'selected':''}>${r}</option>`).join('')}
         </select>
       </div>
       <div class="form-group" id="eu-division-wrap" style="${isMdaAgent?'display:none':(crossDiv?'opacity:.5;pointer-events:none':'')}">
