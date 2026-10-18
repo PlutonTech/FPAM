@@ -9,6 +9,7 @@ import { AssessedTag, ConditionTag, RiskBadge, Tag, TypeTag } from '../../compon
 import type { Asset } from '../../types';
 import { assetKey, coords, formatDate, formatNaira } from '../../lib/assets';
 import EditAssetModal from '../registry/EditAssetModal';
+import ScheduleInspectionModal from '../inspections/ScheduleInspectionModal';
 import { DocumentsTab, HistoryTab, LocationTab, MaintenanceTab, OverviewTab, PhotosTab, ValuationTab } from './tabs';
 
 const TABS = [
@@ -29,6 +30,7 @@ export default function AssetViewPage() {
   const [tab, setTab] = useState<TabKey>('overview');
   const [photoIdx, setPhotoIdx] = useState(0);
   const [editing, setEditing] = useState(false);
+  const [scheduling, setScheduling] = useState(false);
   const [mdas, setMdas] = useState<string[]>([]);
 
   const reload = useCallback(async () => {
@@ -114,6 +116,7 @@ export default function AssetViewPage() {
           </div>
           <div className="row" style={{ marginTop: 'auto' }}>
             {can('canEdit') && <button className="btn btn-primary btn-sm" onClick={() => setEditing(true)}><i className="fa-solid fa-pen-to-square" /> Edit</button>}
+            <button className="btn btn-ghost btn-sm" onClick={() => setScheduling(true)}><i className="fa-solid fa-calendar-plus" /> Schedule inspection</button>
             {c && <a className="btn btn-ghost btn-sm" href={`https://www.google.com/maps/search/?api=1&query=${c.lat},${c.lng}`} target="_blank" rel="noreferrer"><i className="fa-solid fa-map-location-dot" /> Google Maps</a>}
             {can('canDelete') && <button className="btn btn-danger btn-sm" onClick={remove}><i className="fa-solid fa-trash" /> Delete</button>}
           </div>
@@ -140,6 +143,10 @@ export default function AssetViewPage() {
         </div>
       </div>
 
+      {scheduling && (
+        <ScheduleInspectionModal asset={asset} onClose={() => setScheduling(false)}
+                                 onDone={() => { setScheduling(false); reload(); }} />
+      )}
       {editing && (
         <EditAssetModal asset={asset} mdas={mdas} onClose={() => setEditing(false)}
                         onSaved={() => { setEditing(false); reload(); }} />

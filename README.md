@@ -33,7 +33,9 @@ npm run lint
 | **Dashboard** — KPIs from the verified registry, pending-approval and inspection alerts, recent captures, activity feed, condition/type/30-day charts (each with a table view) | Done |
 | **Live Map** — canvas markers coloured by condition, type/condition filters, legend, road/satellite, locate me, fit all, search, asset panel | Done (no 3D view yet) |
 | **Approvals** — pending/approved/rejected queue, approve, reject with reason, re-approve rejected, no self-review, sidebar badge | Done |
-| Capture, Inspections, Analytics, Users, Form Requests, OCR, Excel Import, File DB, Audit, Settings, Guidelines | Placeholder pages linking to the legacy dashboard |
+| **Inspections** — open/overdue/awaiting-review/due views, schedule (also from Asset View), start, submit report, approve/reject, report & history view, assets due by schedule | Done |
+| **Field Capture** — all fields incl. assessed/sector/area/next inspection, type-specific fields, GPS or click-the-map location, photos/documents/spreadsheets, inline validation | Done |
+| Analytics, Users, Form Requests, OCR, Excel Import, File DB, Audit, Settings, Guidelines | Placeholder pages linking to the legacy dashboard |
 
 ## Layout
 
@@ -52,5 +54,6 @@ Notes:
 - Photos and documents are behind Bearer auth, so they're fetched as blobs (`AuthedImage`).
 - Permission checks in the UI only hide controls; the backend is what actually enforces them.
 - Enum lists in `lib/assets.ts` must stay in sync with `assetspatial-backend/src/models/Asset.js`.
-- The new export endpoints (filtered export, `POST /assets/export/bulk`) need the backend branch
-  `fix/asset-registry-audit` deployed.
+- Several features need the backend branch `fix/asset-registry-audit` deployed: filtered and bulk
+  exports, approval rules, scheduling inspections (broken on the current backend), and saving the
+  assessed/sector/area/next-inspection fields on capture.

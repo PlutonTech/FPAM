@@ -49,11 +49,11 @@ export function PhotosTab({ asset, onChange }: { asset: Asset; onChange: () => v
   const key = assetKey(asset);
   const photos = asset.photos || [];
 
-  async function upload(files: FileList | null) {
-    if (!files?.length) return;
+  async function upload(files: File[]) {
+    if (!files.length) return;
     setBusy(true);
     let ok = 0; const failures: string[] = [];
-    for (const f of Array.from(files)) {
+    for (const f of files) {
       try { await assetsApi.uploadPhoto(key, f); ok++; } catch (err) { failures.push(`${f.name}: ${errorMessage(err)}`); }
     }
     setBusy(false);
@@ -72,7 +72,7 @@ export function PhotosTab({ asset, onChange }: { asset: Asset; onChange: () => v
       {can('canCreate') && (
         <label className="btn btn-secondary btn-sm" style={{ cursor: 'pointer', marginBottom: 14 }}>
           <i className={`fa-solid ${busy ? 'fa-spinner fa-spin' : 'fa-upload'}`} /> Upload photos
-          <input type="file" accept="image/*" multiple hidden disabled={busy} onChange={e => { upload(e.target.files); e.target.value = ''; }} />
+          <input type="file" accept="image/*" multiple hidden disabled={busy} onChange={e => { const picked = Array.from(e.target.files || []); e.target.value = ''; upload(picked); }} />
         </label>
       )}
       {photos.length === 0 ? <div className="muted">No photos yet.</div> : (

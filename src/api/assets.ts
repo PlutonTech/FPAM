@@ -28,6 +28,8 @@ export async function fetchAllAssets(params: Record<string, string> = {}): Promi
   return [first, ...rest].flatMap(r => r.assets || []);
 }
 
+export const createAsset = (data: Record<string, unknown>) =>
+  api<{ asset: Asset }>('/assets', { method: 'POST', body: data }).then(r => r.asset);
 export const getAsset    = (id: string) => api<{ asset: Asset }>(`/assets/${enc(id)}`).then(r => r.asset);
 export const updateAsset = (id: string, data: Record<string, unknown>) =>
   api<{ asset: Asset }>(`/assets/${enc(id)}`, { method: 'PUT', body: data }).then(r => r.asset);
@@ -49,6 +51,11 @@ export function uploadDocument(assetId: string, file: File) {
   return api(`/assets/${enc(assetId)}/documents`, { method: 'POST', body: fd });
 }
 export const deleteDocument = (assetId: string, fileId: string) => api(documentPath(assetId, fileId), { method: 'DELETE' });
+
+export function uploadSpreadsheet(assetId: string, file: File) {
+  const fd = new FormData(); fd.append('file', file);
+  return api(`/assets/${enc(assetId)}/excel`, { method: 'POST', body: fd });
+}
 
 // ── Maintenance / valuation ───────────────────────────────────────────────────
 export const addMaintenance = (assetId: string, log: Omit<MaintenanceLog, '_id'>) =>
