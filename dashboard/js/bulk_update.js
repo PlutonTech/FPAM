@@ -36,6 +36,45 @@ function openBulkUpdateModal() {
 
 let _bulkUpdateRows = [];
 
+// Allowed values — mirror the Asset schema enums in the backend. Matching is
+// case-insensitive and the canonical spelling is what gets sent.
+const BULK_ENUMS = {
+  condition: ['Good','Fair','Poor','Critical'],
+  status:    ['Active','Under Maintenance','Decommissioned','Disputed','Recovered'],
+  assessed:  ['Assessed','Unassessed'],
+  sector: ['Administration & Governance','Defence & Security','Education','Health','Infrastructure & Works',
+    'Energy & Power','Agriculture & Food Security','Water Resources','Transportation','Finance & Economy',
+    'Justice & Legal Affairs','Environment','Communications & Digital','Social Development',
+    'Science & Technology','Trade & Investment','Petroleum & Mineral Resources','Labour & Employment',
+    'Foreign Affairs','Culture, Tourism & Sports'],
+};
+function canonicalEnum(field, raw) {
+  if (!raw) return '';
+  const hit = BULK_ENUMS[field].find(v => v.toLowerCase() === String(raw).trim().toLowerCase());
+  return hit || null; // null = present but invalid
+}
+
+// RFC-4180-ish CSV parser: handles quoted fields containing commas, quotes
+// ("") and newlines — the old split(',') broke on any note with a comma.
+function parseCsv(text) {
+  const rows = []; let row = [], field = '', q = false;
+  for (let i = 0; i < text.length; i++) {
+    const c = text[i];
+    if (q) {
+      if (c === '"' && text[i + 1] === '"') { field += '"'; i++; }
+      else if (c === '"') q = false;
+      else field += c;
+    } else if (c === '"') q = true;
+    else if (c === ',') { row.push(field); field = ''; }
+    else if (c === '\n' || c === '\r') {
+      if (c === '\r' && text[i + 1] === '\n') i++;
+      row.push(field); rows.push(row); row = []; field = '';
+    } else field += c;
+  }
+  if (field || row.length) { row.push(field); rows.push(row); }
+  return rows.filter(r => r.some(c => c.trim()));
+}
+
 async function parseBulkUpdateFile(file) {
   if (!file) return;
   const preview = document.getElementById('bulk-update-preview');
@@ -47,12 +86,13 @@ async function parseBulkUpdateFile(file) {
 
     if (file.name.endsWith('.csv') || file.type === 'text/csv') {
       // Parse CSV manually
-      const text = new TextDecoder().decode(buf);
-      const lines = text.trim().split('\n').map(l => l.split(',').map(c => c.replace(/^"|"$/g,'').trim()));
+      const text = new TextDecoder().decode(buf).replace(/^\uFEFF/, '');
+      const lines = parseCsv(text);
+      if (!lines.length) throw new Error('File is empty');
       const headers = lines[0].map(h => h.toLowerCase().trim());
       rows = lines.slice(1).map(cols => {
         const obj = {};
-        headers.forEach((h, i) => { obj[h] = cols[i] || ''; });
+        headers.forEach((h, i) => { obj[h] = (cols[i] || '').trim(); });
         return obj;
       });
     } else {
@@ -64,20 +104,29 @@ async function parseBulkUpdateFile(file) {
       // Normalise headers to lowercase
       rows = rows.map(r => {
         const out = {};
-        Object.entries(r).forEach(([k,v]) => { out[k.toLowerCase().trim()] = String(v||'').trim(); });
+        Object.entries(r).forEach(([k,v]) => {
+          // Excel date cells arrive as Date objects with cellDates:true
+          out[k.toLowerCase().trim()] = v instanceof Date ? v.toISOString().slice(0, 10) : String(v ?? '').trim();
+        });
         return out;
       });
     }
 
     // Validate rows
-    const VALID_CONDITIONS = ['Good','Fair','Poor','Critical',''];
     const valid = [], invalid = [];
     rows.forEach((r, i) => {
-      const id = r.assetid || r['asset id'] || r.asset_id || r.id || '';
-      const cond = r.condition || '';
+      const id = r.assetid || r['asset id'] || r.asset_id || r.assetcode || r['asset code'] || r.id || '';
       if (!id) { invalid.push({ row: i+2, reason: 'Missing assetId' }); return; }
-      if (cond && !VALID_CONDITIONS.includes(cond)) { invalid.push({ row: i+2, id, reason: `Invalid condition: "${cond}"` }); return; }
-      valid.push({ assetId: id, condition: cond||null, notes: r.notes||'', captureDate: r.capturedate||r['capture date']||'', status: r.status||'', sector: r.sector||'', assessed: r.assessed||'' });
+      const out = { assetId: id, notes: r.notes||'', captureDate: r.capturedate||r['capture date']||'' };
+      for (const field of ['condition', 'status', 'sector', 'assessed']) {
+        const v = canonicalEnum(field, r[field]);
+        if (v === null) { invalid.push({ row: i+2, id, reason: `Invalid ${field}: "${r[field]}"` }); return; }
+        out[field] = v; // '' = column blank -> leave unchanged
+      }
+      if (out.captureDate && isNaN(new Date(out.captureDate))) {
+        invalid.push({ row: i+2, id, reason: `Invalid captureDate: "${out.captureDate}"` }); return;
+      }
+      valid.push(out);
     });
 
     _bulkUpdateRows = valid;
@@ -104,7 +153,10 @@ async function parseBulkUpdateFile(file) {
       }
     } catch { currentAssets = assets || []; }
     const assetMap = {};
-    currentAssets.forEach(a => { assetMap[a.assetId||a.id] = a; });
+    currentAssets.forEach(a => {
+      assetMap[a.assetId||a.id] = a;
+      if (a.assetCode) assetMap[a.assetCode] = a; // allow sheets keyed by FGN code
+    });
 
     // Build preview
     const matched   = valid.filter(r => !!assetMap[r.assetId]);
@@ -115,7 +167,8 @@ async function parseBulkUpdateFile(file) {
              (r.notes && r.notes !== cur.notes) ||
              (r.status && r.status !== cur.status) ||
              (r.sector && r.sector !== cur.sector) ||
-             r.captureDate || r.assessed;
+             (r.assessed && r.assessed !== (cur.assessed || 'Unassessed')) ||
+             !!r.captureDate;
     });
 
     if (preview) preview.innerHTML = `
@@ -170,11 +223,15 @@ async function applyBulkUpdate() {
   const applyBtn = document.getElementById('btn-apply-bulk');
   if (applyBtn) { applyBtn.disabled = true; applyBtn.innerHTML = '<div class="spinner" style="width:14px;height:14px;border-width:2px;display:inline-block"></div> Applying…'; }
 
-  let done = 0, failed = 0;
+  let done = 0; const failures = [];
   for (const r of changes) {
     const payload = {};
-    if (r.condition   !== undefined) payload.condition   = r.condition || null;
-    if (r.previousCondition)         payload.previousCondition = r.previousCondition;
+    // Only send a condition when the sheet supplied one — a blank cell used
+    // to be sent as null and wiped the asset's existing condition.
+    if (r.condition) {
+      payload.condition = r.condition;
+      if (r.previousCondition && r.previousCondition !== r.condition) payload.previousCondition = r.previousCondition;
+    }
     if (r.notes)                     payload.notes       = r.notes;
     if (r.status)                    payload.status      = r.status;
     if (r.sector)                    payload.sector      = r.sector;
@@ -184,16 +241,17 @@ async function applyBulkUpdate() {
     try {
       await apiUpdateAsset(r.assetId, payload);
       done++;
-    } catch {
-      // Offline: update local cache
-      const a = (assets||[]).find(x=>(x.assetId||x.id)===r.assetId);
-      if (a) Object.assign(a, payload);
-      failed++;
+    } catch (err) {
+      failures.push(`${r.assetId}: ${err.message}`);
     }
   }
 
-  if (typeof saveLocal === 'function') saveLocal();
-  if (typeof toast === 'function') toast(`${done} assets updated${failed?`, ${failed} failed (saved locally)`:''}`, 'fa-bolt');
+  if (failures.length) console.warn('[bulk update] failures:', failures);
+  if (typeof toast === 'function') {
+    toast(failures.length
+      ? `${done} updated, ${failures.length} failed — ${failures[0]}${failures.length > 1 ? ' (see console for all)' : ''}`
+      : `${done} assets updated`, failures.length ? 'fa-circle-xmark' : 'fa-bolt', !!failures.length);
+  }
   if (typeof addAudit === 'function') addAudit('BULK_UPDATE', 'MULTIPLE', null, `${done} assets updated via Excel import`);
   if (typeof closeModal === 'function') closeModal();
   if (typeof renderAssets === 'function') renderAssets();

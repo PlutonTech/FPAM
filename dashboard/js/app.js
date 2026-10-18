@@ -59,7 +59,12 @@ function addAudit(action, entity, user, detail) {
 
 // ── HELPERS ───────────────────────────────────────────────────────────────────
 function typeColor(type) {
-  const m = { 'Infrastructure':'tag-blue', 'Land / Property':'tag-green', 'Utility':'tag-orange', 'Environmental':'tag-green', 'Equipment':'tag-gray' };
+  const m = {
+    'Infrastructure':'tag-blue', 'Land / Property':'tag-green', 'Utility':'tag-orange', 'Environmental':'tag-green',
+    'Equipment':'tag-gray', 'Monument':'tag-warn', 'Administrative Office':'tag-blue', 'Residential':'tag-green',
+    'Hospital':'tag-red', 'School':'tag-blue', 'Laboratory':'tag-orange', 'Warehouse':'tag-gray',
+    'Court':'tag-warn', 'Security Facility':'tag-red',
+  };
   return m[type] || 'tag-gray';
 }
 function condColor(c) {

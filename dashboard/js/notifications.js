@@ -365,7 +365,7 @@ async function runAlertScan() {
     const myId = _userId();
 
     const myDecidedAssets = list.filter(a =>
-      String(a.capturedBy) === myId &&
+      String(a.capturedBy?._id || a.capturedBy) === myId &&
       ['Approved', 'Rejected'].includes(a.approvalStatus) &&
       a.reviewedAt && (today - new Date(a.reviewedAt)) < RECENT_MS
     );

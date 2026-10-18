@@ -57,9 +57,11 @@ async function renderAssets() {
     if (assessed) params.assessed = assessed;
     allAssets = await fetchAllAssets(params);
     filteredAssets = [...allAssets];
-  } catch {
+  } catch (err) {
     allAssets = [...assets];
     filteredAssets = [...allAssets];
+    toast(isNetworkError(err) ? 'Offline — showing locally cached assets' : `Could not load assets: ${err.message}`,
+          'fa-triangle-exclamation', true);
   }
   applyFiltersAndRender();
 }
@@ -98,42 +100,50 @@ function renderAssetsTable(list) {
     return;
   }
 
+  const canEditRow   = typeof can !== 'function' || can('canEdit');
+  const canDeleteRow = typeof can !== 'function' || can('canDelete');
   tbody.innerHTML = pageItems.map(a => {
     const id = a.assetId || a.id;
     const geom = a.geomType || a.geom || '—';
-    const lat = a.lat || a.location?.coordinates?.[1] || '—';
-    const lng = a.lng || a.location?.coordinates?.[0] || '—';
     const agent = a.agent || a.capturedBy?.name || '—';
-    const mda   = a.mda || '—';
+    const assessed = a.assessed || 'Unassessed';
+    const stateLga = [a.state, a.lga].filter(Boolean).join(' / ') || '—';
+    const rawDate  = a.createdAt || a.date || a.captureDate;
+    const captured = rawDate && !isNaN(new Date(rawDate)) ? new Date(rawDate).toLocaleDateString() : (rawDate || '—');
     return `<tr>
       <td style="width:36px"><input type="checkbox" class="asset-row-check" data-id="${id}" onchange="onAssetRowCheck()" ${selectedAssetIds.has(id)?'checked':''}></td>
-      <td style="font-family:'Space Mono',monospace;font-size:10px;color:var(--text3)">${escHtml(id)}</td>
-      <td><strong>${escHtml(a.name)}</strong></td>
+      <td style="font-family:'Space Mono',monospace;font-size:10px;color:var(--text3)">${escHtml(id)}${a.assetCode && a.assetCode !== id ? `<div style="font-size:9px;opacity:.75">${escHtml(a.assetCode)}</div>` : ''}</td>
+      <td><strong>${escHtml(a.name)}</strong>${a.mda ? `<div style="font-size:10px;color:var(--text3)">${escHtml(a.mda)}</div>` : ''}</td>
       <td><span class="tag ${typeColor(a.type)}">${escHtml(a.type)}</span></td>
       <td>${geomIcon(geom)} <span style="font-size:11px;color:var(--text3);margin-left:2px">${geom}</span></td>
       <td><span class="tag ${condColor(a.condition)}">${escHtml(a.condition)}</span></td>
-      <td style="font-family:'Space Mono',monospace;font-size:10px;color:var(--text3)">${typeof lat==='number'?lat.toFixed(4):lat}, ${typeof lng==='number'?lng.toFixed(4):lng}</td>
-      <td style="font-size:12px;color:var(--text2)">${escHtml(a.state||'—')}</td>
-      <td style="font-size:11px;color:var(--text2);max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${escHtml(mda)}">${escHtml(mda)}</td>
+      <td style="font-size:12px;color:var(--text2)">${escHtml(stateLga)}</td>
+      <td><span class="tag ${assessed==='Unassessed'?'tag-gray':'tag-green'}">${escHtml(assessed)}</span></td>
       <td>${typeof calcRiskScore !== 'undefined' ? riskBadge(calcRiskScore(a)) : ''}</td>
-      <td style="font-size:12px;color:var(--text3)">${escHtml(agent)}</td>
+      <td style="font-size:12px;color:var(--text3)">${escHtml(captured)}<div style="font-size:10px">${escHtml(agent)}</div></td>
       <td>
         <div style="display:flex;gap:6px">
           <button class="btn btn-ghost btn-xs" onclick="window.location.href='asset-view.html?id='+encodeURIComponent('${id}')" title="View detail">
             <i class="fa-solid fa-eye"></i>
           </button>
-          <button class="btn btn-ghost btn-xs" onclick='openEditAsset(${JSON.stringify(a).replace(/'/g,"&#39;")})' title="Edit">
+          ${canEditRow ? `<button class="btn btn-ghost btn-xs" onclick="openEditAssetById('${escHtml(id)}')" title="Edit">
             <i class="fa-solid fa-pen-to-square"></i>
-          </button>
-          <button class="btn btn-danger btn-xs" onclick="deleteAsset('${id}')" title="Delete">
+          </button>` : ''}
+          ${canDeleteRow ? `<button class="btn btn-danger btn-xs" onclick="deleteAsset('${escHtml(id)}')" title="Delete">
             <i class="fa-solid fa-trash"></i>
-          </button>
+          </button>` : ''}
         </div>
       </td>
     </tr>`;
   }).join('');
 
   renderAssetsPagination(start + 1, Math.min(start + ASSETS_PAGE_SIZE, total), total);
+  // Header checkbox reflects only the rows on this page.
+  const selAll = document.getElementById('sel-all');
+  if (selAll) {
+    const ids = pageItems.map(a => a.assetId || a.id);
+    selAll.checked = ids.length > 0 && ids.every(i => selectedAssetIds.has(i));
+  }
 }
 
 // ── PAGINATION CONTROLS ───────────────────────────────────────────────────────
@@ -193,13 +203,16 @@ function applyFiltersAndRender() {
       (a.mda     ||'').toLowerCase().includes(q) ||
       (a.address ||'').toLowerCase().includes(q) ||
       (a.state   ||'').toLowerCase().includes(q) ||
+      (a.lga     ||'').toLowerCase().includes(q) ||
+      (a.type    ||'').toLowerCase().includes(q) ||
       (a.notes   ||'').toLowerCase().includes(q)
     )) return false;
     if (type     && a.type                           !== type)     return false;
     if (cond     && a.condition                      !== cond)     return false;
     if (assessed && (a.assessed||'Unassessed')       !== assessed) return false;
     if (geom     && (a.geomType||a.geom)             !== geom)     return false;
-    if (state    && (a.state||'').toLowerCase()      !== state.toLowerCase()) return false;
+    // Normalised the same way as the stats bar, so "lagos " / "Abuja" still match.
+    if (state    && normalizeNigeriaState(a.state)   !== normalizeNigeriaState(state)) return false;
     if (mda      && a.mda                            !== mda)      return false;
     return true;
   });
@@ -259,17 +272,27 @@ async function deleteAsset(id) {
   try {
     await apiDeleteAsset(id);
     toast('Asset deleted', 'fa-trash');
-  } catch {
+  } catch (err) {
+    if (!isNetworkError(err)) { toast(`Delete failed: ${err.message}`, 'fa-circle-xmark', true); return; }
     assets = assets.filter(a => (a.assetId||a.id) !== id);
     saveLocal();
-    toast('Deleted locally', 'fa-trash');
+    toast('Offline — deleted locally only', 'fa-trash');
   }
+  selectedAssetIds.delete(id);
+  updateBulkBar();
   addAudit('ASSET_DELETED', id, null, 'Asset removed');
   renderAssets();
-  renderDashboard();
+  if (typeof renderDashboard === 'function') renderDashboard();
 }
 
 // ── EDIT ──────────────────────────────────────────────────────────────────────
+function findLoadedAsset(id) {
+  return allAssets.find(x => (x.assetId || x.id) === id) || (assets || []).find(x => (x.assetId || x.id) === id);
+}
+function openEditAssetById(id) {
+  const a = findLoadedAsset(id);
+  if (a) openEditAsset(a);
+}
 function openEditAsset(a) {
   const id = a.assetId || a.id;
   openModal('Edit Asset',
@@ -277,6 +300,7 @@ function openEditAsset(a) {
       <div class="form-group full"><label class="form-label">Name</label><input class="form-control" id="edit-name" value="${escHtml(a.name)}"></div>
       <div class="form-group"><label class="form-label">Condition</label>
         <select class="form-control" id="edit-cond">
+          <option value="" ${a.condition ? '' : 'selected'}>— Not set —</option>
           ${['Good','Fair','Poor','Critical'].map(c=>`<option ${a.condition===c?'selected':''}>${c}</option>`).join('')}
         </select></div>
       <div class="form-group"><label class="form-label">Status</label>
@@ -296,23 +320,29 @@ function openEditAsset(a) {
 }
 
 async function saveEditedAsset(id) {
+  const prev = findLoadedAsset(id) || {};
   const data = {
     name:      document.getElementById('edit-name')?.value.trim(),
-    condition: document.getElementById('edit-cond')?.value,
+    condition: document.getElementById('edit-cond')?.value || null,
     status:    document.getElementById('edit-status')?.value,
     mda:       document.getElementById('edit-mda')?.value || '',
     state:     document.getElementById('edit-state')?.value,
     lga:       document.getElementById('edit-lga')?.value,
     notes:     document.getElementById('edit-notes')?.value,
   };
+  if (!data.name) { toast('Name is required', 'fa-triangle-exclamation', true); return; }
+  // Lets the backend record the change in conditionHistory.
+  if (prev.condition && data.condition !== prev.condition) data.previousCondition = prev.condition;
   try {
     await apiUpdateAsset(id, data);
     toast('Asset updated', 'fa-circle-check');
-  } catch {
+  } catch (err) {
+    // Keep the modal open so the user can correct e.g. a duplicate name.
+    if (!isNetworkError(err)) { toast(`Save failed: ${err.message}`, 'fa-circle-xmark', true); return; }
     const a = assets.find(x => (x.assetId||x.id) === id);
     if (a) Object.assign(a, data);
     saveLocal();
-    toast('Saved locally', 'fa-circle-check');
+    toast('Offline — saved locally only', 'fa-circle-check');
   }
   addAudit('ASSET_UPDATED', id, null, `${data.name} updated`);
   closeModal();
@@ -321,21 +351,25 @@ async function saveEditedAsset(id) {
 
 // ── BULK ACTIONS ──────────────────────────────────────────────────────────────
 function onAssetRowCheck() {
-  selectedAssetIds = new Set([...document.querySelectorAll('.asset-row-check:checked')].map(c => c.dataset.id));
+  document.querySelectorAll('.asset-row-check').forEach(c => {
+    if (c.checked) selectedAssetIds.add(c.dataset.id); else selectedAssetIds.delete(c.dataset.id);
+  });
   updateBulkBar();
 }
 function toggleSelectAllAssets(checked) {
-  document.querySelectorAll('.asset-row-check').forEach(c => { c.checked = checked; });
-  selectedAssetIds = checked ? new Set([...document.querySelectorAll('.asset-row-check')].map(c => c.dataset.id)) : new Set();
+  document.querySelectorAll('.asset-row-check').forEach(c => {
+    c.checked = checked;
+    if (checked) selectedAssetIds.add(c.dataset.id); else selectedAssetIds.delete(c.dataset.id);
+  });
   updateBulkBar();
 }
 function updateBulkBar() {
   const n = selectedAssetIds.size;
-  const bar = document.getElementById('bulk-action-bar');
-  const toolbar = document.getElementById('asset-selection-toolbar');
-  const countEl = document.getElementById('sel-toolbar-count');
+  // assets.html uses #sel-toolbar (shown via the .open class) + #sel-count.
+  document.getElementById('sel-toolbar')?.classList.toggle('open', n > 0);
+  const countEl = document.getElementById('sel-count');
   if (countEl) countEl.textContent = n + ' selected';
-  if (toolbar) toolbar.style.display = n > 0 ? 'flex' : 'none';
+  const bar = document.getElementById('bulk-action-bar');
   if (bar) bar.classList.toggle('visible', n > 0);
   const bulkCount = document.getElementById('bulk-count');
   if (bulkCount) bulkCount.textContent = n + ' selected';
@@ -343,21 +377,61 @@ function updateBulkBar() {
 function clearBulkSelection() {
   selectedAssetIds.clear();
   document.querySelectorAll('.asset-row-check').forEach(c => c.checked = false);
+  const selAll = document.getElementById('sel-all');
+  if (selAll) selAll.checked = false;
   updateBulkBar();
 }
 
 async function bulkDelete() {
   if (!selectedAssetIds.size) return;
   if (!confirm(`Delete ${selectedAssetIds.size} assets? This cannot be undone.`)) return;
-  for (const id of selectedAssetIds) {
-    try { await apiDeleteAsset(id); } catch { assets = assets.filter(a => (a.assetId||a.id) !== id); }
+  let done = 0; const failures = [];
+  for (const id of [...selectedAssetIds]) {
+    try { await apiDeleteAsset(id); done++; selectedAssetIds.delete(id); }
+    catch (err) { failures.push(`${id}: ${err.message}`); }
   }
-  saveLocal();
-  addAudit('BULK_DELETE', 'MULTIPLE', null, `${selectedAssetIds.size} assets deleted`);
-  selectedAssetIds.clear();
+  addAudit('BULK_DELETE', 'MULTIPLE', null, `${done} assets deleted`);
   updateBulkBar();
   renderAssets();
-  toast(`${selectedAssetIds.size || 'Selected'} assets deleted`, 'fa-trash');
+  if (failures.length) {
+    toast(`${done} deleted, ${failures.length} failed — ${failures[0]}`, 'fa-circle-xmark', true);
+  } else {
+    toast(`${done} asset${done === 1 ? '' : 's'} deleted`, 'fa-trash');
+  }
+}
+
+function bulkSetCondition() {
+  if (!selectedAssetIds.size) return;
+  openModal(`Set Condition — ${selectedAssetIds.size} asset${selectedAssetIds.size === 1 ? '' : 's'}`,
+    `<div class="form-group full"><label class="form-label">New condition</label>
+      <select class="form-control" id="bulk-cond">
+        ${['Good','Fair','Poor','Critical'].map(c => `<option>${c}</option>`).join('')}
+      </select></div>`,
+    `<button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+     <button class="btn btn-primary" id="bulk-cond-apply" onclick="applyBulkCondition()"><i class="fa-solid fa-save"></i> Apply</button>`
+  );
+}
+
+async function applyBulkCondition() {
+  const cond = document.getElementById('bulk-cond')?.value;
+  if (!cond) return;
+  const btn = document.getElementById('bulk-cond-apply');
+  if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Applying…'; }
+  let done = 0, skipped = 0; const failures = [];
+  for (const id of [...selectedAssetIds]) {
+    const prev = findLoadedAsset(id)?.condition;
+    if (prev === cond) { skipped++; continue; }
+    try {
+      await apiUpdateAsset(id, { condition: cond, ...(prev ? { previousCondition: prev } : {}) });
+      done++;
+    } catch (err) { failures.push(`${id}: ${err.message}`); }
+  }
+  addAudit('BULK_UPDATE', 'MULTIPLE', null, `${done} assets set to ${cond}`);
+  closeModal();
+  renderAssets();
+  const msg = `${done} updated${skipped ? `, ${skipped} already ${cond}` : ''}`;
+  if (failures.length) toast(`${msg}, ${failures.length} failed — ${failures[0]}`, 'fa-circle-xmark', true);
+  else toast(msg, 'fa-circle-check');
 }
 
 function bulkExportCSV() {
@@ -375,17 +449,35 @@ let _sortDir   = 1;  // 1 = ascending (oldest first)
 
 function sortBy(field) {
   if (_sortField === field) { _sortDir *= -1; } else { _sortField = field; _sortDir = -1; }
+  const COND_RANK = { Good:0, Fair:1, Poor:2, Critical:3 };
+  const key = a => {
+    if (field === 'condition') return COND_RANK[a.condition] ?? 4;           // severity, not alphabet
+    if (field === 'createdAt') return a.createdAt ? new Date(a.createdAt).getTime() : 0;
+    if (field === 'assetId')   return a.assetId || a.id || '';
+    return a[field] ?? '';
+  };
   filteredAssets.sort((a, b) => {
-    const va = a[field] || a.location?.coordinates?.[field] || '';
-    const vb = b[field] || b.location?.coordinates?.[field] || '';
-    if (typeof va === 'number') return (va - vb) * _sortDir;
-    return String(va).localeCompare(String(vb)) * _sortDir;
+    const va = key(a), vb = key(b);
+    if (typeof va === 'number' && typeof vb === 'number') return (va - vb) * _sortDir;
+    // numeric:true -> AST-999 sorts before AST-1001
+    return String(va).localeCompare(String(vb), undefined, { numeric: true }) * _sortDir;
   });
   currentPage = 1;
   renderAssetsTable(filteredAssets);
 }
 
-function exportAssets(fmt) { downloadExport(fmt); }
+// Exports what the registry is showing: the backend applies the same filters.
+// (Free-text search is client-side only, so when it's active we export the
+// exact matching IDs instead.)
+function exportAssets(fmt) {
+  const q = (document.getElementById('search-input')?.value || '').trim();
+  if (q) { downloadExport(fmt, filteredAssets.map(a => a.assetId || a.id)); return; }
+  const filters = {};
+  const pick = (id, key) => { const v = document.getElementById(id)?.value; if (v) filters[key] = v; };
+  pick('filter-type', 'type'); pick('filter-cond', 'condition'); pick('filter-assessed', 'assessed');
+  pick('filter-geom', 'geomType'); pick('filter-state', 'state'); pick('filter-mda', 'mda');
+  downloadExport(fmt, null, filters);
+}
 
 // Bulk bar for assets.html (uses sel-toolbar + sel-count)
 function toggleSelectAll(checked) { toggleSelectAllAssets(checked); }

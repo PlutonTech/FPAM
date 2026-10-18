@@ -174,28 +174,51 @@ async function apiOcrJobStatus(jobId) {
 }
 
 // ── Export ───────────────────────────────────────────────────────────────────
-function apiExportUrl(format, ids = null) {
+function apiExportUrl(format, ids = null, filters = {}) {
   const base = `${API_BASE}/assets/export`;
-  if (ids) return `${base}/bulk?ids=${ids.join(',')}&format=${format}`;
-  return `${base}?format=${format}`;
+  if (ids) return `${base}/bulk`;
+  const qs = new URLSearchParams({ format, ...filters });
+  return `${base}?${qs}`;
 }
 
-function downloadExport(format, ids = null) {
-  const url = apiExportUrl(format, ids);
-  const a = document.createElement('a');
-  a.href = url;
-  a.setAttribute('download', '');
-  // Add auth header via fetch + blob since <a> can't send headers
-  fetch(url, { headers: authHeaders() })
-    .then(r => r.blob())
+// ids    → export exactly those assets (sent as a POST body, so thousands of
+//          IDs don't overflow the URL)
+// filters→ for a full export, the registry's active filters (type, state, …)
+function downloadExport(format, ids = null, filters = {}) {
+  if (ids && !ids.length) { toast('Select at least one asset to export', 'fa-circle-info'); return; }
+  const url  = apiExportUrl(format, ids, filters);
+  const opts = ids
+    ? { method: 'POST', headers: authHeaders(), body: JSON.stringify({ ids, format }) }
+    : { headers: authHeaders() };
+  fetch(url, opts)
+    .then(async r => {
+      // Without this check a 401/413/500 JSON error body was saved as the
+      // "export" file, producing a corrupt .pdf/.xlsx.
+      if (!r.ok) {
+        const data = await r.json().catch(() => ({}));
+        throw new Error(data.error || `Export failed (HTTP ${r.status})`);
+      }
+      return r.blob();
+    })
     .then(blob => {
       const bUrl = URL.createObjectURL(blob);
+      const a = document.createElement('a');
       a.href = bUrl;
       a.download = `assets_export.${format}`;
+      document.body.appendChild(a);
       a.click();
-      URL.revokeObjectURL(bUrl);
+      a.remove();
+      setTimeout(() => URL.revokeObjectURL(bUrl), 1000);
     })
-    .catch(() => toast('Export failed — check connection', 'fa-triangle-exclamation', true));
+    .catch(err => toast(err.message === 'Failed to fetch' ? 'Export failed — check connection' : err.message,
+                        'fa-triangle-exclamation', true));
+}
+
+// True only when the request never reached the server. Anything else (403,
+// 409 duplicate, 422 validation, 500) is a real rejection and must be shown
+// to the user, not papered over with a fake "saved locally".
+function isNetworkError(err) {
+  return !!err && (err.message === 'Failed to fetch' || err.name === 'TypeError');
 }
 
 // ── Users ────────────────────────────────────────────────────────────────────
@@ -514,8 +537,6 @@ window.closeInfoPanel= ()     => { document.getElementById('map-info-panel')?.cl
 // (window. assignments avoid redeclaration conflicts when assets.js also defines these)
 window.loadAssets     = ()     => typeof renderAssets !== 'undefined' ? renderAssets() : null;
 window.toggleSelectAll= (c)    => typeof toggleSelectAllAssets !== 'undefined' ? toggleSelectAllAssets(c) : null;
-window.exportAssets   = (fmt)  => downloadExport(fmt);
-window.bulkExport     = (fmt)  => { if(typeof selectedAssetIds!=='undefined') downloadExport(fmt,[...selectedAssetIds]); };
 window.clearSelection = ()     => typeof clearBulkSelection !== 'undefined' ? clearBulkSelection() : null;
 
 // Users page

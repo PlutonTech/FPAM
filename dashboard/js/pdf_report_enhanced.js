@@ -263,8 +263,10 @@ async function generateMdaReport(mdaName) {
 async function generateDeferredMaintenanceReport() {
   let list;
   try {
-    const r = await apiGetAssets({ limit: 2000 });
-    list = r.assets || [];
+    // The backend caps one request at 200 rows, so page through everything.
+    list = typeof fetchAllAssets === 'function'
+      ? await fetchAllAssets()
+      : ((await apiGetAssets({ limit: 200 })).assets || []);
   } catch {
     list = assets || [];
   }

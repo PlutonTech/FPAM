@@ -412,7 +412,9 @@ table.data-table tbody tr:hover { background: var(--blue-bg); }
         <option value="">All Types</option>
         <option>Infrastructure</option><option>Land / Property</option>
         <option>Utility</option><option>Environmental</option><option>Equipment</option>
-        <option>Monument</option>
+        <option>Monument</option><option>Administrative Office</option><option>Residential</option>
+        <option>Hospital</option><option>School</option><option>Laboratory</option>
+        <option>Warehouse</option><option>Court</option><option>Security Facility</option>
       </select>
       <select class="filter-input" id="filter-cond" onchange="filterAssets()">
         <option value="">All Conditions</option>
@@ -644,10 +646,10 @@ function globalSearch(q) {
           onmouseleave="this.style.background=''"
           onclick="gsSelect(${i})">
           <div>
-            <div style="font-weight:600;color:var(--text)">${a.name||'Unnamed'}</div>
-            <div style="font-size:11px;color:var(--text3);margin-top:2px">${a.type||'—'}${state?' · '+state:''}</div>
+            <div style="font-weight:600;color:var(--text)">${escHtml(a.name||'Unnamed')}</div>
+            <div style="font-size:11px;color:var(--text3);margin-top:2px">${escHtml(a.type||'—')}${state?' · '+escHtml(state):''}</div>
           </div>
-          <span class="tag ${tag}" style="font-size:10px;flex-shrink:0">${cond}</span>
+          <span class="tag ${tag}" style="font-size:10px;flex-shrink:0">${escHtml(cond)}</span>
         </div>`;
       }).join('');
       if (assets.length > 8) dd.innerHTML += `<div style="padding:10px 16px;font-size:11px;color:var(--text3);text-align:center">+${assets.length-8} more — press Enter</div>`;
