@@ -13,14 +13,16 @@ export default function LoginPage() {
   const [busy, setBusy] = useState(false);
 
   const from = (location.state as { from?: string } | null)?.from || '/dashboard';
-  if (user) return <Navigate to={from} replace />;
+  // MDA Agents always land on their portal.
+  const home = (role?: string) => (role === 'MDA Agent' ? '/portal' : from);
+  if (user) return <Navigate to={home(user.role)} replace />;
 
   async function submit(e: FormEvent) {
     e.preventDefault();
     setError(''); setBusy(true);
     try {
-      await login(email.trim(), password);
-      navigate(from, { replace: true });
+      const u = await login(email.trim(), password);
+      navigate(home(u.role), { replace: true });
     } catch (err) {
       setError(errorMessage(err));
     } finally { setBusy(false); }

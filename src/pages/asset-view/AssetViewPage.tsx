@@ -11,12 +11,15 @@ import { assetKey, coords, formatDate, formatNaira } from '../../lib/assets';
 import EditAssetModal from '../registry/EditAssetModal';
 import ScheduleInspectionModal from '../inspections/ScheduleInspectionModal';
 import { DocumentsTab, HistoryTab, LocationTab, MaintenanceTab, OverviewTab, PhotosTab, ValuationTab } from './tabs';
+import { AssetAuditTab, AssetMeTab, InventoryTab, LifecycleTab, RelationshipsTab } from './extraTabs';
 
 const TABS = [
   ['overview', 'Overview', 'fa-circle-info'], ['photos', 'Photos', 'fa-camera'],
   ['location', 'Location', 'fa-map-pin'], ['maintenance', 'Maintenance', 'fa-wrench'],
   ['documents', 'Documents', 'fa-file-lines'], ['valuation', 'Valuation', 'fa-naira-sign'],
-  ['history', 'History', 'fa-chart-line'],
+  ['history', 'History', 'fa-chart-line'], ['relationships', 'Components', 'fa-sitemap'],
+  ['lifecycle', 'Lifecycle', 'fa-arrows-spin'], ['inventory', 'Inventory', 'fa-boxes-stacked'],
+  ['me', 'M&E', 'fa-clipboard-list'], ['audit', 'Change log', 'fa-clock-rotate-left'],
 ] as const;
 type TabKey = typeof TABS[number][0];
 
@@ -140,6 +143,11 @@ export default function AssetViewPage() {
           {tab === 'documents'   && <DocumentsTab asset={asset} onChange={reload} />}
           {tab === 'valuation'   && <ValuationTab asset={asset} onChange={setAsset} />}
           {tab === 'history'     && <HistoryTab asset={asset} />}
+          {tab === 'relationships' && <RelationshipsTab asset={asset} onChange={reload} />}
+          {tab === 'lifecycle'   && <LifecycleTab asset={asset} onChange={reload} />}
+          {tab === 'inventory'   && <InventoryTab asset={asset} />}
+          {tab === 'me'          && <AssetMeTab asset={asset} />}
+          {tab === 'audit'       && <AssetAuditTab asset={asset} />}
         </div>
       </div>
 

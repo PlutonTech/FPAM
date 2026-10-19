@@ -1,4 +1,4 @@
-import { lazy, type ReactNode } from 'react';
+import { lazy, Suspense, type ReactNode } from 'react';
 import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import { AuthProvider, useAuth } from './auth/AuthContext';
 import { ToastProvider } from './components/Toast';
@@ -22,13 +22,22 @@ const FileDbPage = lazy(() => import('./pages/FileDbPage'));
 const AuditPage = lazy(() => import('./pages/AuditPage'));
 const SettingsPage = lazy(() => import('./pages/SettingsPage'));
 const GuidelinesPage = lazy(() => import('./pages/guidelines/GuidelinesPage'));
+const MePage = lazy(() => import('./pages/me/MePage'));
+const PortalPage = lazy(() => import('./pages/portal/PortalPage'));
 
-function RequireAuth({ children }: { children: ReactNode }) {
+// MDA Agents only ever see the compliance portal; staff never see it.
+const MDA_AGENT = 'MDA Agent';
+
+function RequireAuth({ children, portal }: { children: ReactNode; portal?: boolean }) {
   const { user } = useAuth();
   const location = useLocation();
   if (!user) return <Navigate to="/login" replace state={{ from: location.pathname + location.search }} />;
+  if (!portal && user.role === MDA_AGENT) return <Navigate to="/portal" replace />;
+  if (portal && user.role !== MDA_AGENT) return <Navigate to="/dashboard" replace />;
   return <>{children}</>;
 }
+
+const pageLoading = <div className="page loading"><i className="fa-solid fa-spinner fa-spin" /> Loading…</div>;
 
 export default function App() {
   return (
@@ -37,6 +46,7 @@ export default function App() {
         <ToastProvider>
           <Routes>
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/portal" element={<RequireAuth portal><Suspense fallback={pageLoading}><PortalPage /></Suspense></RequireAuth>} />
             <Route element={<RequireAuth><Layout /></RequireAuth>}>
               <Route index element={<Navigate to="/dashboard" replace />} />
               <Route path="dashboard" element={<DashboardPage />} />
@@ -55,6 +65,7 @@ export default function App() {
               <Route path="audit" element={<AuditPage />} />
               <Route path="settings" element={<SettingsPage />} />
               <Route path="guidelines" element={<GuidelinesPage />} />
+              <Route path="me" element={<MePage />} />
               <Route path="*" element={<Navigate to="/dashboard" replace />} />
             </Route>
           </Routes>

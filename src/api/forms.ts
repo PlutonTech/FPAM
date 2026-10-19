@@ -35,6 +35,9 @@ export const createFormRequest = (body: Record<string, unknown>) =>
   api<{ request: FormRequest }>('/form-requests', { method: 'POST', body }).then(r => r.request);
 export const reviewFormRequest = (id: string, body: { status?: FormStatus; reviewRemarks?: string }) =>
   api<{ request: FormRequest }>(`/form-requests/${enc(id)}`, { method: 'PATCH', body }).then(r => r.request);
+/** Owner edits to their own Draft (form data, linked asset, or status: 'Submitted'). */
+export const updateDraft = (id: string, body: Record<string, unknown>) =>
+  api<{ request: FormRequest }>(`/form-requests/${enc(id)}`, { method: 'PATCH', body }).then(r => r.request);
 export const deleteFormRequest = (id: string) => api(`/form-requests/${enc(id)}`, { method: 'DELETE' });
 
 export function addAttachment(id: string, file: File, label = '') {

@@ -7,6 +7,7 @@ export interface User {
   email: string;
   role: Role | string;
   division?: string | null;
+  mda?: string | null;
   permissions?: Record<string, boolean>;
 }
 
@@ -21,6 +22,7 @@ export interface FileRef {
   length?: number;
   uploadDate?: string;
   uploadedAt?: string;
+  meReportId?: string | null;
 }
 
 export interface MaintenanceLog {
@@ -74,6 +76,9 @@ export interface Asset {
   approvalStatus?: 'Pending' | 'Approved' | 'Rejected';
   capturedBy?: UserRef | string | null;
   submittedBy?: UserRef | string | null;
+  parentId?: string | null;
+  childIds?: string[];
+  lifecycleStage?: string;
   rejectionReason?: string;
   agent?: string;
   nextInspection?: string;

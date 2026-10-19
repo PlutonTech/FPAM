@@ -17,6 +17,13 @@ const ROLE_DEFAULTS: Record<string, Partial<Record<Perm, boolean>>> = {
   'Field Agent':  { canCreate: true,  canEdit: false, canDelete: false, canExport: false, canViewAll: false, canManageUsers: false, canViewAudit: false, canManageSettings: false, canApprove: false, canEditInventory: true, canSubmitFormRequests: true,  canReviewFormRequests: false },
 };
 
+/** M&E reports page: M&E division, cross-division staff, Supervisors and System Admins. */
+export const canViewMe = (u: User | null) =>
+  !!u && (u.role === 'System Admin' || u.role === 'Supervisor' || u.division === 'Monitoring & Evaluation' || u.division === 'All');
+/** Filing / clearing M&E reports — mirrors requireMeDivision in the backend. */
+export const canFileMe = (u: User | null) =>
+  !!u && (u.role === 'System Admin' || u.division === 'Monitoring & Evaluation' || u.division === 'All');
+
 export function permsFor(user: User | null): Partial<Record<Perm, boolean>> {
   if (!user) return {};
   const defaults = ROLE_DEFAULTS[user.role] || {};

@@ -2,9 +2,9 @@ import { Suspense, useEffect, useState } from 'react';
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../auth/AuthContext';
 import { approvalsSummary } from '../api/misc';
-import type { Perm } from '../auth/permissions';
+import { canViewMe, type Perm } from '../auth/permissions';
 
-interface NavItem { to: string; label: string; icon: string; roles?: string[]; perm?: Perm; badge?: 'approvals' }
+interface NavItem { to: string; label: string; icon: string; roles?: string[]; perm?: Perm; badge?: 'approvals'; me?: boolean }
 interface NavSection { title: string; items: NavItem[] }
 
 // Same structure as the legacy sidebar. Pages not yet ported open a
@@ -22,6 +22,9 @@ const NAV: NavSection[] = [
     { to: '/analytics',     label: 'Analytics',     icon: 'fa-chart-bar' },
     { to: '/users',         label: 'Users',         icon: 'fa-users', roles: ['System Admin'] },
     { to: '/form-requests', label: 'Form Requests', icon: 'fa-file-circle-check', roles: ['System Admin', 'Supervisor', 'Sub-Head', 'GIS Analyst'] },
+  ]},
+  { title: 'Divisions', items: [
+    { to: '/me', label: 'M&E reports', icon: 'fa-clipboard-list', me: true },
   ]},
   { title: 'Data Tools', items: [
     { to: '/ocr',    label: 'OCR Scanner',   icon: 'fa-file-image' },
@@ -63,7 +66,7 @@ export default function Layout() {
         </div>
         <nav className="nav">
           {NAV.map(section => {
-            const items = section.items.filter(i => (!i.roles || i.roles.includes(user?.role || '')) && (!i.perm || can(i.perm)));
+            const items = section.items.filter(i => (!i.roles || i.roles.includes(user?.role || '')) && (!i.perm || can(i.perm)) && (!i.me || canViewMe(user)));
             if (!items.length) return null;
             return (
               <div key={section.title}>

@@ -29,8 +29,9 @@ npm run lint
 | Registry actions — edit, delete, bulk delete, set condition, Excel/CSV bulk update, completeness report, deferred maintenance report | Done |
 | Exports — filtered CSV/XLSX/GeoJSON/PDF, selected rows, percentage export | Done |
 | **Asset View** — overview, photos (upload/delete), map, maintenance log, documents, valuation, condition history | Done |
-| Asset View — relationships, lifecycle, audit, inventory, M&E tabs | Not yet |
-| MDA portal (`mda_portal.html`) and M&E reports (`me.html`) | Not yet — separate from the main dashboard |
+| Asset View — components (link/unlink), lifecycle stages, inventory (inline edit, import, export), M&E reports, change log | Done |
+| **M&E reports** — per-asset monthly progress reports (secretariat/NHP/custom tasks), ratings, CRA sign-off, report photos, clearance certificate (print) | Done (M&E division, Supervisors, System Admins) |
+| **MDA portal** — separate screen for MDA Agents: submit the 17 compliance forms with attachments, drafts, FPAM remarks, certificate download | Done (MDA Agents are routed here automatically) |
 | **Dashboard** — KPIs from the verified registry, pending-approval and inspection alerts, recent captures, activity feed, condition/type/30-day charts (each with a table view) | Done |
 | **Live Map** — canvas markers coloured by condition, type/condition filters, legend, road/satellite, locate me, fit all, search, asset panel | Done (no 3D view yet) |
 | **Approvals** — pending/approved/rejected queue, approve, reject with reason, re-approve rejected, no self-review, sidebar badge | Done |
@@ -63,6 +64,5 @@ Notes:
 - Photos and documents are behind Bearer auth, so they're fetched as blobs (`AuthedImage`).
 - Permission checks in the UI only hide controls; the backend is what actually enforces them.
 - Enum lists in `lib/assets.ts` must stay in sync with `assetspatial-backend/src/models/Asset.js`.
-- Several features need the backend branch `fix/asset-registry-audit` deployed: filtered and bulk
-  exports, approval rules, scheduling inspections (broken on the current backend), and saving the
-  assessed/sector/area/next-inspection fields on capture.
+- Relies on the backend fixes now on `main` (approval rules, inspection scheduling, permission
+  guards, capture fields, M&E photo links). Deploy the backend before this app.
