@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const user = getCurrentUser ? getCurrentUser() : JSON.parse(localStorage.getItem('as_user') || 'null');
   if (!user || user.role !== 'MDA Agent') {
     // Wrong role landed here, or not logged in at all — send to login.
-    window.location.href = 'login.html';
+    window.location.href='../login.html';
     return;
   }
   document.getElementById('hdr-mda-name').textContent = user.mda || 'No MDA Assigned';
@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 function doLogout() {
   (typeof apiLogout === 'function' ? apiLogout() : Promise.resolve())
-    .finally(() => { localStorage.removeItem('as_token'); window.location.href = 'login.html'; });
+    .finally(() => { localStorage.removeItem('as_token'); window.location.href='../login.html'; });
 }
 
 function closeModal(id) { document.getElementById(id).classList.remove('open'); }

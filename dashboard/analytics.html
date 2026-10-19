@@ -128,9 +128,9 @@
 <script src="js/pdf_report_enhanced.js"></script>
 <script src="js/completeness.js"></script>
 <script>
-function doLogout(){ apiLogout().finally(()=>{ localStorage.removeItem('as_token'); window.location.href='login.html'; }); }
+function doLogout(){ apiLogout().finally(()=>{ localStorage.removeItem('as_token'); window.location.href='../login.html'; }); }
 document.addEventListener('DOMContentLoaded', () => {
-  if (!localStorage.getItem('as_token')) { window.location.href='login.html'; return; }
+  if (!localStorage.getItem('as_token')) { window.location.href='../login.html'; return; }
   initTheme(); renderUserBadge(); checkApiHealth();
   
   loadAnalytics();

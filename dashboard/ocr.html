@@ -198,13 +198,13 @@
 <script src="js/app.js"></script>
 <script src="js/notifications.js"></script>
 <script>
-function doLogout(){ apiLogout().finally(()=>{ localStorage.removeItem('as_token'); window.location.href='login.html'; }); }
+function doLogout(){ apiLogout().finally(()=>{ localStorage.removeItem('as_token'); window.location.href='../login.html'; }); }
 
 let _ocrFile = null;
 let _ocrHistory = JSON.parse(localStorage.getItem('ocr_history')||'[]');
 
 document.addEventListener('DOMContentLoaded', () => {
-  if (!localStorage.getItem('as_token')) { window.location.href='login.html'; return; }
+  if (!localStorage.getItem('as_token')) { window.location.href='../login.html'; return; }
   initTheme(); renderUserBadge(); checkApiHealth();
   
 

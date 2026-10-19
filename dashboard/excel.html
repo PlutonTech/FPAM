@@ -186,7 +186,7 @@
 <script src="js/app.js"></script>
 <script src="js/notifications.js"></script>
 <script>
-function doLogout(){ apiLogout().finally(()=>{ localStorage.removeItem('as_token'); window.location.href='login.html'; }); }
+function doLogout(){ apiLogout().finally(()=>{ localStorage.removeItem('as_token'); window.location.href='../login.html'; }); }
 
 let xlHeaders = [], xlData = [], xlMappings = {}, _xlFile = null, _xlAssetList = [];
 
@@ -408,7 +408,7 @@ async function _doSaveLoose() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  if (!localStorage.getItem('as_token')) { window.location.href='login.html'; return; }
+  if (!localStorage.getItem('as_token')) { window.location.href='../login.html'; return; }
   initTheme(); renderUserBadge(); checkApiHealth();
   
   const dz = document.getElementById('xl-drop');

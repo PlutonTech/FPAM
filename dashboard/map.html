@@ -340,7 +340,7 @@
 <script src="js/notifications.js"></script>
 <script src="js/map.js"></script>
 <script>
-function doLogout(){ apiLogout().finally(()=>{ localStorage.removeItem('as_token'); window.location.href='login.html'; }); }
+function doLogout(){ apiLogout().finally(()=>{ localStorage.removeItem('as_token'); window.location.href='../login.html'; }); }
 
 // ── 3D MAP (MapLibre GL + OpenFreeMap tiles) ──────────────────────────────────
 let _maplibreMap = null;
@@ -607,7 +607,7 @@ window._onMapAssetsLoaded = function(assetList) {
 };
 
 document.addEventListener('DOMContentLoaded', () => {
-  if (!localStorage.getItem('as_token')) { window.location.href='login.html'; return; }
+  if (!localStorage.getItem('as_token')) { window.location.href='../login.html'; return; }
   initTheme(); renderUserBadge(); checkApiHealth();
   
   initMap();

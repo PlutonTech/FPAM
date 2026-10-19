@@ -671,7 +671,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);display:flex
 <script src="js/app.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-  if (!localStorage.getItem('as_token')) { window.location.href = 'login.html'; return; }
+  if (!localStorage.getItem('as_token')) { window.location.href='../login.html'; return; }
   initTheme(); renderUserBadge(); checkApiHealth(); applyRoleGates();
 
   // Sidebar mobile toggle
@@ -694,7 +694,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function doLogout() {
-  apiLogout().finally(() => { localStorage.removeItem('as_token'); window.location.href = 'login.html'; });
+  apiLogout().finally(() => { localStorage.removeItem('as_token'); window.location.href='../login.html'; });
 }
 </script>
 </body>

@@ -181,13 +181,13 @@
 <script src="js/app.js"></script>
 <script src="js/notifications.js"></script>
 <script>
-function doLogout(){ apiLogout().finally(()=>{ localStorage.removeItem('as_token'); window.location.href='login.html'; }); }
+function doLogout(){ apiLogout().finally(()=>{ localStorage.removeItem('as_token'); window.location.href='../login.html'; }); }
 
 let _pmImages = []; // { id, file, dataUrl, width, height, name, size }
 let _pmDragIdx = null;
 
 document.addEventListener('DOMContentLoaded', () => {
-  if (!localStorage.getItem('as_token')) { window.location.href='login.html'; return; }
+  if (!localStorage.getItem('as_token')) { window.location.href='../login.html'; return; }
   initTheme(); renderUserBadge(); checkApiHealth();
 
   const dz = document.getElementById('pm-drop');

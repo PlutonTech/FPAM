@@ -239,7 +239,7 @@
 <script src="js/notifications.js"></script>
 <script src="js/audit.js"></script>
 <script>
-function doLogout(){ apiLogout().finally(()=>{ localStorage.removeItem('as_token'); window.location.href='login.html'; }); }
+function doLogout(){ apiLogout().finally(()=>{ localStorage.removeItem('as_token'); window.location.href='../login.html'; }); }
 
 function clearAuditFilters(){
   ['f-action','f-entity','f-from','f-to'].forEach(id=>{
@@ -344,7 +344,7 @@ function openAuditDetail(i) {
 })();
 
 document.addEventListener('DOMContentLoaded', () => {
-  if (!localStorage.getItem('as_token')) { window.location.href='login.html'; return; }
+  if (!localStorage.getItem('as_token')) { window.location.href='../login.html'; return; }
   initTheme(); renderUserBadge(); checkApiHealth();
   document.getElementById('modal-overlay')?.addEventListener('click',e=>{ if(e.target===e.currentTarget) closeModal(); });
   loadAudit();

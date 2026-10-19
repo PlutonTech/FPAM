@@ -217,7 +217,7 @@ function loadAuthImg(imgEl, url) {
     });
 }
 
-function doLogout(){ apiLogout().finally(()=>{ localStorage.removeItem('as_token'); window.location.href='login.html'; }); }
+function doLogout(){ apiLogout().finally(()=>{ localStorage.removeItem('as_token'); window.location.href='../login.html'; }); }
 
 let allFiles = [];
 
@@ -847,7 +847,7 @@ async function doUploadQueue() {
 async function doUpload() { doUploadQueue(); }
 
 document.addEventListener('DOMContentLoaded', async () => {
-  if (!localStorage.getItem('as_token')) { window.location.href='login.html'; return; }
+  if (!localStorage.getItem('as_token')) { window.location.href='../login.html'; return; }
 // ── BULK DELETE ───────────────────────────────────────────────────────────────
 
   initTheme(); renderUserBadge(); checkApiHealth();

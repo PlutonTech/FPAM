@@ -1447,7 +1447,7 @@ async function issueClearance() {
 
 // ── PAGE INIT ─────────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
-  if (!localStorage.getItem('as_token')) { window.location.href = 'login.html'; return; }
+  if (!localStorage.getItem('as_token')) { window.location.href='../login.html'; return; }
 
   // ── Division access guard ─────────────────────────────────────────────────
   // Only M&E division users, Supervisors, and System Admins can access this page.

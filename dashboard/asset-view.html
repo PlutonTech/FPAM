@@ -2014,7 +2014,7 @@ async function saveAssetEdits() {
 }
 
 function doLogout() {
-  apiLogout().finally(() => { localStorage.removeItem('as_token'); window.location.href = 'login.html'; });
+  apiLogout().finally(() => { localStorage.removeItem('as_token'); window.location.href='../login.html'; });
 }
 
 function showError() {
