@@ -293,6 +293,11 @@ function openEditAssetById(id) {
   const a = findLoadedAsset(id);
   if (a) openEditAsset(a);
 }
+// Option lists that keep the asset's current value even if it's a legacy one.
+const _withCurrent = (list, v) => (v && !list.includes(v) ? [v, ...list] : list);
+const EDIT_TYPES = ['Infrastructure','Land / Property','Utility','Environmental','Equipment','Monument','Administrative Office','Residential','Hospital','School','Laboratory','Warehouse','Court','Security Facility'];
+const EDIT_SECTORS = ['Administration & Governance','Defence & Security','Education','Health','Infrastructure & Works','Energy & Power','Agriculture & Food Security','Water Resources','Transportation','Finance & Economy','Justice & Legal Affairs','Environment','Communications & Digital','Social Development','Science & Technology','Trade & Investment','Petroleum & Mineral Resources','Labour & Employment','Foreign Affairs','Culture, Tourism & Sports'];
+
 function openEditAsset(a) {
   const id = a.assetId || a.id;
   openModal('Edit Asset',
@@ -303,14 +308,28 @@ function openEditAsset(a) {
           <option value="" ${a.condition ? '' : 'selected'}>— Not set —</option>
           ${['Good','Fair','Poor','Critical'].map(c=>`<option ${a.condition===c?'selected':''}>${c}</option>`).join('')}
         </select></div>
+      <div class="form-group"><label class="form-label">Type</label>
+        <select class="form-control" id="edit-type">
+          ${_withCurrent(EDIT_TYPES, a.type).map(t=>`<option ${a.type===t?'selected':''}>${escHtml(t)}</option>`).join('')}
+        </select></div>
+      <div class="form-group"><label class="form-label">Assessment</label>
+        <select class="form-control" id="edit-assessed">
+          ${['Assessed','Unassessed'].map(v=>`<option ${(a.assessed||'Unassessed')===v?'selected':''}>${v}</option>`).join('')}
+        </select></div>
       <div class="form-group"><label class="form-label">Status</label>
         <select class="form-control" id="edit-status">
           ${['Active','Under Maintenance','Decommissioned','Disputed','Recovered'].map(s=>`<option ${(a.status||'Active')===s?'selected':''}>${s}</option>`).join('')}
         </select></div>
       <div class="form-group full"><label class="form-label">MDA / Agency</label>
         <select class="form-control" id="edit-mda"><option value="">— Select MDA —</option></select></div>
+      <div class="form-group full"><label class="form-label">Sector</label>
+        <select class="form-control" id="edit-sector">
+          <option value="">— None —</option>
+          ${_withCurrent(EDIT_SECTORS, a.sector).map(t=>`<option ${a.sector===t?'selected':''}>${escHtml(t)}</option>`).join('')}
+        </select></div>
       <div class="form-group"><label class="form-label">State</label><input class="form-control" id="edit-state" value="${escHtml(a.state||'')}"></div>
       <div class="form-group"><label class="form-label">LGA</label><input class="form-control" id="edit-lga" value="${escHtml(a.lga||'')}"></div>
+      <div class="form-group full"><label class="form-label">Address</label><input class="form-control" id="edit-address" value="${escHtml(a.address||'')}"></div>
       <div class="form-group full"><label class="form-label">Notes</label><textarea class="form-control" id="edit-notes">${escHtml(a.notes||'')}</textarea></div>
     </div>`,
     `<button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
@@ -323,6 +342,10 @@ async function saveEditedAsset(id) {
   const prev = findLoadedAsset(id) || {};
   const data = {
     name:      document.getElementById('edit-name')?.value.trim(),
+    type:      document.getElementById('edit-type')?.value,
+    assessed:  document.getElementById('edit-assessed')?.value,
+    sector:    document.getElementById('edit-sector')?.value || '',
+    address:   document.getElementById('edit-address')?.value,
     condition: document.getElementById('edit-cond')?.value || null,
     status:    document.getElementById('edit-status')?.value,
     mda:       document.getElementById('edit-mda')?.value || '',
@@ -331,8 +354,15 @@ async function saveEditedAsset(id) {
     notes:     document.getElementById('edit-notes')?.value,
   };
   if (!data.name) { toast('Name is required', 'fa-triangle-exclamation', true); return; }
+  // Send only what changed — re-sending an untouched legacy value (e.g. an old
+  // type no longer allowed) would fail validation and block the whole save.
+  const before = { name: prev.name, type: prev.type, assessed: prev.assessed || 'Unassessed', sector: prev.sector || '',
+    address: prev.address || '', condition: prev.condition || null, status: prev.status || 'Active', mda: prev.mda || '',
+    state: prev.state || '', lga: prev.lga || '', notes: prev.notes || '' };
+  Object.keys(data).forEach(k => { if ((data[k] ?? '') === (before[k] ?? '')) delete data[k]; });
+  if (!Object.keys(data).length) { closeModal(); return; }
   // Lets the backend record the change in conditionHistory.
-  if (prev.condition && data.condition !== prev.condition) data.previousCondition = prev.condition;
+  if ('condition' in data && prev.condition) data.previousCondition = prev.condition;
   try {
     await apiUpdateAsset(id, data);
     toast('Asset updated', 'fa-circle-check');
