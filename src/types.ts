@@ -61,6 +61,8 @@ export interface Asset {
   condition?: Condition | null;
   material?: string;
   area?: number;
+  elevation?: number;
+  inspectionInterval?: number;
   notes?: string;
   mda?: string;
   sector?: string;
