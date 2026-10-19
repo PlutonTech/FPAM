@@ -4,6 +4,7 @@ import { AuthProvider, useAuth } from './auth/AuthContext';
 import { ToastProvider } from './components/Toast';
 import Layout from './components/Layout';
 import LoginPage from './pages/LoginPage';
+import { BASENAME, LOGIN_URL } from './config';
 
 // Pages load on demand so the first visit stays fast.
 const DashboardPage = lazy(() => import('./pages/DashboardPage'));
@@ -31,21 +32,30 @@ const MDA_AGENT = 'MDA Agent';
 function RequireAuth({ children, portal }: { children: ReactNode; portal?: boolean }) {
   const { user } = useAuth();
   const location = useLocation();
-  if (!user) return <Navigate to="/login" replace state={{ from: location.pathname + location.search }} />;
+  if (!user) {
+    // Embedded in the public site: its own login page handles sign-in.
+    if (LOGIN_URL) { window.location.replace(LOGIN_URL); return null; }
+    return <Navigate to="/login" replace state={{ from: location.pathname + location.search }} />;
+  }
   if (!portal && user.role === MDA_AGENT) return <Navigate to="/portal" replace />;
   if (portal && user.role !== MDA_AGENT) return <Navigate to="/dashboard" replace />;
   return <>{children}</>;
+}
+
+function ExternalLogin() {
+  window.location.replace(LOGIN_URL);
+  return null;
 }
 
 const pageLoading = <div className="page loading"><i className="fa-solid fa-spinner fa-spin" /> Loading…</div>;
 
 export default function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename={BASENAME}>
       <AuthProvider>
         <ToastProvider>
           <Routes>
-            <Route path="/login" element={<LoginPage />} />
+            <Route path="/login" element={LOGIN_URL ? <ExternalLogin /> : <LoginPage />} />
             <Route path="/portal" element={<RequireAuth portal><Suspense fallback={pageLoading}><PortalPage /></Suspense></RequireAuth>} />
             <Route element={<RequireAuth><Layout /></RequireAuth>}>
               <Route index element={<Navigate to="/dashboard" replace />} />

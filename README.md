@@ -19,6 +19,27 @@ npm run build        # type-check + production build into dist/
 npm run lint
 ```
 
+## Serving it inside the public site (fpam-real)
+
+The public pages (`index.html`, `login.html`, …) stay vanilla; after login they redirect to this
+dashboard at **`/app/`** on the same domain. Same domain matters: the session lives in
+`localStorage` (`as_token` / `as_user`), which browsers only share within one origin.
+
+```bash
+npm run build:embed      # builds into ../fpam-real/app with base /app/ and .env.embed
+```
+
+Then commit and push `fpam-real` (the `app/` folder is the built dashboard). In embedded mode:
+- `login.html` redirects to `/app/dashboard` (MDA Agents to `/app/portal`)
+- signed-out visits and **Log out** go to `/login.html` (`VITE_LOGIN_URL` in `.env.embed`)
+- `fpam-real/vercel.json` rewrites `/app/*` to `/app/index.html` so deep links survive a refresh
+- the old vanilla dashboard is untouched at `/dashboard/` as a fallback
+
+Re-run `npm run build:embed` and commit `fpam-real/app` whenever this app changes. If the site
+isn't on Vercel, add the equivalent rewrite (e.g. nginx `try_files $uri /app/index.html;` under
+`/app/`). Running `npx vite build --base=/app/` directly from Git Bash mangles the path — use the
+npm script.
+
 ## What's ported
 
 | Area | Status |

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import * as formsApi from '../../api/forms';
 import { errorMessage } from '../../api/client';
 import { useAuth } from '../../auth/AuthContext';
+import { goToLogin } from '../../config';
 import Modal from '../../components/Modal';
 import { useToast } from '../../components/Toast';
 import { Tag } from '../../components/Tags';
@@ -14,8 +15,8 @@ import type { FormRequest, FormStatus } from '../../api/forms';
 const STATUS_TONE: Record<FormStatus, Tone> = { Draft: 'gray', Submitted: 'blue', UnderReview: 'warn', Approved: 'green', Deferred: 'orange', Rejected: 'red' };
 const label = (s: string) => (s === 'UnderReview' ? 'Under review' : s);
 const FORM_TYPES = Object.keys(FORM_LABELS);
-// Blank templates are served from public/templates.
-const TEMPLATE_BASE = '/';
+// Blank templates are served from public/templates (respects the /app/ base).
+const TEMPLATE_BASE = import.meta.env.BASE_URL;
 
 /**
  * Stand-alone portal for MDA Agents: submit compliance forms for their own
@@ -59,7 +60,7 @@ export default function PortalPage() {
         </div>
         <div className="row" style={{ flexWrap: 'nowrap' }}>
           <span className="portal-user">{user?.name}</span>
-          <button className="btn btn-ghost btn-sm" onClick={async () => { await logout(); navigate('/login'); }}><i className="fa-solid fa-right-from-bracket" /> Log out</button>
+          <button className="btn btn-ghost btn-sm" onClick={async () => { await logout(); goToLogin(navigate); }}><i className="fa-solid fa-right-from-bracket" /> Log out</button>
         </div>
       </header>
 

@@ -12,7 +12,7 @@ export default function GuidelinesPage() {
           <div className="page-sub">FPAM compliance policy and operational guidelines for public assets maintenance</div>
         </div>
       </header>
-      <div dangerouslySetInnerHTML={{ __html: content }} />
+      <div dangerouslySetInnerHTML={{ __html: content.split('href="/docs/').join(`href="${import.meta.env.BASE_URL}docs/`) }} />
     </div>
   );
 }

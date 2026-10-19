@@ -1,6 +1,7 @@
 import { Suspense, useEffect, useState } from 'react';
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../auth/AuthContext';
+import { goToLogin } from '../config';
 import { approvalsSummary } from '../api/misc';
 import { canViewMe, type Perm } from '../auth/permissions';
 
@@ -88,7 +89,7 @@ export default function Layout() {
             <div className="sidebar-user-role">{user?.role || '—'}</div>
           </div>
           <button className="icon-btn" title="Log out" aria-label="Log out"
-                  onClick={async () => { await logout(); navigate('/login'); }}>
+                  onClick={async () => { await logout(); goToLogin(navigate); }}>
             <i className="fa-solid fa-right-from-bracket" />
           </button>
         </div>
