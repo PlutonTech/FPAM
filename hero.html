@@ -599,7 +599,7 @@ h1 {
 if (localStorage.getItem('as_token')) {
   let role;
   try { role = JSON.parse(localStorage.getItem('as_user') || 'null')?.role; } catch {}
-  window.location.href = role === 'MDA Agent' ? './dashboard/mda_portal.html' : './dashboard/dashboard.html';
+  window.location.href = role === 'MDA Agent' ? './app/portal' : './app/dashboard';
 }
 
 function togglePw() {
@@ -657,8 +657,8 @@ async function doLogin() {
     }
 
     window.location.href = role === 'MDA Agent'
-      ? './dashboard/mda_portal.html'
-      : './dashboard/dashboard.html';
+      ? './app/portal'
+      : './app/dashboard';
   } catch (e) {
     document.getElementById('login-alert-msg').textContent =
       e.message || 'Login failed. Check your credentials.';
