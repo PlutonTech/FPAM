@@ -574,3 +574,6 @@ fieldset:disabled .switch { opacity: .6; cursor: not-allowed; }
 .notif-meta { font-size: 10px; color: var(--text3); display: flex; gap: 8px; margin-top: 3px; }
 .notif-go { color: var(--accent); font-weight: 600; }
 .notif-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); flex-shrink: 0; margin-top: 6px; }
+.nav-soon { opacity: .45; cursor: default; }
+.nav-soon:hover { background: none; color: rgba(255,255,255,.7); }
+.nav-soon-tag { margin-left: auto; font-size: 9px; background: rgba(255,255,255,.12); padding: 1px 6px; border-radius: 4px; }

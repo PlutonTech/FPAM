@@ -4,11 +4,12 @@ import { useAuth } from '../auth/AuthContext';
 import { goToLogin } from '../config';
 import { approvalsSummary } from '../api/misc';
 import { canViewMe, type Perm } from '../auth/permissions';
+import { CROSS_DIVISION } from '../api/users';
 import ChangePasswordModal from './ChangePasswordModal';
 import NotificationBell, { useAlertScan } from './NotificationBell';
 import { RMS_NAV } from '@rms-routes';
 
-interface NavItem { to: string; label: string; icon: string; roles?: string[]; perm?: Perm; badge?: 'approvals'; me?: boolean; end?: boolean }
+interface NavItem { to: string; label: string; icon: string; roles?: string[]; perm?: Perm; badge?: 'approvals'; me?: boolean; end?: boolean; division?: string; soon?: boolean }
 interface NavSection { title: string; items: NavItem[] }
 
 // Same structure as the legacy sidebar. Pages not yet ported open a
@@ -27,8 +28,14 @@ const NAV: NavSection[] = [
     { to: '/users',         label: 'Users',         icon: 'fa-users', roles: ['System Admin'] },
     { to: '/form-requests', label: 'Form Requests', icon: 'fa-file-circle-check', roles: ['System Admin', 'Supervisor', 'Sub-Head', 'GIS Analyst'] },
   ]},
+  // Same list as the legacy sidebar. Cross-division roles see all of them;
+  // everyone else only their own division. "soon" ones aren't built yet.
   { title: 'Divisions', items: [
-    { to: '/me', label: 'M&E reports', icon: 'fa-clipboard-list', me: true },
+    { to: '/assets', label: 'Assets & Condition',           icon: 'fa-database',         division: 'Assets & Condition' },
+    { to: '/me',     label: 'Monitoring & Evaluation',      icon: 'fa-chart-line',       division: 'Monitoring & Evaluation', me: true },
+    { to: '#planning',       label: 'Planning & Design',            icon: 'fa-compass-drafting', division: 'Planning & Design', soon: true },
+    { to: '#rehabilitation', label: 'Rehabilitation & Restoration', icon: 'fa-helmet-safety',    division: 'Rehabilitation & Restoration', soon: true },
+    { to: '#training',       label: 'Training & Maintenance',       icon: 'fa-chalkboard-user',  division: 'Building Training & Maintenance', soon: true },
   ]},
   // VITE_RMS_NAV=off hides the links; the revenue pages still work by URL.
   ...(RMS_NAV && import.meta.env.VITE_RMS_NAV !== 'off' ? [RMS_NAV] : []),
@@ -75,12 +82,17 @@ export default function Layout() {
         </div>
         <nav className="nav">
           {NAV.map(section => {
-            const items = section.items.filter(i => (!i.roles || i.roles.includes(user?.role || '')) && (!i.perm || can(i.perm)) && (!i.me || canViewMe(user)));
+            const items = section.items.filter(i => (!i.roles || i.roles.includes(user?.role || '')) && (!i.perm || can(i.perm)) && (!i.me || canViewMe(user))
+              && (!i.division || CROSS_DIVISION.includes(user?.role || '') || !user?.division || user.division === 'All' || user.division === i.division));
             if (!items.length) return null;
             return (
               <div key={section.title}>
                 <div className="nav-section">{section.title}</div>
-                {items.map(i => (
+                {items.map(i => i.soon ? (
+                  <span key={i.to} className="nav-item nav-soon" title="Coming soon" aria-disabled="true">
+                    <i className={`fa-solid ${i.icon}`} />{i.label}<span className="nav-soon-tag">Soon</span>
+                  </span>
+                ) : (
                   <NavLink key={i.to} to={i.to} end={i.end} className="nav-item" onClick={() => setOpen(false)}>
                     <i className={`fa-solid ${i.icon}`} />{i.label}
                     {i.badge === 'approvals' && pending > 0 && <span className="nav-badge">{pending}</span>}
