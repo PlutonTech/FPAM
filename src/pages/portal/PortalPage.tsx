@@ -6,6 +6,7 @@ import { useAuth } from '../../auth/AuthContext';
 import { goToLogin } from '../../config';
 import Modal from '../../components/Modal';
 import ChangePasswordModal from '../../components/ChangePasswordModal';
+import NotificationBell, { useAlertScan } from '../../components/NotificationBell';
 import { useToast } from '../../components/Toast';
 import { Tag } from '../../components/Tags';
 import { formatDate, timeAgo, type Tone } from '../../lib/assets';
@@ -34,6 +35,7 @@ export default function PortalPage() {
   const [editing, setEditing] = useState<{ type: string; draft?: FormRequest } | 'pick' | null>(null);
   const [viewing, setViewing] = useState<string | null>(null);
   const [changingPw, setChangingPw] = useState(false);
+  useAlertScan();
 
   const load = useCallback(async () => {
     setError('');
@@ -61,6 +63,7 @@ export default function PortalPage() {
           <div><div className="portal-title">FPAM compliance portal</div><div className="portal-mda">{user?.mda || 'No MDA assigned'}</div></div>
         </div>
         <div className="row" style={{ flexWrap: 'nowrap' }}>
+          <NotificationBell className="notif-bell-dark" />
           <span className="portal-user">{user?.name}</span>
           <button className="btn btn-ghost btn-sm" onClick={() => setChangingPw(true)} title="Change password" aria-label="Change password"><i className="fa-solid fa-key" /></button>
           <button className="btn btn-ghost btn-sm" onClick={async () => { await logout(); goToLogin(navigate); }}><i className="fa-solid fa-right-from-bracket" /> Log out</button>

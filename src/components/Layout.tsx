@@ -5,6 +5,7 @@ import { goToLogin } from '../config';
 import { approvalsSummary } from '../api/misc';
 import { canViewMe, type Perm } from '../auth/permissions';
 import ChangePasswordModal from './ChangePasswordModal';
+import NotificationBell, { useAlertScan } from './NotificationBell';
 import { RMS_NAV } from '@rms-routes';
 
 interface NavItem { to: string; label: string; icon: string; roles?: string[]; perm?: Perm; badge?: 'approvals'; me?: boolean; end?: boolean }
@@ -48,6 +49,7 @@ export default function Layout() {
   const [open, setOpen] = useState(false);
   const [pending, setPending] = useState(0);
   const [changingPw, setChangingPw] = useState(false);
+  useAlertScan();
   const location = useLocation();
 
   // Pending-approvals badge; refreshed on navigation so it drops after reviewing.
@@ -68,6 +70,7 @@ export default function Layout() {
             <div className="logo-name">FPAMAS</div>
             <div className="logo-sub">Federal Public Asset Management</div>
           </div>
+          <NotificationBell className="notif-bell-side" />
         </div>
         <nav className="nav">
           {NAV.map(section => {
@@ -108,6 +111,8 @@ export default function Layout() {
         <button className="menu-btn" onClick={() => setOpen(true)} aria-label="Open menu">
           <i className="fa-solid fa-bars" />
         </button>
+        {/* Phones: the sidebar is off-screen, so the bell floats top-right. */}
+        <NotificationBell className="notif-fab" />
         {/* Pages are lazy-loaded; only the content area waits, the sidebar stays put. */}
         <Suspense fallback={<div className="page loading"><i className="fa-solid fa-spinner fa-spin" /> Loading…</div>}>
           <Outlet />

@@ -541,3 +541,36 @@ fieldset:disabled .switch { opacity: .6; cursor: not-allowed; }
 .remita-ch i { color: #e4572e; width: 18px; text-align: center; }
 .remita-ch.on { border-color: #e4572e; background: #fff7f3; }
 .remita-ch input { accent-color: #e4572e; }
+
+/* Leaflet's panes use z-indexes up to 1000; keep each map in its own stacking
+   context so modals (z-index 100) and popups always sit above it. */
+.leaflet-container { isolation: isolate; z-index: 0; }
+
+/* ── Notifications ───────────────────────────────────────────────────────── */
+.notif-bell { position: relative; display: grid; place-items: center; width: 34px; height: 34px; border-radius: 8px; border: 1px solid var(--border2); background: var(--surface); color: var(--text2); cursor: pointer; font-size: 14px; flex-shrink: 0; }
+.notif-bell:hover { color: var(--accent); border-color: var(--accent); }
+.notif-bell-side { margin-left: auto; background: rgba(255,255,255,.08); border-color: rgba(255,255,255,.15); color: rgba(255,255,255,.85); }
+.notif-bell-side:hover { color: #fff; border-color: rgba(255,255,255,.4); }
+.notif-bell-dark { background: transparent; color: #fff; border-color: rgba(255,255,255,.3); }
+.notif-badge { position: absolute; top: -6px; right: -6px; min-width: 17px; padding: 0 5px; border-radius: 10px; background: var(--danger); color: #fff; font-size: 9px; font-weight: 700; line-height: 16px; text-align: center; }
+.notif-fab { display: none; position: fixed; top: 12px; right: 12px; z-index: 30; width: 38px; height: 38px; box-shadow: var(--shadow); }
+@media (max-width: 860px) { .notif-fab { display: grid; } }
+.notif-panel { position: fixed; z-index: 150; width: min(360px, calc(100vw - 16px)); max-height: min(520px, calc(100vh - 90px)); display: flex; flex-direction: column; overflow: hidden; background: var(--surface); border: 1px solid var(--border); border-radius: 14px; box-shadow: var(--shadow-lg); }
+.notif-hd { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 12px 16px; border-bottom: 1px solid var(--border); font-size: 14px; color: var(--navy); }
+.notif-count { margin-left: 6px; padding: 1px 7px; border-radius: 10px; background: var(--danger); color: #fff; font-size: 10px; font-weight: 700; }
+.notif-link { background: none; border: none; padding: 0; color: var(--accent); font-size: 11px; font-weight: 600; cursor: pointer; }
+.notif-link.muted { color: var(--text3); font-weight: 500; }
+.notif-list { overflow-y: auto; flex: 1; }
+.notif-empty { padding: 40px 20px; text-align: center; color: var(--text3); font-size: 13px; display: flex; flex-direction: column; gap: 10px; align-items: center; }
+.notif-empty i { font-size: 26px; opacity: .4; }
+.notif-item { display: flex; gap: 10px; align-items: flex-start; width: 100%; padding: 12px 16px; border: none; border-bottom: 1px solid var(--border); background: none; text-align: left; cursor: pointer; font: inherit; }
+.notif-item.unread { background: rgba(74,144,217,.04); }
+.notif-item:hover { background: rgba(74,144,217,.08); }
+.notif-icon { width: 34px; height: 34px; border-radius: 9px; display: grid; place-items: center; flex-shrink: 0; font-size: 13px; }
+.notif-text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.notif-title { font-size: 12px; font-weight: 600; color: var(--text); }
+.notif-item.unread .notif-title { font-weight: 800; }
+.notif-body { font-size: 11px; color: var(--text3); line-height: 1.5; }
+.notif-meta { font-size: 10px; color: var(--text3); display: flex; gap: 8px; margin-top: 3px; }
+.notif-go { color: var(--accent); font-weight: 600; }
+.notif-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); flex-shrink: 0; margin-top: 6px; }

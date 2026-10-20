@@ -80,6 +80,7 @@ export interface Asset {
   childIds?: string[];
   lifecycleStage?: string;
   rejectionReason?: string;
+  reviewedAt?: string;
   agent?: string;
   nextInspection?: string;
   lastInspection?: string;
