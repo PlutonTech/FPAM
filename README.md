@@ -68,9 +68,11 @@ Phase two (not built): instalments, recurring lease billing and escalation, pena
 reconciliation against Remita settlement data, revenue dashboards, a real backend.
 
 The code lives in `src/rms/` (data model, rules, store), `src/pages/revenue/` (staff) and
-`src/pages/rms-public/` (customer portal). Routes come from `@rms-routes`; `.env.embed` sets
-`VITE_RMS=off`, which makes `vite.config.ts` resolve that to `routes.off.tsx`, so
-`npm run build:embed` contains **no RMS code** and the live site is unaffected.
+`src/pages/rms-public/` (customer portal). Routes come from `@rms-routes`. The embedded build
+includes the RMS (`VITE_RMS=on` in `.env.embed`): staff at `/app/revenue`, public at
+`/app/properties`. Set `VITE_RMS=off` to build without it — `vite.config.ts` then resolves
+`@rms-routes` to `routes.off.tsx` and no RMS code ships. Even on the live site the data stays
+in each visitor's own browser.
 
 ## What's ported
 
