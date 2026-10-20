@@ -4,6 +4,7 @@ import { useAuth } from '../auth/AuthContext';
 import { goToLogin } from '../config';
 import { approvalsSummary } from '../api/misc';
 import { canViewMe, type Perm } from '../auth/permissions';
+import ChangePasswordModal from './ChangePasswordModal';
 
 interface NavItem { to: string; label: string; icon: string; roles?: string[]; perm?: Perm; badge?: 'approvals'; me?: boolean }
 interface NavSection { title: string; items: NavItem[] }
@@ -44,6 +45,7 @@ export default function Layout() {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [pending, setPending] = useState(0);
+  const [changingPw, setChangingPw] = useState(false);
   const location = useLocation();
 
   // Pending-approvals badge; refreshed on navigation so it drops after reviewing.
@@ -88,6 +90,9 @@ export default function Layout() {
             <div className="sidebar-user-name">{user?.name || 'User'}</div>
             <div className="sidebar-user-role">{user?.role || '—'}</div>
           </div>
+          <button className="icon-btn" title="Change password" aria-label="Change password" onClick={() => setChangingPw(true)}>
+            <i className="fa-solid fa-key" />
+          </button>
           <button className="icon-btn" title="Log out" aria-label="Log out"
                   onClick={async () => { await logout(); goToLogin(navigate); }}>
             <i className="fa-solid fa-right-from-bracket" />
@@ -95,6 +100,7 @@ export default function Layout() {
         </div>
       </aside>
       {open && <div className="sidebar-backdrop" onClick={() => setOpen(false)} />}
+      {changingPw && <ChangePasswordModal onClose={() => setChangingPw(false)} />}
 
       <div className="main">
         <button className="menu-btn" onClick={() => setOpen(true)} aria-label="Open menu">

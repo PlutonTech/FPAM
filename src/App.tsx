@@ -4,6 +4,7 @@ import { AuthProvider, useAuth } from './auth/AuthContext';
 import { ToastProvider } from './components/Toast';
 import Layout from './components/Layout';
 import LoginPage from './pages/LoginPage';
+import { ForgotPasswordPage, ResetPasswordPage } from './pages/PasswordPages';
 import { BASENAME, LOGIN_URL } from './config';
 
 // Pages load on demand so the first visit stays fast.
@@ -56,6 +57,8 @@ export default function App() {
         <ToastProvider>
           <Routes>
             <Route path="/login" element={LOGIN_URL ? <ExternalLogin /> : <LoginPage />} />
+            <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+            <Route path="/reset-password" element={<ResetPasswordPage />} />
             <Route path="/portal" element={<RequireAuth portal><Suspense fallback={pageLoading}><PortalPage /></Suspense></RequireAuth>} />
             <Route element={<RequireAuth><Layout /></RequireAuth>}>
               <Route index element={<Navigate to="/dashboard" replace />} />

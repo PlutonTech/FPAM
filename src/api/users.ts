@@ -44,15 +44,26 @@ export interface ManagedUser {
 
 export const listUsers = () =>
   api<{ users: ManagedUser[]; total: number }>('/users?limit=1000').then(r => r.users || []);
+/** `emailed` is set when the body asked for `sendCredentials`. */
 export const createUser = (body: Record<string, unknown>) =>
-  api<{ user: ManagedUser }>('/users', { method: 'POST', body }).then(r => r.user);
+  api<{ user: ManagedUser; emailed?: boolean; emailError?: string }>('/users', { method: 'POST', body });
 export const updateUser = (id: string, body: Record<string, unknown>) =>
   api<{ user: ManagedUser }>(`/users/${enc(id)}`, { method: 'PUT', body }).then(r => r.user);
 export const setUserPermissions = (id: string, perms: Partial<Record<PermKey, boolean>>) =>
   api<{ user: ManagedUser }>(`/users/${enc(id)}/permissions`, { method: 'PUT', body: perms }).then(r => r.user);
 export const deactivateUser = (id: string) => api(`/users/${enc(id)}`, { method: 'DELETE' });
-export const resetPassword = (id: string) =>
-  api<{ tempPassword: string }>(`/users/${enc(id)}/reset-password`, { method: 'POST' }).then(r => r.tempPassword);
+/** Admin reset. Omit `password` to have one generated (returned as tempPassword). */
+export interface ResetResult { tempPassword?: string; emailed?: boolean; emailError?: string }
+export const resetPassword = (id: string, opts: { password?: string; sendEmail?: boolean } = {}) =>
+  api<ResetResult>(`/users/${enc(id)}/reset-password`, { method: 'POST', body: opts });
+
+// ── Own account ───────────────────────────────────────────────────────────────
+export const forgotPassword = (email: string) =>
+  api<{ message: string }>('/auth/forgot-password', { method: 'POST', body: { email } });
+export const resetPasswordWithToken = (token: string, password: string) =>
+  api<{ message: string }>('/auth/reset-password', { method: 'POST', body: { token, password } });
+export const changePassword = (currentPassword: string, newPassword: string) =>
+  api<{ message: string }>('/auth/change-password', { method: 'POST', body: { currentPassword, newPassword } });
 
 // ── Role defaults ─────────────────────────────────────────────────────────────
 export interface RoleConfig { role: string; defaults: Record<PermKey, boolean> }

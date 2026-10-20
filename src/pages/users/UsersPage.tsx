@@ -15,7 +15,7 @@ const ROLE_TONE: Record<string, Tone> = {
 const initials = (n: string) => n.split(/\s+/).map(p => p[0]).join('').slice(0, 2).toUpperCase();
 
 type ModalState = { kind: 'create' } | { kind: 'edit'; user: ManagedUser } | { kind: 'perms'; user: ManagedUser }
-  | { kind: 'password'; user: ManagedUser; temp: string } | null;
+  | { kind: 'reset'; user: ManagedUser } | { kind: 'password'; user: ManagedUser; result: usersApi.ResetResult } | null;
 
 export default function UsersPage() {
   const { user: me, can } = useAuth();
@@ -65,11 +65,7 @@ export default function UsersPage() {
     } catch (err) { toast(errorMessage(err), 'error'); }
   }
 
-  async function resetPw(u: ManagedUser) {
-    if (!confirm(`Reset ${u.name}'s password? Their current password stops working.`)) return;
-    try { setModal({ kind: 'password', user: u, temp: await usersApi.resetPassword(u._id) }); }
-    catch (err) { toast(errorMessage(err), 'error'); }
-  }
+  const resetPw = (u: ManagedUser) => setModal({ kind: 'reset', user: u });
 
   return (
     <div className="page">
@@ -149,17 +145,65 @@ export default function UsersPage() {
         <PermissionsModal user={modal.user} base={roleConfigs.find(c => c.role === modal.user.role)?.defaults}
                           onClose={() => setModal(null)} onDone={() => { setModal(null); load(); }} />
       )}
-      {modal?.kind === 'password' && (
-        <Modal title={`New password for ${modal.user.name}`} onClose={() => setModal(null)} footer={
-          <button className="btn btn-primary" onClick={() => setModal(null)}>Done</button>}>
-          <p style={{ fontSize: 13, marginBottom: 10 }}>Share this temporary password securely. It won't be shown again.</p>
-          <div className="row" style={{ flexWrap: 'nowrap' }}>
-            <code className="temp-pw">{modal.temp}</code>
-            <button className="btn btn-ghost btn-sm" onClick={() => navigator.clipboard?.writeText(modal.temp).then(() => toast('Copied'))}><i className="fa-solid fa-copy" /> Copy</button>
-          </div>
-        </Modal>
+      {modal?.kind === 'reset' && (
+        <ResetPasswordModal user={modal.user} onClose={() => setModal(null)}
+                            onDone={result => setModal({ kind: 'password', user: modal.user, result })} />
       )}
+      {modal?.kind === 'password' && (() => {
+        const { tempPassword, emailed, emailError } = modal.result;
+        return (
+          <Modal title={`Password reset for ${modal.user.name}`} onClose={() => setModal(null)} footer={
+            <button className="btn btn-primary" onClick={() => setModal(null)}>Done</button>}>
+            {emailed && <div className="form-ok" style={{ marginBottom: 12 }}><i className="fa-solid fa-envelope-circle-check" /> The new password was emailed to {modal.user.email}.</div>}
+            {emailError && <div className="form-error" style={{ marginTop: 0, marginBottom: 12 }}><i className="fa-solid fa-triangle-exclamation" /> The email could not be sent ({emailError === 'not configured' ? 'email is not set up on the server yet' : emailError}). Share the password another way.</div>}
+            {tempPassword ? <>
+              <p style={{ fontSize: 13, marginBottom: 10 }}>{emailed ? 'For your records, the' : 'Share this'} temporary password securely. It won't be shown again.</p>
+              <div className="row" style={{ flexWrap: 'nowrap' }}>
+                <code className="temp-pw">{tempPassword}</code>
+                <button className="btn btn-ghost btn-sm" onClick={() => navigator.clipboard?.writeText(tempPassword).then(() => toast('Copied'))}><i className="fa-solid fa-copy" /> Copy</button>
+              </div>
+            </> : <p style={{ fontSize: 13 }}>The password you chose is now active. Their old password no longer works.</p>}
+          </Modal>
+        );
+      })()}
     </div>
+  );
+}
+
+// ── Admin password reset ─────────────────────────────────────────────────────
+function ResetPasswordModal({ user, onClose, onDone }: { user: ManagedUser; onClose: () => void; onDone: (r: usersApi.ResetResult) => void }) {
+  const [mode, setMode] = useState<'generate' | 'set'>('generate');
+  const [pw, setPw] = useState('');
+  const [sendEmail, setSendEmail] = useState(true);
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState('');
+
+  async function save() {
+    if (mode === 'set' && pw.length < 8) { setError('Password must be at least 8 characters'); return; }
+    setBusy(true); setError('');
+    try { onDone(await usersApi.resetPassword(user._id, { password: mode === 'set' ? pw : undefined, sendEmail })); }
+    catch (err) { setError(errorMessage(err)); setBusy(false); }
+  }
+
+  return (
+    <Modal title={`Reset password — ${user.name}`} onClose={onClose} footer={<>
+      <button className="btn btn-ghost" onClick={onClose}>Cancel</button>
+      <button className="btn btn-primary" onClick={save} disabled={busy}><i className={`fa-solid ${busy ? 'fa-spinner fa-spin' : 'fa-key'}`} /> Reset password</button>
+    </>}>
+      <p style={{ fontSize: 13, marginBottom: 12 }}>{user.name}'s current password stops working straight away.</p>
+      <div className="pw-mode">
+        <label className="check-label"><input type="radio" name="pw-mode" checked={mode === 'generate'} onChange={() => setMode('generate')} /> Generate a temporary password</label>
+        <label className="check-label"><input type="radio" name="pw-mode" checked={mode === 'set'} onChange={() => setMode('set')} /> Set a password</label>
+      </div>
+      {mode === 'set' && <>
+        <label className="form-label" htmlFor="rp-new">New password</label>
+        <input id="rp-new" className="form-control" type="text" autoComplete="off" placeholder="At least 8 characters" value={pw} onChange={e => setPw(e.target.value)} />
+      </>}
+      <label className="check-label" style={{ marginTop: 12 }}>
+        <input type="checkbox" checked={sendEmail} onChange={e => setSendEmail(e.target.checked)} /> Email the new password to {user.email}
+      </label>
+      {error && <div className="form-error"><i className="fa-solid fa-circle-xmark" /> {error}</div>}
+    </Modal>
   );
 }
 
@@ -172,6 +216,7 @@ function UserFormModal({ user, isMe, onClose, onDone }: { user?: ManagedUser; is
     division: user?.division && user.division !== 'All' ? user.division : 'Assets & Condition',
     mda: user?.mda || '', zone: user?.zone || '', states: user?.states || [] as string[],
   });
+  const [sendCredentials, setSendCredentials] = useState(true);
   const [mdas, setMdas] = useState<string[]>([]);
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
@@ -190,11 +235,15 @@ function UserFormModal({ user, isMe, onClose, onDone }: { user?: ManagedUser; is
       division: cross ? 'All' : isMda ? null : form.division,
       mda: isMda ? form.mda : null, zone: form.zone, states: form.states,
     };
-    if (!editing) Object.assign(body, { email: form.email.trim(), password: form.password });
+    if (!editing) Object.assign(body, { email: form.email.trim(), password: form.password, sendCredentials });
     setBusy(true); setError('');
     try {
-      if (editing) await usersApi.updateUser(user!._id, body); else await usersApi.createUser(body);
-      toast(editing ? `${form.name} updated` : `${form.name} added as ${form.role}`);
+      if (editing) { await usersApi.updateUser(user!._id, body); toast(`${form.name} updated`); }
+      else {
+        const r = await usersApi.createUser(body);
+        if (sendCredentials && !r.emailed) toast(`${form.name} added — but the welcome email could not be sent${r.emailError === 'not configured' ? ' (email not set up on the server)' : ''}. Share the login details yourself.`, 'error');
+        else toast(`${form.name} added as ${form.role}${r.emailed ? ' — login details emailed' : ''}`);
+      }
       onDone();
     } catch (err) { setError(errorMessage(err)); }
     finally { setBusy(false); }
@@ -210,6 +259,9 @@ function UserFormModal({ user, isMe, onClose, onDone }: { user?: ManagedUser; is
         {!editing && <>
           <div className="full"><label className="form-label">Email</label><input className="form-control" type="email" value={form.email} onChange={set('email')} placeholder="user@agency.gov.ng" /></div>
           <div className="full"><label className="form-label">Password</label><input className="form-control" type="password" value={form.password} onChange={set('password')} placeholder="At least 8 characters" autoComplete="new-password" /></div>
+          <div className="full"><label className="check-label">
+            <input type="checkbox" checked={sendCredentials} onChange={e => setSendCredentials(e.target.checked)} /> Email the sign-in details to this user
+          </label></div>
         </>}
         <div><label className="form-label">Role</label>
           <select className="form-control" value={form.role} onChange={set('role')} disabled={isMe} title={isMe ? "You can't change your own role" : undefined}>

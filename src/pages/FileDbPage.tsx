@@ -105,18 +105,18 @@ export default function FileDbPage() {
           </div>
         ) : (
           <div className="card table-wrap">
-            <table className="data-table">
+            <table className="data-table file-table">
               <thead><tr><th>File</th><th>Asset</th><th>Type</th><th>Size</th><th>Uploaded</th><th /></tr></thead>
               <tbody>
                 {shown.slice(0, 500).map(f => (
                   <tr key={f._assetId + fid(f)}>
-                    <td><div className="row" style={{ flexWrap: 'nowrap' }}><i className={`fa-solid ${ICON[f._fileType]}`} style={{ color: 'var(--accent)', width: 16 }} />
-                      <span style={{ fontSize: 13, wordBreak: 'break-all' }}>{name(f)}</span></div></td>
-                    <td><Link to={`/assets/${encodeURIComponent(f._assetId)}`} style={{ color: 'inherit' }}>{f._assetName}</Link><div className="id-cell">{f._assetId}</div></td>
-                    <td><Tag tone={f._fileType === 'photo' ? 'blue' : f._fileType === 'excel' ? 'green' : 'gray'}>{f._fileType}</Tag></td>
-                    <td className="cell-sub">{size(f.sizeBytes || f.length)}</td>
-                    <td className="cell-sub">{formatDate(f.uploadedAt)}</td>
-                    <td><div className="row" style={{ gap: 6, flexWrap: 'nowrap' }}>
+                    <td className="ft-name"><div className="row" style={{ flexWrap: 'nowrap', alignItems: 'flex-start' }}><i className={`fa-solid ${ICON[f._fileType]}`} style={{ color: 'var(--accent)', width: 16, marginTop: 3 }} />
+                      <span className="file-name" title={name(f)}>{name(f)}</span></div></td>
+                    <td className="ft-asset"><Link to={`/assets/${encodeURIComponent(f._assetId)}`} style={{ color: 'inherit' }}>{f._assetName}</Link><div className="id-cell">{f._assetId}</div></td>
+                    <td className="ft-type"><Tag tone={f._fileType === 'photo' ? 'blue' : f._fileType === 'excel' ? 'green' : 'gray'}>{f._fileType}</Tag></td>
+                    <td className="cell-sub ft-size">{size(f.sizeBytes || f.length)}</td>
+                    <td className="cell-sub ft-date">{formatDate(f.uploadedAt)}</td>
+                    <td className="ft-actions"><div className="row" style={{ gap: 6, flexWrap: 'nowrap' }}>
                       <button className="btn btn-ghost btn-xs" onClick={() => open(f)} title="Open"><i className="fa-solid fa-eye" /></button>
                       <button className="btn btn-ghost btn-xs" title="Download" onClick={() => downloadFile(path(f), name(f)).catch(err => toast(errorMessage(err), 'error'))}><i className="fa-solid fa-download" /></button>
                       {can('canEdit') && <button className="btn btn-danger btn-xs" title="Delete" onClick={() => remove(f)}><i className="fa-solid fa-trash" /></button>}

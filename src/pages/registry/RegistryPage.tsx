@@ -274,7 +274,14 @@ export default function RegistryPage() {
               ) : pageItems.map(a => {
                 const id = assetKey(a);
                 return (
-                  <tr key={id}>
+                  <tr key={id} className="row-link"
+                      onClick={e => {
+                        // Whole row opens the asset; checkboxes, links and buttons keep their own behaviour,
+                        // and selecting text doesn't count as a click.
+                        if ((e.target as HTMLElement).closest('input, button, a, select, label')) return;
+                        if (window.getSelection()?.toString()) return;
+                        navigate(`/assets/${encodeURIComponent(id)}`);
+                      }}>
                     <td><input type="checkbox" checked={selected.has(id)} onChange={e => toggle(id, e.target.checked)} aria-label={`Select ${a.name}`} /></td>
                     <td className="id-cell">
                       {id}

@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from 'react';
-import { Navigate, useLocation, useNavigate } from 'react-router-dom';
+import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../auth/AuthContext';
 import { errorMessage } from '../api/client';
 
@@ -44,7 +44,8 @@ export default function LoginPage() {
         <label className="form-label" htmlFor="password" style={{ marginTop: 14 }}>Password</label>
         <input id="password" className="form-control" type="password" autoComplete="current-password" required
                value={password} onChange={e => setPassword(e.target.value)} />
-        {error && <div className="form-error"><i className="fa-solid fa-circle-xmark" /> {error}</div>}
+        <div style={{ textAlign: 'right', marginTop: 6 }}><Link className="login-link-inline" to="/forgot-password">Forgot password?</Link></div>
+        {error &&<div className="form-error"><i className="fa-solid fa-circle-xmark" /> {error}</div>}
         <button className="btn btn-primary btn-block" disabled={busy} style={{ marginTop: 20 }}>
           {busy ? <><i className="fa-solid fa-spinner fa-spin" /> Signing in…</> : 'Sign in'}
         </button>
