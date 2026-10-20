@@ -472,3 +472,72 @@ fieldset:disabled .switch { opacity: .6; cursor: not-allowed; }
 .row-link { cursor: pointer; }
 .modal .check-label { white-space: normal; }
 .av-info .id-cell { min-width: 0; max-width: none; white-space: nowrap; }
+
+/* ── Revenue Management System (phase-one prototype) ─────────────────────── */
+.num { text-align: right; white-space: nowrap; }
+.money { white-space: nowrap; }
+.rms-persona { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; padding: 10px 14px; margin-bottom: 16px; background: var(--accent-bg); }
+.rms-persona-label { font-size: 12px; font-weight: 700; color: var(--navy); }
+.rms-persona select { min-width: 0; max-width: 100%; }
+.rms-chain { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(120px, 100%), 1fr)); gap: 10px; }
+.rms-chain-step { position: relative; text-align: center; padding: 12px 8px; border: 1px solid var(--border); border-radius: 10px; background: var(--surface2); }
+.rms-chain-icon { color: var(--accent); font-size: 18px; }
+.rms-chain-n { font-size: 22px; font-weight: 800; color: var(--navy); }
+.rms-chain-label { font-size: 11px; color: var(--text3); }
+.rms-chain-arrow { position: absolute; right: -9px; top: 50%; transform: translateY(-50%); color: var(--text3); font-size: 10px; z-index: 1; }
+.rms-task { color: inherit; text-decoration: none; font-size: 13px; }
+.rms-task:hover { background: var(--surface2); }
+.rms-count { min-width: 24px; text-align: center; padding: 1px 8px; border-radius: 10px; background: var(--danger); color: #fff; font-size: 11px; font-weight: 700; }
+.rms-count.zero { background: var(--surface3); color: var(--text3); }
+.rms-row-rec td { background: #fff8e6; }
+.rms-verify.ok { border-left: 4px solid var(--success); }
+.rms-verify.ok i { color: var(--success); }
+.rms-verify.bad { border-left: 4px solid var(--danger); background: #fff5f5; }
+.rms-verify.bad i { color: var(--danger); }
+.rms-alert { border-left: 4px solid #f0a500; display: flex; flex-direction: column; gap: 8px; font-size: 13px; }
+.rms-offer { margin-top: 10px; padding: 10px 12px; border-radius: 8px; background: #fff8e6; border: 1px solid #f3dca0; font-size: 13px; }
+
+/* Public customer portal */
+.pub { min-height: 100vh; height: 100vh; overflow-y: auto; background: var(--bg); display: flex; flex-direction: column; }
+.pub-hd { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; padding: 12px 24px; background: var(--navy); color: #fff; position: sticky; top: 0; z-index: 500; }
+.pub-brand { display: flex; align-items: center; gap: 10px; color: #fff; text-decoration: none; min-width: 0; }
+.pub-title { font-weight: 800; font-size: 15px; }
+.pub-sub { font-size: 11px; color: rgba(255,255,255,.7); }
+.pub-nav { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.pub-nav a:not(.btn) { color: rgba(255,255,255,.85); text-decoration: none; font-size: 13px; font-weight: 600; }
+.pub-nav a.active:not(.btn) { color: #fff; border-bottom: 2px solid var(--accent); }
+.pub-nav .btn-ghost { background: transparent; color: #fff; border-color: rgba(255,255,255,.3); }
+.pub-main { width: 100%; max-width: 1180px; margin: 0 auto; padding: 22px 20px 40px; flex: 1; }
+.pub-ft { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; justify-content: center; padding: 14px 20px; font-size: 11px; color: var(--text3); border-top: 1px solid var(--border); background: var(--surface); }
+.pub-hero { padding: 26px 24px; margin-bottom: 18px; border-radius: var(--radius); background: linear-gradient(135deg, var(--navy), var(--navy-2)); color: #fff; }
+.pub-hero h1 { font-size: 24px; margin: 0 0 8px; line-height: 1.25; }
+.pub-hero p { margin: 0; font-size: 14px; color: rgba(255,255,255,.8); max-width: 680px; line-height: 1.6; }
+.pub-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(260px, 100%), 1fr)); gap: 16px; }
+.pub-card { display: flex; flex-direction: column; overflow: hidden; color: inherit; text-decoration: none; transition: box-shadow .15s, transform .15s; }
+.pub-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-2px); }
+.pub-card-img { position: relative; height: 120px; display: grid; place-items: center; font-size: 40px; color: rgba(255,255,255,.9); background: linear-gradient(135deg, #2c5d8f, var(--accent)); }
+.pub-card-img .tag { position: absolute; top: 10px; left: 10px; background: #fff; }
+.pub-card-body { padding: 14px 16px 16px; display: flex; flex-direction: column; gap: 4px; }
+.pub-card-title { font-weight: 700; color: var(--navy); line-height: 1.35; }
+.pub-card-price, .pub-price { font-size: 20px; font-weight: 800; color: var(--navy); margin-top: 6px; }
+.pub-price { font-size: 26px; margin: 2px 0 6px; }
+.pub-card-price span, .pub-price span { font-size: 12px; font-weight: 600; color: var(--text3); }
+.pub-card-close { font-size: 12px; color: var(--text2); margin-top: 6px; }
+.pub-card-close.soon { color: #b45309; font-weight: 600; }
+.pub-detail { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 360px); gap: 16px; align-items: start; }
+.pub-side { position: sticky; top: 76px; }
+.pub-map { height: 280px; overflow: hidden; }
+.pub-auth { max-width: 520px; margin: 10px auto; }
+.pub-demo-hint { margin-top: 14px; padding: 8px 10px; border-radius: 8px; background: var(--surface2); font-size: 11px; color: var(--text2); line-height: 1.6; overflow-wrap: anywhere; }
+@media (max-width: 860px) { .pub-detail { grid-template-columns: minmax(0, 1fr); } .pub-side { position: static; } }
+@media (max-width: 600px) { .pub-hd { padding: 10px 14px; } .pub-main { padding: 16px 14px 32px; } .pub-hero h1 { font-size: 19px; } .pub-sub { display: none; } }
+
+/* Simulated Remita checkout */
+.remita-box { border: 1px solid #f2c6b5; background: #fff7f3; border-radius: 10px; padding: 12px 14px; }
+.remita-brand { font-weight: 800; font-size: 17px; color: #e4572e; margin-bottom: 8px; letter-spacing: -.3px; }
+.remita-brand span { font-size: 11px; font-weight: 600; color: var(--text3); letter-spacing: 0; }
+.remita-channels { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(200px, 100%), 1fr)); gap: 8px; margin-top: 14px; }
+.remita-ch { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border: 1px solid var(--border2); border-radius: 8px; cursor: pointer; font-size: 13px; }
+.remita-ch i { color: #e4572e; width: 18px; text-align: center; }
+.remita-ch.on { border-color: #e4572e; background: #fff7f3; }
+.remita-ch input { accent-color: #e4572e; }

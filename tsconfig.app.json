@@ -20,7 +20,10 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "erasableSyntaxOnly": true,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+
+    /* '@rms-routes' — swapped for routes.off.tsx by vite.config.ts when VITE_RMS=off */
+    "paths": { "@rms-routes": ["./src/rms/routes.tsx"] }
   },
   "include": ["src"]
 }

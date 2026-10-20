@@ -40,6 +40,38 @@ isn't on Vercel, add the equivalent rewrite (e.g. nginx `try_files $uri /app/ind
 `/app/`). Running `npx vite build --base=/app/` directly from Git Bash mangles the path — use the
 npm script.
 
+## Revenue Management System — phase one (local prototype)
+
+A working prototype of the RMS core revenue chain from the architecture documents, **stored only
+in the browser's localStorage** — no backend calls, nothing shared between browsers. Run
+`npm run dev` and open:
+
+- **Staff:** sign in, then the sidebar's *Revenue (demo)* section (`/revenue`). Use **Acting as**
+  at the top to switch between Revenue Officer, Valuer, two Committee members, Finance and Auditor.
+- **Public:** `/properties` (no staff login). Demo customers: `amaka@example.com`,
+  `sahel@example.com`, `ibrahim@example.com`, password `demo1234` — or register a new one.
+
+The chain: revenue status on assets → valuation (committee-approved, immutable) → listing
+(sale / lease / sealed-bid auction, price ≥ valuation) → public registration and application with
+a Remita-RRR fee bill → close and open bids → evaluate and recommend → committee award (offer
+letter) → customer accepts → demand notice → simulated Remita payment → receipt → ownership-transfer
+or lease record and asset marked sold / leased.
+
+Built in: money in integer kobo; double-entry, append-only, hash-chained ledger with a verifier
+and trial balance; idempotent, signature-checked Remita callback handler (Billing → Payments has
+Replay / Tamper buttons to show it); segregation of duties (no self-approved valuations, valuer
+and evaluator can't approve the award); versioned fee schedules; audit trail. The seeded Kano
+auction is past its closing date, so the evaluation → award → payment path can be walked
+immediately. *Reset demo data* restores the seed.
+
+Phase two (not built): instalments, recurring lease billing and escalation, penalties,
+reconciliation against Remita settlement data, revenue dashboards, a real backend.
+
+The code lives in `src/rms/` (data model, rules, store), `src/pages/revenue/` (staff) and
+`src/pages/rms-public/` (customer portal). Routes come from `@rms-routes`; `.env.embed` sets
+`VITE_RMS=off`, which makes `vite.config.ts` resolve that to `routes.off.tsx`, so
+`npm run build:embed` contains **no RMS code** and the live site is unaffected.
+
 ## What's ported
 
 | Area | Status |

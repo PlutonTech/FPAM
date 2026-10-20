@@ -1,5 +1,6 @@
 import { lazy, Suspense, type ReactNode } from 'react';
 import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-router-dom';
+import { rmsPublicRoutes, rmsStaffRoutes } from '@rms-routes';
 import { AuthProvider, useAuth } from './auth/AuthContext';
 import { ToastProvider } from './components/Toast';
 import Layout from './components/Layout';
@@ -59,6 +60,8 @@ export default function App() {
             <Route path="/login" element={LOGIN_URL ? <ExternalLogin /> : <LoginPage />} />
             <Route path="/forgot-password" element={<ForgotPasswordPage />} />
             <Route path="/reset-password" element={<ResetPasswordPage />} />
+            {/* Revenue Management System prototype (absent when VITE_RMS=off) */}
+            {rmsPublicRoutes(pageLoading)}
             <Route path="/portal" element={<RequireAuth portal><Suspense fallback={pageLoading}><PortalPage /></Suspense></RequireAuth>} />
             <Route element={<RequireAuth><Layout /></RequireAuth>}>
               <Route index element={<Navigate to="/dashboard" replace />} />
@@ -79,6 +82,7 @@ export default function App() {
               <Route path="settings" element={<SettingsPage />} />
               <Route path="guidelines" element={<GuidelinesPage />} />
               <Route path="me" element={<MePage />} />
+              {rmsStaffRoutes()}
               <Route path="*" element={<Navigate to="/dashboard" replace />} />
             </Route>
           </Routes>

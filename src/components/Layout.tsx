@@ -5,8 +5,9 @@ import { goToLogin } from '../config';
 import { approvalsSummary } from '../api/misc';
 import { canViewMe, type Perm } from '../auth/permissions';
 import ChangePasswordModal from './ChangePasswordModal';
+import { RMS_NAV } from '@rms-routes';
 
-interface NavItem { to: string; label: string; icon: string; roles?: string[]; perm?: Perm; badge?: 'approvals'; me?: boolean }
+interface NavItem { to: string; label: string; icon: string; roles?: string[]; perm?: Perm; badge?: 'approvals'; me?: boolean; end?: boolean }
 interface NavSection { title: string; items: NavItem[] }
 
 // Same structure as the legacy sidebar. Pages not yet ported open a
@@ -28,6 +29,7 @@ const NAV: NavSection[] = [
   { title: 'Divisions', items: [
     { to: '/me', label: 'M&E reports', icon: 'fa-clipboard-list', me: true },
   ]},
+  ...(RMS_NAV ? [RMS_NAV] : []),
   { title: 'Data Tools', items: [
     { to: '/ocr',    label: 'OCR Scanner',   icon: 'fa-file-image' },
     { to: '/excel',  label: 'Excel Import',  icon: 'fa-file-excel' },
@@ -75,7 +77,7 @@ export default function Layout() {
               <div key={section.title}>
                 <div className="nav-section">{section.title}</div>
                 {items.map(i => (
-                  <NavLink key={i.to} to={i.to} className="nav-item" onClick={() => setOpen(false)}>
+                  <NavLink key={i.to} to={i.to} end={i.end} className="nav-item" onClick={() => setOpen(false)}>
                     <i className={`fa-solid ${i.icon}`} />{i.label}
                     {i.badge === 'approvals' && pending > 0 && <span className="nav-badge">{pending}</span>}
                   </NavLink>
