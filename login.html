@@ -714,7 +714,7 @@ h1 {
       </div>
     </div>
 
-    <div class="forgot-row"><a href="./app/forgot-password">Forgot password?</a></div>
+    <div class="forgot-row"><a href="./app/?to=/forgot-password">Forgot password?</a></div>
 
     <button class="btn-login" id="login-btn" onclick="doLogin()">
       <i class="fa-solid fa-right-to-bracket" id="btn-icon"></i>
@@ -765,7 +765,9 @@ h1 {
 if (localStorage.getItem('as_token')) {
   let role;
   try { role = JSON.parse(localStorage.getItem('as_user') || 'null')?.role; } catch {}
-  window.location.href = role === 'MDA Agent' ? './app/portal' : './app/dashboard';
+  // ./app/ is a real file on any server; the dashboard then routes to
+  // /dashboard or (MDA Agents) /portal itself.
+  window.location.href = './app/';
 }
 
 function togglePw() {
@@ -822,9 +824,10 @@ async function doLogin() {
       } catch { /* ignore parse errors, fall through to default redirect */ }
     }
 
-    window.location.href = role === 'MDA Agent'
-      ? './app/portal'
-      : './app/dashboard';
+    // ./app/ (app/index.html) exists on any server, including local ones
+    // without the vercel.json rewrite; the dashboard then sends MDA Agents
+    // to /portal and everyone else to /dashboard.
+    window.location.href = './app/';
   } catch (e) {
     document.getElementById('login-alert-msg').textContent =
       e.message || 'Login failed. Check your credentials.';
