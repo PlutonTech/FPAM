@@ -45,6 +45,7 @@ npm script.
 | Area | Status |
 |---|---|
 | Login, logout, session expiry → back to login | Done |
+| Passwords — forgot-password email link (`/forgot-password`, `/reset-password`), change own password (key icon in the sidebar / portal header), admin reset with generated or chosen password and optional email, welcome email on create | Done (emails need SMTP set on the backend) |
 | Sidebar layout, role-based nav, permission checks (`can('canEdit')` …) | Done |
 | **Asset Registry** — search, all filters (kept in the URL), sorting, stats bar, pagination, row selection | Done |
 | Registry actions — edit, delete, bulk delete, set condition, Excel/CSV bulk update, completeness report, deferred maintenance report | Done |
@@ -85,5 +86,7 @@ Notes:
 - Photos and documents are behind Bearer auth, so they're fetched as blobs (`AuthedImage`).
 - Permission checks in the UI only hide controls; the backend is what actually enforces them.
 - Enum lists in `lib/assets.ts` must stay in sync with `assetspatial-backend/src/models/Asset.js`.
+- Phone layout: page-level grids use `minmax(0,1fr)` so wide content can't push the page sideways;
+  keep that pattern when adding grids.
 - Relies on the backend fixes now on `main` (approval rules, inspection scheduling, permission
   guards, capture fields, M&E photo links). Deploy the backend before this app.
