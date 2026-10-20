@@ -30,7 +30,8 @@ const NAV: NavSection[] = [
   { title: 'Divisions', items: [
     { to: '/me', label: 'M&E reports', icon: 'fa-clipboard-list', me: true },
   ]},
-  ...(RMS_NAV ? [RMS_NAV] : []),
+  // VITE_RMS_NAV=off hides the links; the revenue pages still work by URL.
+  ...(RMS_NAV && import.meta.env.VITE_RMS_NAV !== 'off' ? [RMS_NAV] : []),
   { title: 'Data Tools', items: [
     { to: '/ocr',    label: 'OCR Scanner',   icon: 'fa-file-image' },
     { to: '/excel',  label: 'Excel Import',  icon: 'fa-file-excel' },
