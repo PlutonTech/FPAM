@@ -3,6 +3,7 @@ import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-route
 import { rmsPublicRoutes, rmsStaffRoutes } from '@rms-routes';
 import { AuthProvider, useAuth } from './auth/AuthContext';
 import { ToastProvider } from './components/Toast';
+import ErrorBoundary from './components/ErrorBoundary';
 import Layout from './components/Layout';
 import LoginPage from './pages/LoginPage';
 import { ForgotPasswordPage, ResetPasswordPage } from './pages/PasswordPages';
@@ -27,6 +28,10 @@ const SettingsPage = lazy(() => import('./pages/SettingsPage'));
 const GuidelinesPage = lazy(() => import('./pages/guidelines/GuidelinesPage'));
 const MePage = lazy(() => import('./pages/me/MePage'));
 const PortalPage = lazy(() => import('./pages/portal/PortalPage'));
+const MfaPage = lazy(() => import('./pages/MfaPage'));
+const PrivacyPage = lazy(() => import('./pages/PrivacyPage'));
+const DataQualityPage = lazy(() => import('./pages/DataQualityPage'));
+const SystemHealthPage = lazy(() => import('./pages/SystemHealthPage'));
 
 // MDA Agents only ever see the compliance portal; staff never see it.
 const MDA_AGENT = 'MDA Agent';
@@ -56,9 +61,12 @@ export default function App() {
     <BrowserRouter basename={BASENAME}>
       <AuthProvider>
         <ToastProvider>
+          <ErrorBoundary>
           <Routes>
             <Route path="/login" element={LOGIN_URL ? <ExternalLogin /> : <LoginPage />} />
             <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+            <Route path="/mfa" element={<Suspense fallback={pageLoading}><MfaPage /></Suspense>} />
+            <Route path="/privacy" element={<Suspense fallback={pageLoading}><PrivacyPage /></Suspense>} />
             <Route path="/reset-password" element={<ResetPasswordPage />} />
             {/* Revenue Management System prototype (absent when VITE_RMS=off) */}
             {rmsPublicRoutes(pageLoading)}
@@ -82,10 +90,13 @@ export default function App() {
               <Route path="settings" element={<SettingsPage />} />
               <Route path="guidelines" element={<GuidelinesPage />} />
               <Route path="me" element={<MePage />} />
+              <Route path="data-quality" element={<DataQualityPage />} />
+              <Route path="system" element={<SystemHealthPage />} />
               {rmsStaffRoutes()}
               <Route path="*" element={<Navigate to="/dashboard" replace />} />
             </Route>
           </Routes>
+          </ErrorBoundary>
         </ToastProvider>
       </AuthProvider>
     </BrowserRouter>

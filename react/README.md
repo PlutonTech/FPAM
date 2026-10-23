@@ -40,6 +40,23 @@ isn't on Vercel, add the equivalent rewrite (e.g. nginx `try_files $uri /app/ind
 `/app/`). Running `npx vite build --base=/app/` directly from Git Bash mangles the path — use the
 npm script.
 
+## Platform features added in October 2026
+
+| Feature | Where |
+|---|---|
+| Two-step sign-in (authenticator app + recovery codes), sign out everywhere, password change | Shield icon in the sidebar / portal header (`AccountSecurityModal`); code step at `/mfa` and on the login page |
+| Live notifications from the server (socket.io) merged with the registry alerts | Bell (`lib/serverNotifications.ts`) |
+| Offline field capture — saved in IndexedDB with photos, uploaded when back online; app shell cached by a service worker | `lib/offlineQueue.ts`, `public/sw.js`, Field Capture |
+| Data quality — issue counts, bulk state/MDA spelling fixes, assign → fix → verify | `/data-quality` |
+| System health — server/database status, config checks, error log, list-drift check, backup download | `/system` (System Admin) |
+| Browser error reporting + error screens instead of blank pages | `lib/errorReporting.ts`, `ErrorBoundary` |
+| "Server waking up" banner for slow first requests | `ServerWakeBanner` |
+| Privacy notice | `/privacy` |
+| Content-Security-Policy on built pages | `vite.config.ts` |
+
+`npm test` runs the unit tests (vitest); GitHub Actions runs lint, tests and a build on every push.
+The old vanilla dashboard pages redirect to these (see `../vercel.json`), except the PDF merger.
+
 ## Revenue Management System — phase one (local prototype)
 
 A working prototype of the RMS core revenue chain from the architecture documents, **stored only

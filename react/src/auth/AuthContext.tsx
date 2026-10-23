@@ -6,7 +6,10 @@ import { permsFor, type Perm } from './permissions';
 
 interface AuthState {
   user: User | null;
-  login: (email: string, password: string) => Promise<User>;
+  /** Resolves to the user, or to { mfaToken } when a two-step code is still needed. */
+  login: (email: string, password: string) => Promise<User | { mfaToken: string }>;
+  /** Store a session (after two-step verification, or a fresh token after a password change). */
+  finishLogin: (token: string, user?: User) => void;
   logout: () => Promise<void>;
   can: (perm: Perm) => boolean;
 }
@@ -21,13 +24,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUnauthorizedHandler(() => { tokenStore.clear(); setUser(null); });
   }, []);
 
+  const finishLogin = useCallback((token: string, u?: User) => {
+    tokenStore.set(token);
+    if (u) { tokenStore.setUser(u); setUser(u); }
+  }, []);
+
   const login = useCallback(async (email: string, password: string) => {
     const r = await assetsApi.login(email, password);
-    tokenStore.set(r.token);
-    tokenStore.setUser(r.user);
-    setUser(r.user);
+    if (r.mfaRequired) return { mfaToken: r.mfaToken };
+    finishLogin(r.token, r.user);
     return r.user;
-  }, []);
+  }, [finishLogin]);
 
   const logout = useCallback(async () => {
     await assetsApi.logout();
@@ -37,8 +44,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const value = useMemo<AuthState>(() => {
     const perms = permsFor(user);
-    return { user, login, logout, can: p => perms[p] === true };
-  }, [user, login, logout]);
+    return { user, login, finishLogin, logout, can: p => perms[p] === true };
+  }, [user, login, finishLogin, logout]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

@@ -5,11 +5,18 @@ import { goToLogin } from '../config';
 import { approvalsSummary } from '../api/misc';
 import { canViewMe, type Perm } from '../auth/permissions';
 import { CROSS_DIVISION } from '../api/users';
-import ChangePasswordModal from './ChangePasswordModal';
+import AccountSecurityModal from './AccountSecurityModal';
+import ErrorBoundary from './ErrorBoundary';
 import NotificationBell, { useAlertScan } from './NotificationBell';
+import ServerWakeBanner from './ServerWakeBanner';
+import { useOfflineQueue } from '../lib/offlineQueue';
 import { RMS_NAV } from '@rms-routes';
 
-interface NavItem { to: string; label: string; icon: string; roles?: string[]; perm?: Perm; badge?: 'approvals'; me?: boolean; end?: boolean; division?: string; soon?: boolean }
+interface NavItem { to: string; label: string; icon: string; roles?: string[]; perm?: Perm; badge?: 'approvals' | 'offline'; me?: boolean; end?: boolean; division?: string; soon?: boolean }
+
+const MANAGERS = ['System Admin', 'Supervisor', 'Sub-Head', 'GIS Analyst'];
+// Roles whose accounts can approve or administer: nudged to turn on two-step sign-in.
+const PRIVILEGED = ['System Admin', 'Supervisor', 'Sub-Head'];
 interface NavSection { title: string; items: NavItem[] }
 
 // Same structure as the legacy sidebar. Pages not yet ported open a
@@ -21,12 +28,14 @@ const NAV: NavSection[] = [
     { to: '/assets',    label: 'Asset Registry', icon: 'fa-database' },
   ]},
   { title: 'Management', items: [
-    { to: '/capture',       label: 'Field Capture', icon: 'fa-location-crosshairs' },
+    { to: '/capture',       label: 'Field Capture', icon: 'fa-location-crosshairs', badge: 'offline' },
     { to: '/approvals',     label: 'Approvals',     icon: 'fa-stamp', badge: 'approvals', roles: ['Sub-Head', 'Supervisor', 'System Admin'] },
     { to: '/inspections',   label: 'Inspections',   icon: 'fa-clipboard-check', roles: ['System Admin', 'Supervisor', 'Sub-Head', 'GIS Analyst'] },
     { to: '/analytics',     label: 'Analytics',     icon: 'fa-chart-bar' },
     { to: '/users',         label: 'Users',         icon: 'fa-users', roles: ['System Admin'] },
     { to: '/form-requests', label: 'Form Requests', icon: 'fa-file-circle-check', roles: ['System Admin', 'Supervisor', 'Sub-Head', 'GIS Analyst'] },
+    { to: '/data-quality',  label: 'Data Quality',  icon: 'fa-broom', roles: MANAGERS },
+    { to: '/data-quality?mine=1', label: 'My Data Fixes', icon: 'fa-broom', roles: ['Field Agent'] },
   ]},
   // Same list as the legacy sidebar. Cross-division roles see all of them;
   // everyone else only their own division. "soon" ones aren't built yet.
@@ -48,6 +57,8 @@ const NAV: NavSection[] = [
     { to: '/audit',      label: 'Audit Log',  icon: 'fa-clock-rotate-left', perm: 'canViewAudit' },
     { to: '/settings',   label: 'Settings',   icon: 'fa-sliders' },
     { to: '/guidelines', label: 'Guidelines', icon: 'fa-book-open' },
+    { to: '/system',     label: 'System Health', icon: 'fa-heart-pulse', roles: ['System Admin'] },
+    { to: '/privacy',    label: 'Privacy',    icon: 'fa-user-shield' },
   ]},
 ];
 
@@ -56,9 +67,12 @@ export default function Layout() {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [pending, setPending] = useState(0);
-  const [changingPw, setChangingPw] = useState(false);
+  const [security, setSecurity] = useState<null | 'password' | 'mfa'>(null);
+  const [mfaNudgeHidden, setMfaNudgeHidden] = useState(() => sessionStorage.getItem('as_mfa_nudge') === 'hidden');
+  const offline = useOfflineQueue();
   useAlertScan();
   const location = useLocation();
+  const showMfaNudge = !mfaNudgeHidden && PRIVILEGED.includes(user?.role || '') && !user?.mfa?.enabled;
 
   // Pending-approvals badge; refreshed on navigation so it drops after reviewing.
   const canApprove = can('canApprove');
@@ -96,6 +110,7 @@ export default function Layout() {
                   <NavLink key={i.to} to={i.to} end={i.end} className="nav-item" onClick={() => setOpen(false)}>
                     <i className={`fa-solid ${i.icon}`} />{i.label}
                     {i.badge === 'approvals' && pending > 0 && <span className="nav-badge">{pending}</span>}
+                    {i.badge === 'offline' && offline.count > 0 && <span className="nav-badge" title="Captures saved on this device, waiting to upload"><i className="fa-solid fa-cloud-arrow-up" /> {offline.count}</span>}
                   </NavLink>
                 ))}
               </div>
@@ -108,8 +123,8 @@ export default function Layout() {
             <div className="sidebar-user-name">{user?.name || 'User'}</div>
             <div className="sidebar-user-role">{user?.role || '—'}</div>
           </div>
-          <button className="icon-btn" title="Change password" aria-label="Change password" onClick={() => setChangingPw(true)}>
-            <i className="fa-solid fa-key" />
+          <button className="icon-btn" title="Account security — password, two-step sign-in, sessions" aria-label="Account security" onClick={() => setSecurity('password')}>
+            <i className="fa-solid fa-shield-halved" />
           </button>
           <button className="icon-btn" title="Log out" aria-label="Log out"
                   onClick={async () => { await logout(); goToLogin(navigate); }}>
@@ -118,7 +133,7 @@ export default function Layout() {
         </div>
       </aside>
       {open && <div className="sidebar-backdrop" onClick={() => setOpen(false)} />}
-      {changingPw && <ChangePasswordModal onClose={() => setChangingPw(false)} />}
+      {security && <AccountSecurityModal initialTab={security} onClose={() => setSecurity(null)} />}
 
       <div className="main">
         <button className="menu-btn" onClick={() => setOpen(true)} aria-label="Open menu">
@@ -126,10 +141,21 @@ export default function Layout() {
         </button>
         {/* Phones: the sidebar is off-screen, so the bell floats top-right. */}
         <NotificationBell className="notif-fab" />
+        <ServerWakeBanner />
+        {showMfaNudge && (
+          <div className="mfa-nudge" role="note">
+            <i className="fa-solid fa-shield-halved" />
+            <span>Your account can approve or administer records. Turn on <strong>two-step sign-in</strong> so a stolen password alone can't be used.</span>
+            <button className="btn btn-primary btn-xs" onClick={() => setSecurity('mfa')}>Set it up</button>
+            <button className="btn btn-ghost btn-xs" onClick={() => { sessionStorage.setItem('as_mfa_nudge', 'hidden'); setMfaNudgeHidden(true); }}>Later</button>
+          </div>
+        )}
         {/* Pages are lazy-loaded; only the content area waits, the sidebar stays put. */}
-        <Suspense fallback={<div className="page loading"><i className="fa-solid fa-spinner fa-spin" /> Loading…</div>}>
-          <Outlet />
-        </Suspense>
+        <ErrorBoundary resetKey={location.pathname}>
+          <Suspense fallback={<div className="page loading"><i className="fa-solid fa-spinner fa-spin" /> Loading…</div>}>
+            <Outlet />
+          </Suspense>
+        </ErrorBoundary>
       </div>
     </div>
   );

@@ -9,6 +9,8 @@ export interface User {
   division?: string | null;
   mda?: string | null;
   permissions?: Record<string, boolean>;
+  phone?: string | null;
+  mfa?: { enabled?: boolean; enabledAt?: string };
 }
 
 export type Condition = 'Good' | 'Fair' | 'Poor' | 'Critical';

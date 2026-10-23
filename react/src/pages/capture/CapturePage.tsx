@@ -2,7 +2,9 @@ import { useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { CircleMarker, MapContainer, TileLayer, useMap, useMapEvents } from 'react-leaflet';
 import * as assetsApi from '../../api/assets';
-import { errorMessage } from '../../api/client';
+import { errorMessage, isNetworkError } from '../../api/client';
+import { enqueueCapture, type FileKind } from '../../lib/offlineQueue';
+import OfflineQueuePanel from '../../components/OfflineQueuePanel';
 import { useToast } from '../../components/Toast';
 import { ASSET_TYPES, CONDITIONS, GEOM_TYPES, NIGERIA_STATES, SECTORS, normalizeState } from '../../lib/assets';
 import { TYPE_FIELDS } from './typeFields';
@@ -127,11 +129,32 @@ export default function CapturePage() {
       ...(form.area ? { area: Number(form.area) } : {}),
     };
 
+    // No connection: keep the capture (with its files) on this device and
+    // upload it automatically when the signal returns.
+    const saveOffline = async () => {
+      const files = ([[photos, 'photo'], [docs, 'document'], [sheets, 'spreadsheet']] as [File[], FileKind][])
+        .flatMap(([list, kind]) => list.map(f => ({ kind, name: f.name, type: f.type, blob: f as Blob })));
+      try {
+        await enqueueCapture(payload, files);
+      } catch (e) {
+        setSaving('');
+        toast(`Could not save offline: ${errorMessage(e)}`, 'error');
+        return;
+      }
+      setSaving('');
+      setForm({ ...EMPTY, captureDate: today() }); setTypeData({}); setPhotos([]); setDocs([]); setSheets([]);
+      toast('No connection — capture saved on this device. It will upload automatically when you are back online.', 'info');
+      top.current?.scrollIntoView({ behavior: 'smooth' });
+    };
+
+    if (!navigator.onLine) { setSaving('Saving on this device…'); await saveOffline(); return; }
+
     setSaving('Saving asset…');
     let asset;
     try {
       asset = await assetsApi.createAsset(payload);
     } catch (err) {
+      if (isNetworkError(err)) { await saveOffline(); return; }
       setSaving('');
       toast(`Save failed: ${errorMessage(err)}`, 'error');   // form stays filled in
       return;
@@ -165,9 +188,10 @@ export default function CapturePage() {
       <header className="page-header">
         <div>
           <h1 className="page-title">Field capture</h1>
-          <div className="page-sub">Record a new asset. The asset ID and FGN code are assigned when you save.</div>
+          <div className="page-sub">Record a new asset. The asset ID and FGN code are assigned when you save. Works without a connection — captures are kept on this device and uploaded later.</div>
         </div>
       </header>
+      <OfflineQueuePanel />
 
       <form className="capture-grid" onSubmit={submit} noValidate>
         <div className="capture-main">

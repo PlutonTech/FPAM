@@ -1,5 +1,127 @@
 {
   "rewrites": [
-    { "source": "/app/:path*", "destination": "/app/index.html" }
+    {
+      "source": "/app/:path*",
+      "destination": "/app/index.html"
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/dashboard",
+      "destination": "/app/dashboard",
+      "permanent": false
+    },
+    {
+      "source": "/dashboard/",
+      "destination": "/app/dashboard",
+      "permanent": false
+    },
+    {
+      "source": "/dashboard/index.html",
+      "destination": "/app/dashboard",
+      "permanent": false
+    },
+    {
+      "source": "/dashboard/asset-view.html",
+      "has": [
+        {
+          "type": "query",
+          "key": "id",
+          "value": "(?<id>.+)"
+        }
+      ],
+      "destination": "/app/assets/:id",
+      "permanent": false
+    },
+    {
+      "source": "/dashboard/asset-view.html",
+      "destination": "/app/assets",
+      "permanent": false
+    },
+    {
+      "source": "/dashboard/dashboard.html",
+      "destination": "/app/dashboard",
+      "permanent": false
+    },
+    {
+      "source": "/dashboard/map.html",
+      "destination": "/app/map",
+      "permanent": false
+    },
+    {
+      "source": "/dashboard/assets.html",
+      "destination": "/app/assets",
+      "permanent": false
+    },
+    {
+      "source": "/dashboard/capture.html",
+      "destination": "/app/capture",
+      "permanent": false
+    },
+    {
+      "source": "/dashboard/approvals.html",
+      "destination": "/app/approvals",
+      "permanent": false
+    },
+    {
+      "source": "/dashboard/inspections.html",
+      "destination": "/app/inspections",
+      "permanent": false
+    },
+    {
+      "source": "/dashboard/analytics.html",
+      "destination": "/app/analytics",
+      "permanent": false
+    },
+    {
+      "source": "/dashboard/users.html",
+      "destination": "/app/users",
+      "permanent": false
+    },
+    {
+      "source": "/dashboard/audit.html",
+      "destination": "/app/audit",
+      "permanent": false
+    },
+    {
+      "source": "/dashboard/settings.html",
+      "destination": "/app/settings",
+      "permanent": false
+    },
+    {
+      "source": "/dashboard/ocr.html",
+      "destination": "/app/ocr",
+      "permanent": false
+    },
+    {
+      "source": "/dashboard/excel.html",
+      "destination": "/app/excel",
+      "permanent": false
+    },
+    {
+      "source": "/dashboard/filedb.html",
+      "destination": "/app/filedb",
+      "permanent": false
+    },
+    {
+      "source": "/dashboard/me.html",
+      "destination": "/app/me",
+      "permanent": false
+    },
+    {
+      "source": "/dashboard/guidelines.html",
+      "destination": "/app/guidelines",
+      "permanent": false
+    },
+    {
+      "source": "/dashboard/form_requests.html",
+      "destination": "/app/form-requests",
+      "permanent": false
+    },
+    {
+      "source": "/dashboard/mda_portal.html",
+      "destination": "/app/portal",
+      "permanent": false
+    }
   ]
 }

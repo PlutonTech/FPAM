@@ -577,3 +577,42 @@ fieldset:disabled .switch { opacity: .6; cursor: not-allowed; }
 .nav-soon { opacity: .45; cursor: default; }
 .nav-soon:hover { background: none; color: rgba(255,255,255,.7); }
 .nav-soon-tag { margin-left: auto; font-size: 9px; background: rgba(255,255,255,.12); padding: 1px 6px; border-radius: 4px; }
+
+/* ── Server wake-up banner, two-step nudge ───────────────────────────────── */
+.wake-banner { position: sticky; top: 0; z-index: 25; margin: 0; padding: 9px 16px; background: #fff8e6; border-bottom: 1px solid #f3dca0; color: #7a5200; font-size: 13px; }
+.mfa-nudge { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin: 16px 28px 0; padding: 10px 14px; border: 1px solid var(--border2); border-left: 4px solid var(--accent); border-radius: 10px; background: var(--accent-bg); font-size: 13px; color: var(--navy); }
+.mfa-nudge > i { color: var(--accent); }
+.mfa-nudge span { flex: 1; min-width: 200px; }
+@media (max-width: 860px) { .mfa-nudge { margin: 60px 14px 0; } }
+
+/* ── Account security ────────────────────────────────────────────────────── */
+.mfa-setup { display: flex; gap: 16px; align-items: flex-start; flex-wrap: wrap; }
+.mfa-setup img { border: 1px solid var(--border); border-radius: 8px; background: #fff; }
+.mfa-key { font-family: var(--mono); font-size: 12px; background: var(--surface2); padding: 1px 6px; border-radius: 4px; overflow-wrap: anywhere; }
+.mfa-input { font-family: var(--mono); font-size: 22px; letter-spacing: 6px; text-align: center; }
+.recovery-codes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; }
+.recovery-codes code { font-family: var(--mono); font-size: 14px; padding: 6px 8px; background: var(--surface2); border: 1px solid var(--border2); border-radius: 6px; text-align: center; }
+.btn-linklike { background: none; border: none; padding: 0; cursor: pointer; text-decoration: underline; }
+
+/* ── Offline captures ────────────────────────────────────────────────────── */
+.offline-panel { margin-bottom: 14px; border-left: 4px solid var(--accent); }
+.offline-panel > .row > div > i { color: var(--accent); }
+
+/* ── Data quality ────────────────────────────────────────────────────────── */
+.dq-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(150px, 100%), 1fr)); gap: 12px; margin-bottom: 14px; }
+.dq-card { text-align: left; padding: 14px; cursor: pointer; border: 1px solid var(--border); font: inherit; display: flex; flex-direction: column; gap: 2px; }
+.dq-card > i { color: #d97706; font-size: 16px; }
+.dq-card.clean > i { color: var(--success); }
+.dq-card.active { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(74,144,217,.25); }
+.dq-count { font-size: 24px; font-weight: 800; color: var(--navy); }
+.dq-label { font-size: 12px; font-weight: 600; color: var(--text2); line-height: 1.35; }
+.dq-sub { font-size: 12px; font-weight: 700; color: var(--text2); text-transform: uppercase; letter-spacing: .4px; margin-bottom: 4px; }
+.dq-fix { flex-wrap: wrap; }
+.dq-fix select { min-width: 0; max-width: 220px; }
+
+/* ── System health, privacy ──────────────────────────────────────────────── */
+.err-stack { margin-top: 8px; max-height: 240px; overflow: auto; font-size: 10px; background: var(--surface2); padding: 8px; border-radius: 6px; white-space: pre-wrap; overflow-wrap: anywhere; }
+.privacy-page { min-height: 100vh; height: 100vh; overflow-y: auto; background: var(--bg); padding: 24px 16px; }
+.privacy-card { max-width: 760px; margin: 0 auto; padding: 28px; font-size: 14px; line-height: 1.65; color: var(--text); }
+.privacy-card h2 { font-size: 15px; color: var(--navy); margin: 18px 0 6px; }
+.privacy-card ul { padding-left: 20px; margin: 0; }

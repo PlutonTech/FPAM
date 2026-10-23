@@ -25,7 +25,7 @@ body{font-family:Georgia,'Times New Roman',serif;color:#0B1829;max-width:760px;m
 button{position:fixed;top:14px;right:14px;padding:8px 16px;background:#0B2545;color:#fff;border:0;border-radius:6px;cursor:pointer;font-family:system-ui}
 @media print{button{display:none}}
 </style></head><body>
-<button onclick="print()">Print</button>
+<button id="print-btn">Print</button>
 <div class="hd"><div class="a">Federal Ministry of Housing and Urban Development</div><div class="b">Headquarters, Mabushi, Abuja</div>
 <div class="b">Department of Federal Public Assets Maintenance</div><div class="t">FACILITY MANAGEMENT CLEARANCE CERTIFICATE</div></div>
 <div class="grid">
@@ -45,4 +45,7 @@ ${!sat && r.unsatisfactoryWorks ? `<div class="unsat"><strong>Unsatisfactory wor
   const w = window.open('', '_blank');
   if (!w) { alert('Allow pop-ups for this site to print the certificate.'); return; }
   w.document.write(html); w.document.close();
+  // No inline onclick: the dashboard's Content-Security-Policy (inherited by
+  // this window) blocks inline scripts, so wire the button from here.
+  w.document.getElementById('print-btn')?.addEventListener('click', () => w.print());
 }

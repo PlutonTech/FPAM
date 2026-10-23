@@ -50,13 +50,31 @@ async function handle(r: Response): Promise<Response> {
 
 type Body = Record<string, unknown> | unknown[] | FormData | undefined;
 
+// ── "Server is waking up" signal ─────────────────────────────────────────────
+// The free hosting plan sleeps when idle, so the first request can take ~30 s.
+// Requests still running after 4 s count as slow; the banner shows while any are.
+let slowCount = 0;
+const slowListeners = new Set<() => void>();
+export const slowRequests = {
+  get: () => slowCount,
+  subscribe: (cb: () => void) => { slowListeners.add(cb); return () => { slowListeners.delete(cb); }; },
+};
+async function timed<T>(work: Promise<T>): Promise<T> {
+  let slow = false;
+  const t = setTimeout(() => { slow = true; slowCount++; slowListeners.forEach(l => l()); }, 4000);
+  try { return await work; } finally {
+    clearTimeout(t);
+    if (slow) { slowCount--; slowListeners.forEach(l => l()); }
+  }
+}
+
 export async function api<T = unknown>(path: string, opts: { method?: string; body?: Body } = {}): Promise<T> {
   const isForm = opts.body instanceof FormData;
-  const r = await fetch(API_BASE + path, {
+  const r = await timed(fetch(API_BASE + path, {
     method: opts.method || 'GET',
     headers: authHeaders(!isForm),
     body: opts.body === undefined ? undefined : isForm ? (opts.body as FormData) : JSON.stringify(opts.body),
-  });
+  }));
   await handle(r);
   return r.json().catch(() => ({})) as Promise<T>;
 }

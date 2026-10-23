@@ -40,6 +40,8 @@ export interface ManagedUser {
   isActive?: boolean;
   stats?: { assetsCreated?: number; lastActiveAt?: string };
   createdAt?: string;
+  phone?: string | null;
+  mfa?: { enabled?: boolean; enabledAt?: string };
 }
 
 export const listUsers = () =>
@@ -62,8 +64,11 @@ export const forgotPassword = (email: string) =>
   api<{ message: string }>('/auth/forgot-password', { method: 'POST', body: { email } });
 export const resetPasswordWithToken = (token: string, password: string) =>
   api<{ message: string }>('/auth/reset-password', { method: 'POST', body: { token, password } });
+/** Other devices are signed out; the response carries a fresh token for this one. */
 export const changePassword = (currentPassword: string, newPassword: string) =>
-  api<{ message: string }>('/auth/change-password', { method: 'POST', body: { currentPassword, newPassword } });
+  api<{ message: string; token?: string }>('/auth/change-password', { method: 'POST', body: { currentPassword, newPassword } });
+/** Admin: turn off a user's two-step sign-in (lost phone). */
+export const resetUserMfa = (id: string) => api(`/users/${enc(id)}/reset-mfa`, { method: 'POST' });
 
 // ── Role defaults ─────────────────────────────────────────────────────────────
 export interface RoleConfig { role: string; defaults: Record<PermKey, boolean> }

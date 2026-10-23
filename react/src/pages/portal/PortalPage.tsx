@@ -5,7 +5,7 @@ import { errorMessage } from '../../api/client';
 import { useAuth } from '../../auth/AuthContext';
 import { goToLogin } from '../../config';
 import Modal from '../../components/Modal';
-import ChangePasswordModal from '../../components/ChangePasswordModal';
+import AccountSecurityModal from '../../components/AccountSecurityModal';
 import NotificationBell, { useAlertScan } from '../../components/NotificationBell';
 import { useToast } from '../../components/Toast';
 import { Tag } from '../../components/Tags';
@@ -65,11 +65,11 @@ export default function PortalPage() {
         <div className="row" style={{ flexWrap: 'nowrap' }}>
           <NotificationBell className="notif-bell-dark" />
           <span className="portal-user">{user?.name}</span>
-          <button className="btn btn-ghost btn-sm" onClick={() => setChangingPw(true)} title="Change password" aria-label="Change password"><i className="fa-solid fa-key" /></button>
+          <button className="btn btn-ghost btn-sm" onClick={() => setChangingPw(true)} title="Account security" aria-label="Account security"><i className="fa-solid fa-shield-halved" /></button>
           <button className="btn btn-ghost btn-sm" onClick={async () => { await logout(); goToLogin(navigate); }}><i className="fa-solid fa-right-from-bracket" /> Log out</button>
         </div>
       </header>
-      {changingPw && <ChangePasswordModal onClose={() => setChangingPw(false)} />}
+      {changingPw && <AccountSecurityModal onClose={() => setChangingPw(false)} />}
 
       <main className="page" style={{ margin: '0 auto' }}>
         {!user?.mda && <div className="alert alert-warn"><i className="fa-solid fa-triangle-exclamation" /> Your account has no MDA assigned, so you can't submit forms yet. Contact your FPAM System Admin.</div>}

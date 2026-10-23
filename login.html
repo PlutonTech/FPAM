@@ -810,6 +810,14 @@ async function doLogin() {
   try {
     const result = await apiLogin(email, password);
 
+    // Two-step sign-in is on for this account: the password was right, and the
+    // dashboard's code screen finishes signing in with this short-lived token.
+    if (result && result.mfaRequired) {
+      sessionStorage.setItem('as_mfa_token', result.mfaToken);
+      window.location.href = './app/?to=/mfa';
+      return;
+    }
+
     // Route by role: MDA Agent gets the lightweight external portal, every
     // other role gets the full dashboard. This page only loads api.js (not
     // app.js), so there's no shared getCurrentUser() helper here — read the

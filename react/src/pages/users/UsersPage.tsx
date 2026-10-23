@@ -67,6 +67,12 @@ export default function UsersPage() {
 
   const resetPw = (u: ManagedUser) => setModal({ kind: 'reset', user: u });
 
+  async function resetMfa(u: ManagedUser) {
+    if (!confirm(`Turn off two-step sign-in for ${u.name}? Use this when they've lost their phone. They'll be signed out and can set it up again.`)) return;
+    try { await usersApi.resetUserMfa(u._id); toast(`Two-step sign-in turned off for ${u.name}`); load(); }
+    catch (err) { toast(errorMessage(err), 'error'); }
+  }
+
   return (
     <div className="page">
       <header className="page-header">
@@ -112,7 +118,7 @@ export default function UsersPage() {
                             <div><strong>{u.name}</strong>{isMe && <span className="cell-sub"> (you)</span>}<div className="cell-sub">{u.email}</div></div>
                           </div>
                         </td>
-                        <td><Tag tone={ROLE_TONE[u.role] || 'gray'}>{u.role}</Tag></td>
+                        <td><Tag tone={ROLE_TONE[u.role] || 'gray'}>{u.role}</Tag>{u.mfa?.enabled && <span title="Two-step sign-in is on" style={{ marginLeft: 6, color: 'var(--success)' }}><i className="fa-solid fa-shield-halved" /></span>}</td>
                         <td style={{ fontSize: 12 }}>{u.role === 'MDA Agent' ? (u.mda || '—') : (usersApi.CROSS_DIVISION.includes(u.role) ? 'All divisions' : (u.division || '—'))}</td>
                         <td className="cell-sub">{[u.zone, (u.states || []).join(', ')].filter(Boolean).join(' · ') || 'All'}</td>
                         <td>{overrides ? <Tag tone="warn">{overrides} custom</Tag> : <span className="cell-sub">Role default</span>}</td>
@@ -123,6 +129,7 @@ export default function UsersPage() {
                             <button className="btn btn-ghost btn-xs" title="Edit" onClick={() => setModal({ kind: 'edit', user: u })}><i className="fa-solid fa-pen" /></button>
                             {u.role !== 'System Admin' && <button className="btn btn-ghost btn-xs" title="Permissions" onClick={() => setModal({ kind: 'perms', user: u })}><i className="fa-solid fa-shield-halved" /></button>}
                             <button className="btn btn-ghost btn-xs" title="Reset password" onClick={() => resetPw(u)}><i className="fa-solid fa-key" /></button>
+                            {u.mfa?.enabled && <button className="btn btn-ghost btn-xs" title="Reset two-step sign-in (lost phone)" onClick={() => resetMfa(u)}><i className="fa-solid fa-shield-halved" /></button>}
                             {!isMe && (u.isActive === false
                               ? <button className="btn btn-secondary btn-xs" onClick={() => toggleActive(u)}>Reactivate</button>
                               : <button className="btn btn-danger btn-xs" title="Deactivate" onClick={() => toggleActive(u)}><i className="fa-solid fa-user-slash" /></button>)}
@@ -214,7 +221,7 @@ function UserFormModal({ user, isMe, onClose, onDone }: { user?: ManagedUser; is
   const [form, setForm] = useState({
     name: user?.name || '', email: user?.email || '', password: '', role: user?.role || 'Field Agent',
     division: user?.division && user.division !== 'All' ? user.division : 'Assets & Condition',
-    mda: user?.mda || '', zone: user?.zone || '', states: user?.states || [] as string[],
+    mda: user?.mda || '', zone: user?.zone || '', states: user?.states || [] as string[], phone: user?.phone || '',
   });
   const [sendCredentials, setSendCredentials] = useState(true);
   const [mdas, setMdas] = useState<string[]>([]);
@@ -233,7 +240,7 @@ function UserFormModal({ user, isMe, onClose, onDone }: { user?: ManagedUser; is
     const body: Record<string, unknown> = {
       name: form.name.trim(), role: form.role,
       division: cross ? 'All' : isMda ? null : form.division,
-      mda: isMda ? form.mda : null, zone: form.zone, states: form.states,
+      mda: isMda ? form.mda : null, zone: form.zone, states: form.states, phone: form.phone.trim() || null,
     };
     if (!editing) Object.assign(body, { email: form.email.trim(), password: form.password, sendCredentials });
     setBusy(true); setError('');
@@ -278,6 +285,9 @@ function UserFormModal({ user, isMe, onClose, onDone }: { user?: ManagedUser; is
               {cross ? <option value="All">All divisions</option> : usersApi.DIVISIONS.map(d => <option key={d}>{d}</option>)}
             </select></div>
         )}
+        <div><label className="form-label">Phone (for SMS alerts)</label>
+          <input className="form-control" type="tel" value={form.phone} onChange={set('phone')} placeholder="e.g. 0803 123 4567" />
+          <div className="cell-sub">Optional. Used to text capture, inspection and form decisions.</div></div>
         <div><label className="form-label">Zone</label>
           <select className="form-control" value={form.zone} onChange={set('zone')}>
             <option value="">— No zone —</option>{usersApi.ZONES.map(z => <option key={z}>{z}</option>)}

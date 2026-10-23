@@ -1,11 +1,13 @@
+import type { LoginResult } from './security';
 import { api, downloadFile } from './client';
-import type { Asset, AssetListResponse, MaintenanceLog, User, Valuation } from '../types';
+import type { Asset, AssetListResponse, MaintenanceLog, Valuation } from '../types';
 
 const enc = encodeURIComponent;
 
 // ── Auth ──────────────────────────────────────────────────────────────────────
+/** Returns { token, user }, or { mfaRequired, mfaToken } when two-step sign-in is on. */
 export const login  = (email: string, password: string) =>
-  api<{ token: string; user: User }>('/auth/login', { method: 'POST', body: { email, password } });
+  api<LoginResult>('/auth/login', { method: 'POST', body: { email, password } });
 export const logout = () => api('/auth/logout', { method: 'POST' }).catch(() => {});
 
 // ── Assets ────────────────────────────────────────────────────────────────────
