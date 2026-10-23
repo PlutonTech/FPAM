@@ -8,7 +8,7 @@
     "build": "tsc -b && vite build",
     "lint": "oxlint",
     "preview": "vite preview",
-    "build:embed": "tsc -b && vite build --mode embed --base=/app/ --outDir ../fpam-real/app --emptyOutDir"
+    "build:embed": "tsc -b && vite build --mode embed --base=/app/ --outDir ../app --emptyOutDir"
   },
   "dependencies": {
     "jspdf": "^4.2.1",

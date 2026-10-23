@@ -1,0 +1,2 @@
+# React source is built locally/CI into app/; the site deploys only the built files.
+react/
