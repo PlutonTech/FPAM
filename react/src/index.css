@@ -616,3 +616,4 @@ fieldset:disabled .switch { opacity: .6; cursor: not-allowed; }
 .privacy-card { max-width: 760px; margin: 0 auto; padding: 28px; font-size: 14px; line-height: 1.65; color: var(--text); }
 .privacy-card h2 { font-size: 15px; color: var(--navy); margin: 18px 0 6px; }
 .privacy-card ul { padding-left: 20px; margin: 0; }
+.mfa-required { max-width: 640px; margin: 20px auto; }

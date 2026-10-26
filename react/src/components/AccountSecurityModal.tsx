@@ -62,7 +62,8 @@ function PasswordTab({ onDone }: { onDone: () => void }) {
   );
 }
 
-function MfaTab() {
+/** Two-step sign-in setup/status. Also used by the "required" screen (MfaRequiredScreen). */
+export function MfaTab({ onEnabled, onDone }: { onEnabled?: () => void; onDone?: () => void } = {}) {
   const { user, finishLogin } = useAuth();
   const toast = useToast();
   const enabled = !!user?.mfa?.enabled;
@@ -85,7 +86,7 @@ function MfaTab() {
   }
   async function confirm() {
     setBusy(true); setError('');
-    try { const r = await security.enableMfa(code); setCodes(r.recoveryCodes); setSetup(null); setCode(''); await refreshUser(); toast('Two-step sign-in is on'); }
+    try { const r = await security.enableMfa(code); setCodes(r.recoveryCodes); setSetup(null); setCode(''); onEnabled?.(); await refreshUser(); toast('Two-step sign-in is on'); }
     catch (err) { setError(errorMessage(err)); } finally { setBusy(false); }
   }
   async function turnOff() {
@@ -101,7 +102,7 @@ function MfaTab() {
       <div className="recovery-codes">{codes.map(c => <code key={c}>{c}</code>)}</div>
       <div className="row" style={{ marginTop: 10 }}>
         <button className="btn btn-ghost btn-sm" onClick={() => navigator.clipboard?.writeText(codes.join('\n')).then(() => toast('Copied'))}><i className="fa-solid fa-copy" /> Copy</button>
-        <button className="btn btn-primary btn-sm" onClick={() => setCodes(null)}>I've saved them</button>
+        <button className="btn btn-primary btn-sm" onClick={() => { setCodes(null); onDone?.(); }}>I've saved them</button>
       </div>
     </div>
   );

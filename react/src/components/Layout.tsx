@@ -9,6 +9,7 @@ import AccountSecurityModal from './AccountSecurityModal';
 import ErrorBoundary from './ErrorBoundary';
 import NotificationBell, { useAlertScan } from './NotificationBell';
 import ServerWakeBanner from './ServerWakeBanner';
+import MfaRequiredScreen from './MfaRequiredScreen';
 import { useOfflineQueue } from '../lib/offlineQueue';
 import { RMS_NAV } from '@rms-routes';
 
@@ -72,7 +73,11 @@ export default function Layout() {
   const offline = useOfflineQueue();
   useAlertScan();
   const location = useLocation();
-  const showMfaNudge = !mfaNudgeHidden && PRIVILEGED.includes(user?.role || '') && !user?.mfa?.enabled;
+  // Required by the server for this role: block the dashboard until it's set
+  // up. keepGate holds the screen open while the recovery codes are shown.
+  const [keepGate, setKeepGate] = useState(false);
+  const showMfaGate = !!user?.mfaSetupRequired || keepGate;
+  const showMfaNudge = !showMfaGate && !mfaNudgeHidden && PRIVILEGED.includes(user?.role || '') && !user?.mfa?.enabled;
 
   // Pending-approvals badge; refreshed on navigation so it drops after reviewing.
   const canApprove = can('canApprove');
@@ -152,9 +157,11 @@ export default function Layout() {
         )}
         {/* Pages are lazy-loaded; only the content area waits, the sidebar stays put. */}
         <ErrorBoundary resetKey={location.pathname}>
-          <Suspense fallback={<div className="page loading"><i className="fa-solid fa-spinner fa-spin" /> Loading…</div>}>
-            <Outlet />
-          </Suspense>
+          {showMfaGate
+            ? <MfaRequiredScreen onEnabled={() => setKeepGate(true)} onDone={() => setKeepGate(false)} onLogout={async () => { await logout(); goToLogin(navigate); }} />
+            : <Suspense fallback={<div className="page loading"><i className="fa-solid fa-spinner fa-spin" /> Loading…</div>}>
+                <Outlet />
+              </Suspense>}
         </ErrorBoundary>
       </div>
     </div>

@@ -1,1 +1,0 @@
-var e=`https://fpambacend.onrender.com/api`,t=`/login.html`,n=`/app/`.replace(/\/$/,``);function r(e){window.location.assign(t)}export{r as i,n,t as r,e as t};

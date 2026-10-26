@@ -32,6 +32,9 @@ export function errorMessage(err: unknown): string {
 // Called on 401 so the app can drop back to the login screen.
 let onUnauthorized: (() => void) | null = null;
 export function setUnauthorizedHandler(fn: () => void) { onUnauthorized = fn; }
+// Called when the server requires this account to set up two-step sign-in first.
+let onMfaSetupRequired: (() => void) | null = null;
+export function setMfaSetupRequiredHandler(fn: () => void) { onMfaSetupRequired = fn; }
 
 function authHeaders(json = true): HeadersInit {
   const h: Record<string, string> = {};
@@ -45,6 +48,7 @@ async function handle(r: Response): Promise<Response> {
   if (r.ok) return r;
   const data = await r.json().catch(() => ({} as { error?: string }));
   if (r.status === 401 && onUnauthorized) onUnauthorized();
+  if (r.status === 403 && (data as { code?: string }).code === 'MFA_SETUP_REQUIRED' && onMfaSetupRequired) onMfaSetupRequired();
   throw new ApiError(data.error || `Request failed (HTTP ${r.status})`, r.status);
 }
 

@@ -1,6 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
 import * as assetsApi from '../api/assets';
-import { setUnauthorizedHandler, tokenStore } from '../api/client';
+import { setMfaSetupRequiredHandler, setUnauthorizedHandler, tokenStore } from '../api/client';
 import type { User } from '../types';
 import { permsFor, type Perm } from './permissions';
 
@@ -22,6 +22,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     setUnauthorizedHandler(() => { tokenStore.clear(); setUser(null); });
+    // A stored session from before two-step sign-in became required.
+    setMfaSetupRequiredHandler(() => setUser(u => (u && !u.mfaSetupRequired ? { ...u, mfaSetupRequired: true } : u)));
   }, []);
 
   const finishLogin = useCallback((token: string, u?: User) => {

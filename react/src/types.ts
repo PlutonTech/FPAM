@@ -11,6 +11,8 @@ export interface User {
   permissions?: Record<string, boolean>;
   phone?: string | null;
   mfa?: { enabled?: boolean; enabledAt?: string };
+  /** Server says this role must turn on two-step sign-in before using the API. */
+  mfaSetupRequired?: boolean;
 }
 
 export type Condition = 'Good' | 'Fair' | 'Poor' | 'Critical';
