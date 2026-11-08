@@ -1241,6 +1241,12 @@
       ['low', 'medium', 'high'].forEach(s => document.getElementById('sev-' + s).classList.remove('active'));
       document.getElementById('sev-' + val).classList.add('active');
     }
+    // Arriving from a scanned asset QR label (/app/a/<id> → ?asset=<id>): fill in the asset.
+    (function () {
+      const asset = new URLSearchParams(location.search).get('asset');
+      const el = document.getElementById('f-asset');
+      if (asset && el && !el.value) el.value = 'Asset ID ' + asset;
+    })();
     function submitComplaint() {
       const required = [['f-name', 'Full Name'], ['f-email', 'Email'], ['f-phone', 'Phone'], ['f-state', 'State'], ['f-asset', 'Asset Name'], ['f-type', 'Complaint Type'], ['f-desc', 'Description']];
       let ok = true;
@@ -1265,26 +1271,14 @@
         submission_date: new Date().toLocaleDateString('en-GB', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })
       };
       const subject = '[FPAM Complaint] ' + params.complaint_type + ' — ' + params.asset_name;
-      const body = 'FPAM COMPLAINT SUBMISSION
-      '+' = '.repeat(40)+'
-      Reference: '+params.ref_number+'
-      Date: '+params.submission_date+'
-
-      COMPLAINANT
-      Name: '+params.complainant_name+'
-      Email: '+params.complainant_email+'
-      Phone: '+params.complainant_phone+'
-
-ASSET DETAILS
-      State: '+params.state+'
-      Asset: '+params.asset_name+'
-
-      COMPLAINT
-      Type: '+params.complaint_type+'
-      Severity: '+params.severity+'
-
-      Description:
-      '+params.description;
+      const body = [
+        'FPAM COMPLAINT SUBMISSION', '='.repeat(40),
+        'Reference: ' + params.ref_number, 'Date: ' + params.submission_date, '',
+        'COMPLAINANT', 'Name: ' + params.complainant_name, 'Email: ' + params.complainant_email, 'Phone: ' + params.complainant_phone, '',
+        'ASSET DETAILS', 'State: ' + params.state, 'Asset: ' + params.asset_name, '',
+        'COMPLAINT', 'Type: ' + params.complaint_type, 'Severity: ' + params.severity, '',
+        'Description:', params.description
+      ].join('\n');
       window.location.href = 'mailto:info@fpam.housing.gov.ng?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
       btn.style.display = 'none';
       fb.className = 'success'; fb.style.display = 'block';

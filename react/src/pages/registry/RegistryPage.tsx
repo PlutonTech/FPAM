@@ -17,6 +17,7 @@ import BulkUpdateModal from './BulkUpdateModal';
 import CompletenessModal from './CompletenessModal';
 import PercentExportModal from './PercentExportModal';
 import { openDeferredMaintenanceReport } from './deferredReport';
+import { downloadQrLabels } from './qrLabels';
 
 const PAGE_SIZE = 50;
 type ModalState =
@@ -106,6 +107,14 @@ export default function RegistryPage() {
     setSelected(s => new Set([...s].filter(id => !gone.has(id))));
     if (failures.length) toast(`${deleted.length} deleted, ${failures.length} failed — ${failures[0]}`, 'error');
     else toast(`${deleted.length} asset${deleted.length === 1 ? '' : 's'} deleted`);
+  }
+
+  const [labelsBusy, setLabelsBusy] = useState(false);
+  async function printLabels() {
+    setLabelsBusy(true);
+    try { await downloadQrLabels(all.filter(a => selected.has(assetKey(a)))); }
+    catch (err) { toast(errorMessage(err), 'error'); }
+    finally { setLabelsBusy(false); }
   }
 
   async function runExport(fn: () => Promise<void>) {
@@ -220,6 +229,7 @@ export default function RegistryPage() {
           <span className="sel-count">{selected.size} selected</span>
           <button className="btn btn-secondary btn-sm" onClick={() => setModal({ kind: 'completeness' })}><i className="fa-solid fa-chart-bar" /> Completeness</button>
           {can('canEdit') && <button className="btn btn-secondary btn-sm" onClick={() => setModal({ kind: 'bulk' })}><i className="fa-solid fa-file-excel" /> Bulk Update</button>}
+          <button className="btn btn-secondary btn-sm" onClick={printLabels} disabled={labelsBusy}><i className={`fa-solid ${labelsBusy ? 'fa-spinner fa-spin' : 'fa-qrcode'}`} /> QR Labels</button>
           <button className="btn btn-secondary btn-sm" onClick={() => openDeferredMaintenanceReport(all)}><i className="fa-solid fa-file-pdf" /> Deferred Report</button>
           {can('canExport') && <>
             <button className="btn btn-secondary btn-sm" onClick={() => exportSelected('csv')}><i className="fa-solid fa-download" /> CSV</button>

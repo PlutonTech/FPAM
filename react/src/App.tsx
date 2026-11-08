@@ -32,6 +32,7 @@ const MfaPage = lazy(() => import('./pages/MfaPage'));
 const PrivacyPage = lazy(() => import('./pages/PrivacyPage'));
 const DataQualityPage = lazy(() => import('./pages/DataQualityPage'));
 const SystemHealthPage = lazy(() => import('./pages/SystemHealthPage'));
+const ScanPage = lazy(() => import('./pages/ScanPage'));
 
 // MDA Agents only ever see the compliance portal; staff never see it.
 const MDA_AGENT = 'MDA Agent';
@@ -68,6 +69,8 @@ export default function App() {
             <Route path="/mfa" element={<Suspense fallback={pageLoading}><MfaPage /></Suspense>} />
             <Route path="/privacy" element={<Suspense fallback={pageLoading}><PrivacyPage /></Suspense>} />
             <Route path="/reset-password" element={<ResetPasswordPage />} />
+            {/* Printed asset QR labels point here; public for anyone who scans one. */}
+            <Route path="/a/:id" element={<Suspense fallback={pageLoading}><ScanPage /></Suspense>} />
             {/* Revenue Management System prototype (absent when VITE_RMS=off) */}
             {rmsPublicRoutes(pageLoading)}
             <Route path="/portal" element={<RequireAuth portal><Suspense fallback={pageLoading}><PortalPage /></Suspense></RequireAuth>} />

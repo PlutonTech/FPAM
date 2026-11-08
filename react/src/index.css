@@ -617,3 +617,6 @@ fieldset:disabled .switch { opacity: .6; cursor: not-allowed; }
 .privacy-card h2 { font-size: 15px; color: var(--navy); margin: 18px 0 6px; }
 .privacy-card ul { padding-left: 20px; margin: 0; }
 .mfa-required { max-width: 640px; margin: 20px auto; }
+.scan-card { max-width: 480px; }
+.scan-id code { font-size: 15px; padding: 2px 6px; background: var(--bg); border-radius: 4px; }
+.scan-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
