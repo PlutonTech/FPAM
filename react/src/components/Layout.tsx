@@ -36,6 +36,7 @@ const NAV: NavSection[] = [
     { to: '/users',         label: 'Users',         icon: 'fa-users', roles: ['System Admin'] },
     { to: '/form-requests', label: 'Form Requests', icon: 'fa-file-circle-check', roles: ['System Admin', 'Supervisor', 'Sub-Head', 'GIS Analyst'] },
     { to: '/data-quality',  label: 'Data Quality',  icon: 'fa-broom', roles: MANAGERS },
+    { to: '/reports',       label: 'Public Reports', icon: 'fa-triangle-exclamation', roles: MANAGERS },
     { to: '/data-quality?mine=1', label: 'My Data Fixes', icon: 'fa-broom', roles: ['Field Agent'] },
   ]},
   // Same list as the legacy sidebar. Cross-division roles see all of them;
@@ -45,7 +46,7 @@ const NAV: NavSection[] = [
     { to: '/me',     label: 'Monitoring & Evaluation',      icon: 'fa-chart-line',       division: 'Monitoring & Evaluation', me: true },
     { to: '#planning',       label: 'Planning & Design',            icon: 'fa-compass-drafting', division: 'Planning & Design', soon: true },
     { to: '#rehabilitation', label: 'Rehabilitation & Restoration', icon: 'fa-helmet-safety',    division: 'Rehabilitation & Restoration', soon: true },
-    { to: '#training',       label: 'Training & Maintenance',       icon: 'fa-chalkboard-user',  division: 'Building Training & Maintenance', soon: true },
+    { to: '/btm',            label: 'Training & Maintenance',       icon: 'fa-chalkboard-user',  division: 'Building Training & Maintenance' },
   ]},
   // VITE_RMS_NAV=off hides the links; the revenue pages still work by URL.
   ...(RMS_NAV && import.meta.env.VITE_RMS_NAV !== 'off' ? [RMS_NAV] : []),
@@ -53,6 +54,7 @@ const NAV: NavSection[] = [
     { to: '/ocr',    label: 'OCR Scanner',   icon: 'fa-file-image' },
     { to: '/excel',  label: 'Excel Import',  icon: 'fa-file-excel' },
     { to: '/filedb', label: 'File Database', icon: 'fa-folder-open' },
+    { to: '/pdf-tools', label: 'PDF Tools',  icon: 'fa-file-pdf' },
   ]},
   { title: 'System', items: [
     { to: '/audit',      label: 'Audit Log',  icon: 'fa-clock-rotate-left', perm: 'canViewAudit' },

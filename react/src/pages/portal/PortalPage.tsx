@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import * as formsApi from '../../api/forms';
 import { errorMessage } from '../../api/client';
 import { useAuth } from '../../auth/AuthContext';
@@ -11,6 +11,7 @@ import { useToast } from '../../components/Toast';
 import { Tag } from '../../components/Tags';
 import { formatDate, timeAgo, type Tone } from '../../lib/assets';
 import FormRenderer from '../forms/FormRenderer';
+import ReportsQueue from '../reports/ReportsQueue';
 import { FORM_DATA_FIELD, FORM_ICONS, FORM_LABELS, FORM_LINKS_TO_ASSET, FORM_REQUIRES_ATTACHMENT, FORM_TEMPLATE_FILE } from '../forms/formDefs';
 import type { FormRequest, FormStatus } from '../../api/forms';
 
@@ -35,6 +36,9 @@ export default function PortalPage() {
   const [editing, setEditing] = useState<{ type: string; draft?: FormRequest } | 'pick' | null>(null);
   const [viewing, setViewing] = useState<string | null>(null);
   const [changingPw, setChangingPw] = useState(false);
+  // ?tab=reports: problems the public reported on this MDA's assets (QR label scans).
+  const [params, setParams] = useSearchParams();
+  const section = params.get('tab') === 'reports' ? 'reports' : 'forms';
   useAlertScan();
 
   const load = useCallback(async () => {
@@ -72,6 +76,16 @@ export default function PortalPage() {
       {changingPw && <AccountSecurityModal onClose={() => setChangingPw(false)} />}
 
       <main className="page" style={{ margin: '0 auto' }}>
+        <nav className="portal-sections" aria-label="Portal sections">
+          <button className={section === 'forms' ? 'active' : ''} onClick={() => setParams({})}><i className="fa-solid fa-file-circle-check" /> Compliance forms</button>
+          <button className={section === 'reports' ? 'active' : ''} onClick={() => setParams({ tab: 'reports' })}><i className="fa-solid fa-triangle-exclamation" /> Public reports</button>
+        </nav>
+        {section === 'reports' ? <>
+          <header className="page-header">
+            <div><h1 className="page-title">Public reports</h1><div className="page-sub">Problems members of the public reported on your MDA's assets by scanning their QR labels</div></div>
+          </header>
+          <ReportsQueue portal />
+        </> : <>
         {!user?.mda && <div className="alert alert-warn"><i className="fa-solid fa-triangle-exclamation" /> Your account has no MDA assigned, so you can't submit forms yet. Contact your FPAM System Admin.</div>}
         <header className="page-header">
           <div><h1 className="page-title">Your submissions</h1><div className="page-sub">Compliance forms your MDA has sent to FPAM</div></div>
@@ -118,6 +132,7 @@ export default function PortalPage() {
               </table>
             )}
         </div>
+        </>}
       </main>
 
       {editing === 'pick' && (

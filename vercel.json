@@ -122,6 +122,11 @@
       "source": "/dashboard/mda_portal.html",
       "destination": "/app/portal",
       "permanent": false
+    },
+    {
+      "source": "/dashboard/pdf-merger.html",
+      "destination": "/app/pdf-tools",
+      "permanent": false
     }
   ]
 }

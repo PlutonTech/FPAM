@@ -620,3 +620,46 @@ fieldset:disabled .switch { opacity: .6; cursor: not-allowed; }
 .scan-card { max-width: 480px; }
 .scan-id code { font-size: 15px; padding: 2px 6px; background: var(--bg); border-radius: 4px; }
 .scan-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+.scan-details { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 6px 14px; margin: 0 0 14px; font-size: 14px; }
+.scan-details dt { color: var(--text2); font-size: 12px; font-weight: 600; padding-top: 2px; }
+.scan-details dd { margin: 0; overflow-wrap: anywhere; }
+.scan-form h2 { font-size: 16px; color: var(--navy); margin: 6px 0 12px; }
+.scan-sev { display: flex; gap: 8px; }
+.scan-sev label { flex: 1; text-align: center; border: 1px solid var(--border2); border-radius: 8px; padding: 7px; cursor: pointer; font-size: 13px; }
+.scan-sev label.active { border-color: var(--accent); background: rgba(74,144,217,.1); font-weight: 600; }
+.scan-sev input { position: absolute; opacity: 0; pointer-events: none; }
+.scan-done { display: flex; gap: 12px; padding: 14px; border-radius: 8px; background: rgba(45,184,123,.1); margin-top: 6px; line-height: 1.55; }
+.scan-done > i { color: var(--success); font-size: 22px; margin-top: 2px; }
+.hp-field { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
+.report-snippet { max-width: 360px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.report-history { list-style: none; padding: 0; margin: 0 0 14px; display: grid; gap: 8px; font-size: 13px; }
+.report-history li { border-left: 2px solid var(--border2); padding-left: 10px; }
+.report-actions { border-top: 1px solid var(--border); padding-top: 12px; }
+.portal-sections { display: flex; gap: 6px; margin-bottom: 16px; border-bottom: 1px solid var(--border); }
+.portal-sections button { background: none; border: 0; border-bottom: 2px solid transparent; padding: 8px 12px; font-size: 13px; font-weight: 600; color: var(--text2); cursor: pointer; }
+.portal-sections button.active { color: var(--accent); border-bottom-color: var(--accent); }
+.btm-two { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 14px; }
+@media (max-width: 900px) { .btm-two { grid-template-columns: minmax(0, 1fr); } }
+.plain-fieldset { border: 0; padding: 0; margin: 0; min-width: 0; }
+.alert-info { background: #eef5fc; border: 1px solid rgba(74,144,217,.3); color: #1f3f63; }
+.alert-success { display: block; background: rgba(45,184,123,.1); border: 1px solid rgba(45,184,123,.3); color: #145c3c; }
+.card-header { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 12px 16px; border-bottom: 1px solid var(--border); }
+.card-title { font-size: 13px; font-weight: 700; color: var(--navy); display: flex; gap: 8px; align-items: center; }
+.section-h { font-size: 13px; font-weight: 700; color: var(--navy); margin: 14px 0 8px; }
+.pdf-tools { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; align-items: start; }
+@media (max-width: 900px) { .pdf-tools { grid-template-columns: minmax(0, 1fr); } }
+.pdf-drop { padding: 28px 16px; text-align: center; cursor: pointer; border: 2px dashed var(--border2); display: grid; gap: 6px; justify-items: center; }
+.pdf-drop > i { font-size: 28px; color: var(--accent); }
+.pdf-drop.disabled { pointer-events: none; opacity: .6; }
+.pdf-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.pdf-list li { display: flex; align-items: center; gap: 10px; padding: 6px 8px; border: 1px solid var(--border); border-radius: 8px; background: var(--surface); cursor: grab; }
+.pdf-list li.dragging { opacity: .5; }
+.pdf-list img, .pdf-icon { width: 40px; height: 40px; object-fit: cover; border-radius: 4px; flex: none; }
+.pdf-icon { display: grid; place-items: center; background: #fdecec; color: #c0392b; font-size: 18px; }
+.pdf-num { width: 18px; text-align: right; font-size: 11px; color: var(--text3); flex: none; }
+.pdf-name { display: grid; min-width: 0; flex: 1; font-size: 13px; }
+.pdf-name > span:first-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.map3d { position: absolute; inset: 0; }
+.map-status-full { display: grid; place-items: center; color: var(--text2); }
+.map3d-tip .maplibregl-popup-content { padding: 6px 9px; font-size: 12px; border-radius: 6px; }
+.map3d .maplibregl-ctrl-bottom-right { bottom: 28px; }

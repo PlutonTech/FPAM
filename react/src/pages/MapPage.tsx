@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { lazy, Suspense, useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { CircleMarker, MapContainer, TileLayer, Tooltip, useMap, useMapEvents } from 'react-leaflet';
 import L, { type Map as LeafletMap } from 'leaflet';
@@ -8,6 +8,11 @@ import { useToast } from '../components/Toast';
 import { ConditionTag, GeomIcon, TypeTag } from '../components/Tags';
 import type { Asset } from '../types';
 import { ASSET_TYPES, CONDITIONS, CONDITION_COLORS, assetKey, coords } from '../lib/assets';
+import type { MapAsk, MapRequest, Point3D } from './map/Map3D';
+
+// The 3D view (MapLibre) only downloads when someone switches it on.
+const Map3D = lazy(() => import('./map/Map3D'));
+const VIEW_KEY = 'fpam_map_3d';
 
 const TILES = {
   road: { url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', attribution: '&copy; OpenStreetMap contributors' },
@@ -38,6 +43,13 @@ export default function MapPage() {
   const [selected, setSelected] = useState<Located | null>(null);
   const [searchOpen, setSearchOpen] = useState(false);
   const [q, setQ] = useState('');
+  const [view3d, setView3d] = useState(() => { try { return localStorage.getItem(VIEW_KEY) === '1'; } catch { return false; } });
+  const [request, setRequest] = useState<MapRequest | null>(null);
+  const ask = (r: MapAsk) => setRequest(prev => ({ ...r, n: (prev?.n || 0) + 1 }));
+  const toggle3d = () => setView3d(v => {
+    try { localStorage.setItem(VIEW_KEY, v ? '0' : '1'); } catch { /* not critical */ }
+    return !v;
+  });
 
   useEffect(() => { assetsApi.fetchAllAssets().then(setAll).catch(err => setError(errorMessage(err))); }, []);
 
@@ -61,7 +73,7 @@ export default function MapPage() {
     if (!m || !list.length) return;
     m.fitBounds(L.latLngBounds(list.map(s => [s.lat, s.lng] as [number, number])).pad(0.1));
   };
-  const fitAll = () => fitTo(map, shown);
+  const fitAll = () => (view3d ? ask({ kind: 'fit' }) : fitTo(map, shown));
 
   // Fit once, when the map and the data are both ready.
   const [fitted, setFitted] = useState(false);
@@ -69,15 +81,21 @@ export default function MapPage() {
     if (map && located.length && !fitted) { fitTo(map, located); setFitted(true); }
   }, [map, located, fitted]);
 
+  const flyTo = (lat: number, lng: number, zoom: number) =>
+    (view3d ? ask({ kind: 'fly', lat, lng, zoom: zoom + 1 }) : map?.flyTo([lat, lng], zoom, { duration: 0.6 }));
   const focus = (s: Located) => {
     setSelected(s);
-    map?.flyTo([s.lat, s.lng], Math.max(map.getZoom(), 15), { duration: 0.6 });
+    flyTo(s.lat, s.lng, view3d ? 16 : Math.max(map?.getZoom() || 0, 15));
   };
+  const points3d = useMemo<Point3D[]>(() => shown.map(s => ({
+    key: assetKey(s.a), lat: s.lat, lng: s.lng, name: s.a.name,
+    sub: `${s.a.type || '—'} · ${s.a.condition || 'Not set'}`, color: CONDITION_COLORS[s.a.condition || ''] || UNSET_COLOR,
+  })), [shown]);
 
   const locateMe = () => {
     if (!navigator.geolocation) { toast('Geolocation is not supported by this browser', 'error'); return; }
     navigator.geolocation.getCurrentPosition(
-      p => map?.flyTo([p.coords.latitude, p.coords.longitude], 14),
+      p => flyTo(p.coords.latitude, p.coords.longitude, 14),
       () => toast('Could not get your location', 'error'),
       { enableHighAccuracy: true, timeout: 15000 },
     );
@@ -87,6 +105,12 @@ export default function MapPage() {
 
   return (
     <div className="map-page">
+      {view3d ? (
+        <Suspense fallback={<div className="map-full map-status-full"><i className="fa-solid fa-spinner fa-spin" /> Loading 3D view…</div>}>
+          <Map3D points={points3d} selectedKey={selected ? assetKey(selected.a) : null} satellite={tile === 'satellite'} request={request}
+                 onCursor={setCursor} onSelect={k => { const s = shown.find(x => assetKey(x.a) === k); if (s) setSelected(s); }} />
+        </Suspense>
+      ) : (
       <MapContainer center={ABUJA} zoom={6} preferCanvas zoomControl={false} className="map-full">
         <TileLayer key={tile} url={TILES[tile].url} attribution={TILES[tile].attribution} />
         <MapBridge onReady={setMap} onCursor={setCursor} />
@@ -104,6 +128,7 @@ export default function MapPage() {
           );
         })}
       </MapContainer>
+      )}
 
       {/* Filters + legend, top-left */}
       <div className="map-float map-filters">
@@ -126,13 +151,16 @@ export default function MapPage() {
         <button className="btn btn-ghost btn-sm" onClick={() => setTile(t => (t === 'road' ? 'satellite' : 'road'))}>
           <i className={`fa-solid ${tile === 'road' ? 'fa-satellite' : 'fa-map'}`} /> {tile === 'road' ? 'Satellite' : 'Road map'}
         </button>
+        <button className={`btn btn-sm ${view3d ? 'btn-primary' : 'btn-ghost'}`} onClick={toggle3d} title="Terrain and 3D buildings">
+          <i className="fa-solid fa-cube" /> {view3d ? '2D view' : '3D view'}
+        </button>
         <button className="btn btn-ghost btn-sm" onClick={locateMe}><i className="fa-solid fa-location-crosshairs" /> My location</button>
         <button className="btn btn-ghost btn-sm" onClick={fitAll}><i className="fa-solid fa-maximize" /> Fit all</button>
       </div>
-      <div className="map-float map-zoom">
+      {!view3d && <div className="map-float map-zoom">
         <button className="btn btn-ghost btn-sm" onClick={() => map?.zoomIn()} aria-label="Zoom in"><i className="fa-solid fa-plus" /></button>
         <button className="btn btn-ghost btn-sm" onClick={() => map?.zoomOut()} aria-label="Zoom out"><i className="fa-solid fa-minus" /></button>
-      </div>
+      </div>}
 
       {/* Search, bottom-left */}
       <div className={`map-float map-search${searchOpen ? ' open' : ''}`}>
@@ -182,7 +210,7 @@ export default function MapPage() {
           </div>
           <div className="row" style={{ marginTop: 14 }}>
             <Link className="btn btn-primary btn-sm" to={`/assets/${encodeURIComponent(assetKey(selected.a))}`}><i className="fa-solid fa-eye" /> View detail</Link>
-            <button className="btn btn-ghost btn-sm" onClick={() => map?.flyTo([selected.lat, selected.lng], 17)}><i className="fa-solid fa-magnifying-glass-plus" /> Zoom in</button>
+            <button className="btn btn-ghost btn-sm" onClick={() => flyTo(selected.lat, selected.lng, 17)}><i className="fa-solid fa-magnifying-glass-plus" /> Zoom in</button>
           </div>
         </aside>
       )}

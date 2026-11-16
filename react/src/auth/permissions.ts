@@ -31,3 +31,7 @@ export function permsFor(user: User | null): Partial<Record<Perm, boolean>> {
   if (user.role === 'System Admin') return { ...defaults };
   return { ...defaults, ...(user.permissions || {}) };
 }
+
+/** Building Training & Maintenance changes — mirrors canManage in the backend's btm_routes.js. */
+export const canManageBtm = (u: User | null) =>
+  !!u && (u.role === 'System Admin' || u.division === 'Building Training & Maintenance' || u.division === 'All');

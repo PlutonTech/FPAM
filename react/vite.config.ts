@@ -19,8 +19,9 @@ function csp(apiBase: string): Plugin {
     "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com",   // Leaflet sets inline styles
     "font-src 'self' data: https://fonts.gstatic.com https://cdnjs.cloudflare.com",
     "img-src 'self' data: blob: https:",                                                          // map tiles, photos
-    `connect-src 'self' ${api.origin} ${ws}`,
-    "worker-src 'self'",
+    // Map tiles for the 3D view are fetched by MapLibre (road, satellite, terrain, buildings).
+    `connect-src 'self' ${api.origin} ${ws} https://tile.openstreetmap.org https://server.arcgisonline.com https://s3.amazonaws.com https://tiles.openfreemap.org`,
+    "worker-src 'self' blob:",                                                                    // MapLibre runs its workers from blob: URLs
     "object-src 'none'",
     "base-uri 'self'",
     "form-action 'self'",

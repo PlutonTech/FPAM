@@ -55,7 +55,7 @@ npm script.
 | Content-Security-Policy on built pages | `vite.config.ts` |
 
 `npm test` runs the unit tests (vitest); GitHub Actions runs lint, tests and a build on every push.
-The old vanilla dashboard pages redirect to these (see `../vercel.json`), except the PDF merger.
+The old vanilla dashboard pages redirect to these (see `../vercel.json`).
 
 ## Revenue Management System — phase one (local prototype)
 
@@ -119,6 +119,10 @@ in each visitor's own browser.
 | **File database** — every photo/document/spreadsheet across assets, filter, search, open, download, delete, photo grid | Done |
 | **Settings** — platform settings and feature toggles; MDA list with add/edit/deactivate/reactivate/CSV import | Done (System Admin to edit) |
 | **Guidelines** — legacy content and PDFs | Done |
+| **Building Training & Maintenance** (`/btm`) — planned maintenance, work orders (completing one writes the asset's maintenance log), training sessions | Done (changes: the division or System Admin) |
+| **Public reports** (`/reports`, MDA portal tab) — problems reported by the public from a scanned QR label (`/a/<id>`), routed to the asset's MDA | Done (backend `/api/public`, `/api/reports`) |
+| **Live Map 3D view** — terrain and 3D buildings (MapLibre, OpenFreeMap, AWS elevation tiles; no API keys), loaded only when switched on | Done |
+| **PDF tools** (`/pdf-tools`) — images to PDF and PDF merging in the browser; replaces the old PDF merger | Done |
 
 ## Layout
 
