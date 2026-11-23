@@ -1,6 +1,6 @@
 // Backend base URL. Override in .env.local, e.g. VITE_API_BASE=http://localhost:5000/api
 export const API_BASE: string =
-  import.meta.env.VITE_API_BASE || 'https://fpambacend.onrender.com/api';
+  import.meta.env.VITE_API_BASE || 'https://fpam-backend-1f0eb23d26db.herokuapp.com/api';
 
 // When the dashboard is served inside the public site (e.g. at /app/), the
 // public site's own login page is used instead of the built-in one. Set

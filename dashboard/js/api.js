@@ -4,7 +4,7 @@
  * Falls back gracefully to localStorage when backend is unreachable.
  */
 
-const API_BASE = window.API_BASE || 'https://fpambacend.onrender.com/api';
+const API_BASE = window.API_BASE || 'https://fpam-backend-1f0eb23d26db.herokuapp.com/api';
 
 let _token = localStorage.getItem('as_token') || null;
 let _apiOnline = false;
@@ -474,7 +474,7 @@ function updateConnIndicator(online) {
 // Check API health on load
 async function checkApiHealth() {
   try {
-    const r = await fetch(`${window.API_BASE || 'https://fpambacend.onrender.com'}/health`);
+    const r = await fetch(`${window.API_BASE || 'https://fpam-backend-1f0eb23d26db.herokuapp.com'}/health`);
     if (r.ok) { _apiOnline = true; updateConnIndicator(true); }
   } catch { _apiOnline = false; updateConnIndicator(false); }
 }

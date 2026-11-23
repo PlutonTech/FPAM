@@ -10,7 +10,7 @@ npm install
 npm run dev          # http://localhost:5173
 ```
 
-By default it uses the live API at `https://fpambacend.onrender.com/api`. To point at a local
+By default it uses the live API at `https://fpam-backend-1f0eb23d26db.herokuapp.com/api`. To point at a local
 backend, copy `.env.example` to `.env.local` and set `VITE_API_BASE`
 (e.g. `http://localhost:5000/api`). The backend already allows any `localhost` origin.
 

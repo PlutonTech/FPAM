@@ -10,7 +10,7 @@
  */
 (function () {
   'use strict';
-  var API = window.API_BASE || 'https://fpambacend.onrender.com/api';
+  var API = window.API_BASE || 'https://fpam-backend-1f0eb23d26db.herokuapp.com/api';
 
   function getJSON(path) {
     return fetch(API + path).then(function (r) {

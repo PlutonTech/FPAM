@@ -2,7 +2,7 @@ import { fileURLToPath } from 'node:url'
 import react from '@vitejs/plugin-react'
 import { defineConfig, loadEnv, type Plugin } from 'vite'
 
-const DEFAULT_API = 'https://fpambacend.onrender.com/api'
+const DEFAULT_API = 'https://fpam-backend-1f0eb23d26db.herokuapp.com/api'
 
 /**
  * Content-Security-Policy for built pages: scripts only from this site, data

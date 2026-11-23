@@ -117,7 +117,7 @@ a.go-login:hover{background:var(--navy,#0B2545);}
 <script>
 // Sends the request to FPAMAS (routes/access_requests_routes.js). System Admins
 // are notified and review it on the dashboard under Users -> Access requests.
-var API_BASE = window.API_BASE || 'https://fpambacend.onrender.com/api';
+var API_BASE = window.API_BASE || 'https://fpam-backend-1f0eb23d26db.herokuapp.com/api';
 async function submitRequest() {
   var val = function (id) { return document.getElementById(id).value.trim(); };
   var errBox = document.getElementById('req-error');
