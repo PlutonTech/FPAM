@@ -504,10 +504,6 @@ h1 {
       <i class="fa-solid fa-circle-xmark"></i>
       <span id="login-alert-msg">Invalid credentials. Please try again.</span>
     </div>
-    <div class="alert alert-info show" id="demo-hint">
-      <i class="fa-solid fa-circle-info"></i>
-      <span>Demo: <strong>admin@FPAMAS.gov.ng</strong> &nbsp;/&nbsp; <strong>ChangeMe123!</strong></span>
-    </div>
 
     <div class="form-grp">
       <label class="form-lbl" for="email">Email Address</label>
@@ -626,7 +622,6 @@ async function doLogin() {
   document.getElementById('err-email').classList.remove('show');
   document.getElementById('err-pass').classList.remove('show');
   document.getElementById('login-alert').classList.remove('show');
-  document.getElementById('demo-hint').classList.remove('show');
 
   let valid = true;
   if (!email || !email.includes('@')) {
