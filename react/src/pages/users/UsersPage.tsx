@@ -1,4 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import AccessRequests from './AccessRequests';
 import * as usersApi from '../../api/users';
 import * as assetsApi from '../../api/assets';
 import { errorMessage } from '../../api/client';
@@ -14,7 +16,8 @@ const ROLE_TONE: Record<string, Tone> = {
 };
 const initials = (n: string) => n.split(/\s+/).map(p => p[0]).join('').slice(0, 2).toUpperCase();
 
-type ModalState = { kind: 'create' } | { kind: 'edit'; user: ManagedUser } | { kind: 'perms'; user: ManagedUser }
+type Prefill = Partial<Pick<ManagedUser, 'name' | 'email' | 'role' | 'mda'>>;
+type ModalState = { kind: 'create'; prefill?: Prefill; onCreated?: () => void } | { kind: 'edit'; user: ManagedUser } | { kind: 'perms'; user: ManagedUser }
   | { kind: 'reset'; user: ManagedUser } | { kind: 'password'; user: ManagedUser; result: usersApi.ResetResult } | null;
 
 export default function UsersPage() {
@@ -27,7 +30,14 @@ export default function UsersPage() {
   const [role, setRole] = useState('');
   const [showInactive, setShowInactive] = useState(false);
   const [modal, setModal] = useState<ModalState>(null);
-  const [tab, setTab] = useState<'users' | 'roles'>('users');
+  // ?tab=requests opens the access requests (linked from their notification).
+  const [params, setParams] = useSearchParams();
+  const tab = (['users', 'roles', 'requests'].includes(params.get('tab') || '') ? params.get('tab') : 'users') as 'users' | 'roles' | 'requests';
+  const setTab = (t: 'users' | 'roles' | 'requests') => setParams(t === 'users' ? {} : { tab: t });
+  const [pendingRequests, setPendingRequests] = useState(0);
+  useEffect(() => {
+    if (me?.role === 'System Admin') usersApi.listAccessRequests().then(r => setPendingRequests(r.counts.pending || 0)).catch(() => {});
+  }, [me?.role]);
 
   const load = useCallback(async () => {
     setError('');
@@ -86,9 +96,13 @@ export default function UsersPage() {
       <div className="tab-bar card" role="tablist" style={{ marginBottom: 14 }}>
         <button role="tab" aria-selected={tab === 'users'} className={`tab-btn${tab === 'users' ? ' active' : ''}`} onClick={() => setTab('users')}><i className="fa-solid fa-users" /> Users</button>
         <button role="tab" aria-selected={tab === 'roles'} className={`tab-btn${tab === 'roles' ? ' active' : ''}`} onClick={() => setTab('roles')}><i className="fa-solid fa-shield-halved" /> Role permissions</button>
+        <button role="tab" aria-selected={tab === 'requests'} className={`tab-btn${tab === 'requests' ? ' active' : ''}`} onClick={() => setTab('requests')}><i className="fa-solid fa-user-clock" /> Access requests{pendingRequests ? <span className="tab-count">{pendingRequests}</span> : null}</button>
       </div>
 
-      {tab === 'roles' ? <RoleDefaults configs={roleConfigs} canEdit={can('canManageSettings')} onChange={load} /> : <>
+      {tab === 'requests' ? (
+        <AccessRequests onCount={setPendingRequests}
+          onCreateAccount={(r, approve) => setModal({ kind: 'create', prefill: { name: r.name, email: r.email, role: r.requestedRole }, onCreated: approve })} />
+      ) : tab === 'roles' ? <RoleDefaults configs={roleConfigs} canEdit={can('canManageSettings')} onChange={load} /> : <>
         <div className="filter-bar">
           <div className="search"><i className="fa-solid fa-magnifying-glass" />
             <input className="filter-input" placeholder="Search name, email, MDA…" value={q} onChange={e => setQ(e.target.value)} aria-label="Search users" /></div>
@@ -146,7 +160,8 @@ export default function UsersPage() {
 
       {(modal?.kind === 'create' || modal?.kind === 'edit') && (
         <UserFormModal user={modal.kind === 'edit' ? modal.user : undefined} isMe={modal.kind === 'edit' && modal.user._id === me?._id}
-                       onClose={() => setModal(null)} onDone={() => { setModal(null); load(); }} />
+                       prefill={modal.kind === 'create' ? modal.prefill : undefined}
+                       onClose={() => setModal(null)} onDone={() => { if (modal.kind === 'create') modal.onCreated?.(); setModal(null); load(); }} />
       )}
       {modal?.kind === 'perms' && (
         <PermissionsModal user={modal.user} base={roleConfigs.find(c => c.role === modal.user.role)?.defaults}
@@ -215,13 +230,13 @@ function ResetPasswordModal({ user, onClose, onDone }: { user: ManagedUser; onCl
 }
 
 // ── Create / edit ────────────────────────────────────────────────────────────
-function UserFormModal({ user, isMe, onClose, onDone }: { user?: ManagedUser; isMe: boolean; onClose: () => void; onDone: () => void }) {
+function UserFormModal({ user, isMe, prefill, onClose, onDone }: { user?: ManagedUser; isMe: boolean; prefill?: Prefill; onClose: () => void; onDone: () => void }) {
   const toast = useToast();
   const editing = !!user;
   const [form, setForm] = useState({
-    name: user?.name || '', email: user?.email || '', password: '', role: user?.role || 'Field Agent',
+    name: user?.name || prefill?.name || '', email: user?.email || prefill?.email || '', password: '', role: user?.role || prefill?.role || 'Field Agent',
     division: user?.division && user.division !== 'All' ? user.division : 'Assets & Condition',
-    mda: user?.mda || '', zone: user?.zone || '', states: user?.states || [] as string[], phone: user?.phone || '',
+    mda: user?.mda || prefill?.mda || '', zone: user?.zone || '', states: user?.states || [] as string[], phone: user?.phone || '',
   });
   const [sendCredentials, setSendCredentials] = useState(true);
   const [mdas, setMdas] = useState<string[]>([]);

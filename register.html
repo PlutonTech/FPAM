@@ -98,7 +98,10 @@ a.go-login:hover{background:var(--navy,#0B2545);}
       <textarea class="form-ctrl" id="req-reason" placeholder="Briefly explain why you need access (optional)"></textarea>
     </div>
 
-    <button class="btn-submit" onclick="submitRequest()">
+    <!-- Hidden from people; bots that fill it in are ignored by the server. -->
+    <input id="req-website" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
+    <div id="req-error" role="alert" style="display:none;margin:0 0 12px;padding:10px 12px;border-radius:6px;background:rgba(224,85,85,.1);color:#a02020;font-size:13px"></div>
+    <button class="btn-submit" id="req-btn" onclick="submitRequest()">
       <i class="fa-solid fa-paper-plane"></i> Submit Access Request
     </button>
   </div>
@@ -111,34 +114,36 @@ a.go-login:hover{background:var(--navy,#0B2545);}
   </div>
 </div>
 
-<script src="js/api.js"></script>
 <script>
+// Sends the request to FPAMAS (routes/access_requests_routes.js). System Admins
+// are notified and review it on the dashboard under Users -> Access requests.
+var API_BASE = window.API_BASE || 'https://fpambacend.onrender.com/api';
 async function submitRequest() {
-  const name  = document.getElementById('req-name').value.trim();
-  const email = document.getElementById('req-email').value.trim();
-  const org   = document.getElementById('req-org').value.trim();
-  if (!name || !email || !org) { alert('Please fill in all required fields.'); return; }
+  var val = function (id) { return document.getElementById(id).value.trim(); };
+  var errBox = document.getElementById('req-error');
+  var btn = document.getElementById('req-btn');
+  var showError = function (msg) { errBox.textContent = msg; errBox.style.display = 'block'; };
+  errBox.style.display = 'none';
 
-  const payload = {
-    name, email, organisation: org,
-    requestedRole: document.getElementById('req-role').value,
-    reason: document.getElementById('req-reason').value,
-    requestedAt: new Date().toISOString(),
-  };
+  var name = val('req-name'), email = val('req-email'), org = val('req-org');
+  if (!name || !email || !org) { showError('Please fill in your name, email and organisation.'); return; }
+  if (!/^\S+@\S+\.\S+$/.test(email)) { showError('Please enter a valid email address.'); return; }
 
-  // In production: POST to /api/access-requests (if endpoint exists)
-  // For now: store locally and show success
+  btn.disabled = true;
   try {
-    await apiFetch('/access-requests', { method:'POST', body: JSON.stringify(payload) });
-  } catch {
-    // Backend may not have this endpoint yet — log locally
-    const reqs = JSON.parse(localStorage.getItem('access_requests')||'[]');
-    reqs.push(payload);
-    localStorage.setItem('access_requests', JSON.stringify(reqs));
-  }
-
-  document.getElementById('form-view').style.display='none';
-  document.getElementById('success-view').style.display='block';
+    var r = await fetch(API_BASE + '/access-requests', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: name, email: email, organisation: org, requestedRole: val('req-role'), reason: val('req-reason'), website: val('req-website') }),
+    });
+    if (!r.ok) {
+      var d = await r.json().catch(function () { return {}; });
+      throw new Error(d.error || (r.status === 429 ? 'Too many requests. Please try again later.' : 'The request could not be sent.'));
+    }
+    document.getElementById('form-view').style.display = 'none';
+    document.getElementById('success-view').style.display = 'block';
+  } catch (e) {
+    showError((e instanceof TypeError ? 'Could not reach the server. Check your connection and try again.' : e.message));
+  } finally { btn.disabled = false; }
 }
 </script>
 </body>

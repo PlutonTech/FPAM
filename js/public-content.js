@@ -3,6 +3,7 @@
  *   - the "Latest News" ticker on every page that has #top-ticker
  *   - news.html: the article list, or one article with ?a=<slug>
  *   - gallery.html: projects staff chose to show (name, type, location, photos only)
+ *   - the footer copyright year (.js-year)
  * News is written on the dashboard (Website News); assets are added to the
  * gallery from their page on the dashboard ("Public gallery").
  * Everything is inserted with textContent, never as HTML.
@@ -251,6 +252,11 @@
     });
   }
 
-  function start() { ticker(); newsPage(); galleryPage(); }
+  function year() {
+    var y = String(new Date().getFullYear());
+    Array.prototype.forEach.call(document.querySelectorAll('.js-year'), function (e) { e.textContent = y; });
+  }
+
+  function start() { year(); ticker(); newsPage(); galleryPage(); }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start); else start();
 })();

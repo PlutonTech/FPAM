@@ -112,3 +112,13 @@ export const AUDIT_ACTIONS = [
   'EXPORT', 'BULK_EXPORT', 'OCR_SCAN', 'OCR_IMPORT', 'SETTINGS_CHANGED', 'ROLE_CONFIG_CHANGED',
 ] as const;
 export const AUDIT_ENTITY_TYPES = ['Asset', 'User', 'Inspection', 'FormRequest', 'RoleConfig', 'System'] as const;
+
+// ── Access requests (public site's "Request access" form) ────────────────────
+export interface AccessRequest {
+  _id: string; name: string; email: string; organisation: string; requestedRole: string; reason: string;
+  status: 'pending' | 'approved' | 'declined'; note: string; decidedByName: string; decidedAt: string | null; createdAt: string;
+}
+export const listAccessRequests = () =>
+  api<{ requests: AccessRequest[]; counts: Record<string, number> }>('/access-requests');
+export const decideAccessRequest = (id: string, status: 'approved' | 'declined', note = '') =>
+  api<{ request: AccessRequest }>(`/access-requests/${encodeURIComponent(id)}`, { method: 'PATCH', body: { status, note } });

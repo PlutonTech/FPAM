@@ -1,2 +1,15 @@
-# React source is built locally/CI into app/; the site deploys only the built files.
+# Only the public website and the built dashboard (app/) are deployed.
+# Everything below stays in the repo but is never published.
+
+# React source is built locally/CI into app/.
 react/
+
+# Data, scripts and internal documents (scraper/output holds a full asset export).
+scraper/
+docs/
+*.py
+templates/
+assetspatial-frontend/
+dashboard/temp/
+interactive-floorplan-demo.html
+Interactive-Floor-Plan-Setup-Guide.pdf

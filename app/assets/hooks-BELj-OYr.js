@@ -1,0 +1,1 @@
+import{r as e}from"./rolldown-runtime-XKyaHtl9.js";import{t}from"./react-DlmbjZJV.js";import{s as n}from"./TileLayer-C5QZuA6w.js";var r=e(t(),1);function i(){return n().map}function a(e){let t=i();return(0,r.useEffect)(function(){return t.on(e),function(){t.off(e)}},[t,e]),t}export{a as n,i as t};
