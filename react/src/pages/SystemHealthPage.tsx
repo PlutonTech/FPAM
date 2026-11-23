@@ -75,8 +75,8 @@ export default function SystemHealthPage() {
         <div className="card form-section">
           <div className="form-section-title">Configuration checks</div>
           <div className="list">
-            <Check ok={!!integ?.email} label="Email (SMTP)" good="Configured — emails are being sent" bad="Not configured: set SMTP_HOST, SMTP_USER, SMTP_PASS, MAIL_FROM on Render. Emails are skipped until then." />
-            <Check ok={!!integ?.appUrl} label="Links in emails (APP_URL)" good={integ?.appUrl || ''} bad="Not set: links fall back to CLIENT_URL. Set APP_URL=https://<site>/app on Render." />
+            <Check ok={!!integ?.email} label="Email (SMTP)" good="Configured — emails are being sent" bad="Not configured: set SMTP_HOST, SMTP_USER, SMTP_PASS, MAIL_FROM in the server settings (Heroku → Settings → Config Vars). Emails are skipped until then." />
+            <Check ok={!!integ?.appUrl} label="Links in emails (APP_URL)" good={integ?.appUrl || ''} bad="Not set: links fall back to CLIENT_URL. Set APP_URL=https://<site>/app in the server settings (Heroku → Settings → Config Vars)." />
             <Check ok={!!integ?.sms} label="SMS" good="Configured" bad="Optional. Set SMS_PROVIDER (termii / twilio / africastalking) and its keys to text decisions to field staff." warn />
             <Check ok={!!integ?.antivirus} label="Antivirus for uploads" good="ClamAV scanning on" bad="Optional. Uploads are content-checked (disguised executables, scripted PDFs, macros); set CLAMAV_HOST for full virus scanning." warn />
             <Check ok={!problems.length} label="Dashboard lists match the server" good="All allowed values agree" bad={`${problems.length} list(s) differ — see below`} />
