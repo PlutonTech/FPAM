@@ -21,8 +21,8 @@ export const uploadCover = (id: string, file: File) => {
 };
 export const removeCover = (id: string) => api<{ news: NewsItem }>(`/news/${enc(id)}/cover`, { method: 'DELETE' });
 
-export const setGallery = (assetId: string, enabled: boolean, caption: string) =>
-  api<{ publicGallery: { enabled: boolean; caption: string } }>(`/gallery/assets/${enc(assetId)}`, { method: 'PATCH', body: { enabled, caption } });
+export const setGallery = (assetId: string, enabled: boolean, caption: string, hidden: boolean) =>
+  api<{ publicGallery: { enabled: boolean; caption: string }; publicListing: { hidden: boolean } }>(`/gallery/assets/${enc(assetId)}`, { method: 'PATCH', body: { enabled, caption, hidden } });
 
 /** Who can write news (mirrors routes/news_routes.js) and switch the gallery (routes/gallery_routes.js). */
 export const NEWS_ROLES = ['System Admin', 'Supervisor'];

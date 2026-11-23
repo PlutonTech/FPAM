@@ -257,6 +257,80 @@
     Array.prototype.forEach.call(document.querySelectorAll('.js-year'), function (e) { e.textContent = y; });
   }
 
-  function start() { year(); ticker(); newsPage(); galleryPage(); }
+  // ── Asset list (assets.html) ──────────────────────────────────────────────
+  // Approved assets with public details only: name, type, MDA, location, one photo.
+  var CATEGORY_TYPES = {
+    government: ['Administrative Office', 'Court', 'Hospital', 'School', 'Laboratory', 'Warehouse'],
+    housing: ['Residential'],
+    infrastructure: ['Infrastructure', 'Utility', 'Environmental', 'Monument', 'Land / Property', 'Equipment'],
+  };
+  function assetsPage() {
+    var grid = document.getElementById('ad-grid');
+    if (!grid) return;
+    var qEl = document.getElementById('ad-q'), stateEl = document.getElementById('ad-state'),
+        typeEl = document.getElementById('ad-type'), photosEl = document.getElementById('ad-photos'),
+        more = document.getElementById('ad-more'), count = document.getElementById('ad-count');
+    var page = 1, seq = 0, firstLoad = true;
+    var fmt = function (n) { return Number(n || 0).toLocaleString('en-NG'); };
+
+    function card(a) {
+      var c = el('div', 'ad-card');
+      var ph = el('div', 'ad-photo');
+      if (a.photo) { var img = el('img'); img.src = API + a.photo; img.alt = a.name; img.loading = 'lazy'; ph.appendChild(img); }
+      else ph.appendChild(icon('fa-building'));
+      c.appendChild(ph);
+      var b = el('div', 'ad-body');
+      if (a.type) b.appendChild(el('div', 'ad-type', a.type));
+      b.appendChild(el('div', 'ad-name', a.name));
+      function meta(ic, text) { if (!text) return; var m = el('div', 'ad-meta'); m.appendChild(icon(ic)); m.appendChild(el('span', '', text)); b.appendChild(m); }
+      meta('fa-landmark', a.mda);
+      meta('fa-location-dot', [a.lga, a.state].filter(Boolean).join(', '));
+      c.appendChild(b);
+      return c;
+    }
+    function fillSelect(sel, values) {
+      values.forEach(function (v) { var o = el('option', '', v); o.value = v; sel.appendChild(o); });
+    }
+    function load(reset) {
+      if (reset) page = 1;
+      var my = ++seq;
+      var params = new URLSearchParams({ page: String(page), limit: '24' });
+      if (qEl.value.trim()) params.set('q', qEl.value.trim());
+      if (stateEl.value) params.set('state', stateEl.value);
+      if (typeEl.value) params.set('type', typeEl.value);
+      if (photosEl.checked) params.set('photos', '1');
+      more.disabled = true;
+      getJSON('/public/assets?' + params.toString()).then(function (d) {
+        if (my !== seq) return;                       // a newer search has started
+        if (reset) grid.textContent = '';
+        if (d.summary && firstLoad) {
+          firstLoad = false;
+          var bt = d.summary.byType || {};
+          var sumOf = function (types) { return types.reduce(function (n, t) { return n + (bt[t] || 0); }, 0); };
+          var stats = { total: d.summary.total, housing: sumOf(CATEGORY_TYPES.housing), mdas: d.summary.mdas, states: d.summary.states };
+          Object.keys(stats).forEach(function (k) { var e = document.querySelector('[data-stat="' + k + '"]'); if (e) e.textContent = fmt(stats[k]); });
+          Object.keys(CATEGORY_TYPES).forEach(function (g) { var e = document.querySelector('[data-group="' + g + '"]'); if (e) { var n = sumOf(CATEGORY_TYPES[g]); e.textContent = fmt(n) + (n === 1 ? ' asset' : ' assets'); } });
+          if (d.filters) { fillSelect(stateEl, d.filters.states); fillSelect(typeEl, d.filters.types); }
+        }
+        if (!d.items.length && page === 1) grid.appendChild(el('p', 'ad-msg', 'No assets match your search.'));
+        d.items.forEach(function (a) { grid.appendChild(card(a)); });
+        count.textContent = fmt(d.total) + ' asset' + (d.total === 1 ? '' : 's') + (d.total ? ' · showing ' + fmt(grid.querySelectorAll('.ad-card').length) : '');
+        more.hidden = page >= d.pages;
+        more.disabled = false;
+      }).catch(function () {
+        if (my !== seq) return;
+        grid.textContent = '';
+        grid.appendChild(el('p', 'ad-msg', 'The asset list could not be loaded. Please try again later.'));
+        more.hidden = true;
+      });
+    }
+    var timer;
+    qEl.addEventListener('input', function () { clearTimeout(timer); timer = setTimeout(function () { load(true); }, 350); });
+    [stateEl, typeEl, photosEl].forEach(function (e) { e.addEventListener('change', function () { load(true); }); });
+    more.addEventListener('click', function () { page++; load(false); });
+    load(true);
+  }
+
+  function start() { year(); ticker(); newsPage(); galleryPage(); assetsPage(); }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start); else start();
 })();

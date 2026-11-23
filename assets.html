@@ -46,7 +46,27 @@ html{scroll-behavior:smooth}body{font-family:var(--ff-b);color:var(--text);backg
 .cc-count{font-family:var(--ff-d);font-size:28px;font-weight:600;color:var(--blue);margin-top:10px}
 @media(max-width:960px){.asset-stats{grid-template-columns:repeat(2,1fr)}.at-header,.at-row{grid-template-columns:1fr 1fr}.at-header span:nth-child(n+3),.at-row>*:nth-child(n+3){display:none}.category-cards{grid-template-columns:1fr 1fr}}
 @media(max-width:560px){.asset-stats,.category-cards{grid-template-columns:1fr}}
-</style></head><body>
+</style><style>
+.ad-filters{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:14px}
+.ad-search{flex:1 1 260px;display:flex;align-items:center;gap:8px;border:1px solid var(--border);border-radius:4px;padding:0 12px;background:#fff}
+.ad-search i{color:var(--text3);font-size:13px}
+.ad-search input{border:0;outline:0;flex:1;padding:11px 0;font-family:var(--ff-b);font-size:14px;background:transparent;min-width:0}
+.ad-filters select{flex:0 1 190px;border:1px solid var(--border);border-radius:4px;padding:10px 12px;font-family:var(--ff-b);font-size:13.5px;background:#fff;min-width:0}
+.ad-check{display:flex;align-items:center;gap:7px;font-family:var(--ff-b);font-size:13px;color:var(--text3);padding:0 6px}
+.ad-count{font-family:var(--ff-m);font-size:11px;letter-spacing:.5px;color:var(--text3);margin-bottom:16px}
+.ad-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(250px,100%),1fr));gap:20px}
+.ad-card{background:#fff;border:1px solid var(--border);border-radius:6px;overflow:hidden;display:flex;flex-direction:column}
+.ad-photo{aspect-ratio:4/3;background:#eef2f6;overflow:hidden;display:grid;place-items:center;color:#9aa8b6;font-size:30px}
+.ad-photo img{width:100%;height:100%;object-fit:cover;display:block}
+.ad-body{padding:14px 16px 16px;display:flex;flex-direction:column;gap:6px}
+.ad-type{font-family:var(--ff-m);font-size:9.5px;letter-spacing:1px;text-transform:uppercase;color:var(--blue)}
+.ad-name{font-family:var(--ff-d);font-size:18px;font-weight:600;color:var(--navy);line-height:1.25}
+.ad-meta{font-family:var(--ff-b);font-size:12.5px;color:var(--text3);display:flex;gap:6px;align-items:baseline}
+.ad-meta i{width:12px;color:#9aa8b6;font-size:11px}
+.ad-msg{grid-column:1/-1;text-align:center;color:var(--text3);font-family:var(--ff-b);padding:30px 0}
+.ad-more{text-align:center;margin-top:26px}
+</style>
+</head><body>
 <div id="top-ticker">
   <div class="tt-label"><i class="fa-solid fa-satellite-dish"></i>Latest News</div>
   <div class="tt-track-wrap"><div class="tt-track">
@@ -70,28 +90,26 @@ html{scroll-behavior:smooth}body{font-family:var(--ff-b);color:var(--text);backg
 </div>
 <section class="section">
   <div class="container">
-    <div class="asset-stats reveal">
-      <div class="as-card"><div class="as-n">2,764<span>+</span></div><div class="as-l">Total Assets</div></div>
-      <div class="as-card"><div class="as-n">250<span>+</span></div><div class="as-l">Housing Estates</div></div>
-      <div class="as-card"><div class="as-n">31</div><div class="as-l">MDAs</div></div>
-      <div class="as-card"><div class="as-n">36<span>+</span></div><div class="as-l">States</div></div>
+    <!-- Live from the FPAMAS register (js/public-content.js): approved assets
+         with public details and one photo only. -->
+    <div class="asset-stats" id="asset-stats">
+      <div class="as-card"><div class="as-n" data-stat="total">&#8212;</div><div class="as-l">Assets on the register</div></div>
+      <div class="as-card"><div class="as-n" data-stat="housing">&#8212;</div><div class="as-l">Housing estates &amp; residential</div></div>
+      <div class="as-card"><div class="as-n" data-stat="mdas">&#8212;</div><div class="as-l">MDAs</div></div>
+      <div class="as-card"><div class="as-n" data-stat="states">&#8212;</div><div class="as-l">States</div></div>
     </div>
     <div class="eyebrow reveal"><span>Asset Directory</span></div>
-    <h2 class="s-title reveal rd1">Selected FPAMD Assets</h2>
-    <p class="s-sub reveal rd2" style="margin-bottom:28px">A sample of federal public assets currently under FPAMD stewardship. Use the filters to search by MDA or state.</p>
-    <div class="asset-table-wrap reveal">
-      <div class="at-header"><span>Asset Name</span><span>State</span><span>Category</span><span>Year Built</span><span>Condition</span></div>
-      <div class="at-row"><div class="at-name">Federal Capital Territory Administration</div><div class="at-state">FCT, Abuja</div><div class="at-type">Government</div><div class="at-year">&#8212;</div><div><span class="at-badge badge-good">Good</span></div></div>
-      <div class="at-row"><div class="at-name">ICPC &#8212; Independent Corrupt Practices Commission</div><div class="at-state">FCT, Abuja</div><div class="at-type">Government</div><div class="at-year">&#8212;</div><div><span class="at-badge badge-good">Good</span></div></div>
-      <div class="at-row"><div class="at-name">Federal Teaching Hospital Katsina</div><div class="at-state">Katsina</div><div class="at-type">Health</div><div class="at-year">&#8212;</div><div><span class="at-badge badge-fair">Fair</span></div></div>
-      <div class="at-row"><div class="at-name">Lagos State Ministry of Health</div><div class="at-state">Lagos</div><div class="at-type">Health</div><div class="at-year">&#8212;</div><div><span class="at-badge badge-good">Good</span></div></div>
-      <div class="at-row"><div class="at-name">Ministry of Health, Lafia</div><div class="at-state">Nasarawa</div><div class="at-type">Health</div><div class="at-year">&#8212;</div><div><span class="at-badge badge-fair">Fair</span></div></div>
-      <div class="at-row"><div class="at-name">Niger State Ministry of Health</div><div class="at-state">Niger</div><div class="at-type">Health</div><div class="at-year">&#8212;</div><div><span class="at-badge badge-fair">Fair</span></div></div>
-      <div class="at-row"><div class="at-name">Ministry of Health Zamfara</div><div class="at-state">Zamfara</div><div class="at-type">Health</div><div class="at-year">&#8212;</div><div><span class="at-badge badge-poor">Poor</span></div></div>
-      <div class="at-row"><div class="at-name">Yobe State Ministry of Health</div><div class="at-state">Yobe</div><div class="at-type">Health</div><div class="at-year">&#8212;</div><div><span class="at-badge badge-fair">Fair</span></div></div>
-      <div class="at-row"><div class="at-name">World Health Organisation &#8212; Ondo State Office</div><div class="at-state">Ondo</div><div class="at-type">Health</div><div class="at-year">&#8212;</div><div><span class="at-badge badge-good">Good</span></div></div>
-      <div class="at-row"><div class="at-name">Ministry of Health Kebbi</div><div class="at-state">Kebbi</div><div class="at-type">Health</div><div class="at-year">&#8212;</div><div><span class="at-badge badge-poor">Poor</span></div></div>
-    </div>
+    <h2 class="s-title reveal rd1">Federal Assets Under FPAMD Stewardship</h2>
+    <p class="s-sub reveal rd2" style="margin-bottom:24px">Search the register by name, MDA or location. Only general information is published here.</p>
+    <form class="ad-filters" id="ad-filters" onsubmit="return false">
+      <div class="ad-search"><i class="fa-solid fa-magnifying-glass"></i><input id="ad-q" type="search" placeholder="Search by name, MDA, LGA or state" aria-label="Search assets"></div>
+      <select id="ad-state" aria-label="State"><option value="">All states</option></select>
+      <select id="ad-type" aria-label="Type"><option value="">All types</option></select>
+      <label class="ad-check"><input type="checkbox" id="ad-photos"> With photos only</label>
+    </form>
+    <div class="ad-count" id="ad-count"></div>
+    <div class="ad-grid" id="ad-grid"><p class="ad-msg">Loading assets&#8230;</p></div>
+    <div class="ad-more"><button class="btn btn-blue" id="ad-more" type="button" hidden>Show more</button></div>
   </div>
 </section>
 <section class="section alt">
@@ -99,9 +117,9 @@ html{scroll-behavior:smooth}body{font-family:var(--ff-b);color:var(--text);backg
     <div class="eyebrow reveal"><span>By Category</span></div>
     <h2 class="s-title reveal rd1">Asset Categories</h2>
     <div class="category-cards reveal rd2">
-      <div class="cc"><div class="cc-img"><img src="images/photo_secretariat.jpg" alt="Secretariat"></div><div class="cc-body"><div class="cc-cat">Category</div><div class="cc-title">Government Buildings</div><div class="cc-desc">Federal ministries, secretariats, office complexes and administrative facilities across Nigeria.</div><div class="cc-count">1,200+</div></div></div>
-      <div class="cc"><div class="cc-img"><img src="images/photo_estate_dusk.jpg" alt="Housing"></div><div class="cc-body"><div class="cc-cat">Category</div><div class="cc-title">Housing Estates</div><div class="cc-desc">National Housing Programme estates providing accommodation for federal civil servants and families.</div><div class="cc-count">250+</div></div></div>
-      <div class="cc"><div class="cc-img"><img src="images/photo_estate_aerial.jpg" alt="Infrastructure"></div><div class="cc-body"><div class="cc-cat">Category</div><div class="cc-title">Infrastructure</div><div class="cc-desc">Roads, utilities, drainage and communal facilities within federal estates and government compounds.</div><div class="cc-count">1,300+</div></div></div>
+      <div class="cc"><div class="cc-img"><img src="images/photo_secretariat.jpg" alt="Secretariat"></div><div class="cc-body"><div class="cc-cat">Category</div><div class="cc-title">Government Buildings</div><div class="cc-desc">Federal ministries, secretariats, office complexes and administrative facilities across Nigeria.</div><div class="cc-count" data-group="government">&#8212;</div></div></div>
+      <div class="cc"><div class="cc-img"><img src="images/photo_estate_dusk.jpg" alt="Housing"></div><div class="cc-body"><div class="cc-cat">Category</div><div class="cc-title">Housing Estates</div><div class="cc-desc">National Housing Programme estates providing accommodation for federal civil servants and families.</div><div class="cc-count" data-group="housing">&#8212;</div></div></div>
+      <div class="cc"><div class="cc-img"><img src="images/photo_estate_aerial.jpg" alt="Infrastructure"></div><div class="cc-body"><div class="cc-cat">Category</div><div class="cc-title">Infrastructure</div><div class="cc-desc">Roads, utilities, drainage and communal facilities within federal estates and government compounds.</div><div class="cc-count" data-group="infrastructure">&#8212;</div></div></div>
     </div>
   </div>
 </section>
