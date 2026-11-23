@@ -110,7 +110,7 @@ function ReportModal({ report, portal, canHandle, onClose, onChanged }: {
           {report.location.lat.toFixed(5)}, {report.location.lng.toFixed(5)} <i className="fa-solid fa-arrow-up-right-from-square" /></a></dd></>}
         {(report.reporter?.name || report.reporter?.phone || report.reporter?.email) && <><dt>Reporter</dt>
           <dd>{[report.reporter.name, report.reporter.phone, report.reporter.email].filter(Boolean).join(' · ')}</dd></>}
-        {report.workOrderId && !portal && <><dt>Work order</dt><dd><Link to="/btm?tab=work-orders">Raised — see Training &amp; Maintenance</Link></dd></>}
+        {report.workOrderId && !portal && <><dt>Work order</dt><dd><Link to="/btm?tab=work-orders">Raised — see Building Training &amp; Maintenance</Link></dd></>}
       </dl>
 
       <h3 className="section-h">History</h3>

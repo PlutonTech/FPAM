@@ -47,7 +47,7 @@ const NAV: NavSection[] = [
     { to: '/me',     label: 'Monitoring & Evaluation',      icon: 'fa-chart-line',       division: 'Monitoring & Evaluation', me: true },
     { to: '#planning',       label: 'Planning & Design',            icon: 'fa-compass-drafting', division: 'Planning & Design', soon: true },
     { to: '#rehabilitation', label: 'Rehabilitation & Restoration', icon: 'fa-helmet-safety',    division: 'Rehabilitation & Restoration', soon: true },
-    { to: '/btm',            label: 'Training & Maintenance',       icon: 'fa-chalkboard-user',  division: 'Building Training & Maintenance' },
+    { to: '/btm',            label: 'Building Training & Maintenance', icon: 'fa-chalkboard-user',  division: 'Building Training & Maintenance' },
   ]},
   // VITE_RMS_NAV=off hides the links; the revenue pages still work by URL.
   ...(RMS_NAV && import.meta.env.VITE_RMS_NAV !== 'off' ? [RMS_NAV] : []),
