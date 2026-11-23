@@ -37,6 +37,7 @@ const NAV: NavSection[] = [
     { to: '/form-requests', label: 'Form Requests', icon: 'fa-file-circle-check', roles: ['System Admin', 'Supervisor', 'Sub-Head', 'GIS Analyst'] },
     { to: '/data-quality',  label: 'Data Quality',  icon: 'fa-broom', roles: MANAGERS },
     { to: '/reports',       label: 'Public Reports', icon: 'fa-triangle-exclamation', roles: MANAGERS },
+    { to: '/news',          label: 'Website News',  icon: 'fa-newspaper', roles: ['System Admin', 'Supervisor'] },
     { to: '/data-quality?mine=1', label: 'My Data Fixes', icon: 'fa-broom', roles: ['Field Agent'] },
   ]},
   // Same list as the legacy sidebar. Cross-division roles see all of them;

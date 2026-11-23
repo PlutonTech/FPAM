@@ -10,6 +10,7 @@ import type { Asset } from '../../types';
 import { assetKey, coords, formatDate, formatNaira } from '../../lib/assets';
 import EditAssetModal from '../registry/EditAssetModal';
 import ScheduleInspectionModal from '../inspections/ScheduleInspectionModal';
+import GalleryToggle from './GalleryToggle';
 import { DocumentsTab, HistoryTab, LocationTab, MaintenanceTab, OverviewTab, PhotosTab, ValuationTab } from './tabs';
 import { AssetAuditTab, AssetMeTab, InventoryTab, LifecycleTab, RelationshipsTab } from './extraTabs';
 
@@ -120,6 +121,7 @@ export default function AssetViewPage() {
           <div className="row" style={{ marginTop: 'auto' }}>
             {can('canEdit') && <button className="btn btn-primary btn-sm" onClick={() => setEditing(true)}><i className="fa-solid fa-pen-to-square" /> Edit</button>}
             <button className="btn btn-ghost btn-sm" onClick={() => setScheduling(true)}><i className="fa-solid fa-calendar-plus" /> Schedule inspection</button>
+            <GalleryToggle asset={asset} onChange={setAsset} />
             {c && <a className="btn btn-ghost btn-sm" href={`https://www.google.com/maps/search/?api=1&query=${c.lat},${c.lng}`} target="_blank" rel="noreferrer"><i className="fa-solid fa-map-location-dot" /> Google Maps</a>}
             {can('canDelete') && <button className="btn btn-danger btn-sm" onClick={remove}><i className="fa-solid fa-trash" /> Delete</button>}
           </div>

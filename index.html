@@ -1950,6 +1950,7 @@
     function animCounters() { document.querySelectorAll('.stat-n').forEach(el => { const t = parseFloat(el.textContent.replace(/[^0-9.]/g, '')); if (!t) return; const suf = el.innerHTML.replace(/[0-9.,]/g, '').replace(/<span>/g, '').replace(/<\/span>/g, ''); let v = 0, inc = t / 110; const iv = setInterval(() => { v = Math.min(v + inc, t); el.innerHTML = (v < 10 ? v.toFixed(1) : Math.floor(v)).toLocaleString() + '<span>' + suf + '</span>'; if (v >= t) clearInterval(iv); }, 16); }); }
     new IntersectionObserver(([e]) => { if (e.isIntersecting) animCounters(); }, { threshold: .3 }).observe(document.querySelector('.stats-band'));
   </script>
+<script src="js/public-content.js"></script>
 </body>
 
 </html>

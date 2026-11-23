@@ -40,7 +40,13 @@ html{scroll-behavior:smooth}body{font-family:var(--ff-b);color:var(--text);backg
 .lb-caption{position:absolute;bottom:24px;left:50%;transform:translateX(-50%);text-align:center}
 .lb-cap-title{font-family:var(--ff-d);font-size:18px;font-weight:600;color:#fff}
 .lb-cap-loc{font-family:var(--ff-b);font-size:12px;font-weight:300;color:rgba(255,255,255,.6);margin-top:4px}
-</style></head><body>
+</style><style>.gallery-empty{column-span:all;text-align:center;color:var(--text3);font-family:var(--ff-b);padding:40px 0}
+.gi-count{font-family:var(--ff-b);font-size:11px;color:rgba(255,255,255,.75);margin-top:4px}
+.gallery-item img{width:100%;display:block}
+.lb-nav{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.12);border:none;color:#fff;width:46px;height:46px;border-radius:50%;font-size:18px;cursor:pointer}
+.lb-nav:hover{background:rgba(255,255,255,.25)}.lb-prev{left:24px}.lb-next{right:24px}
+@media(max-width:600px){.lb-prev{left:8px}.lb-next{right:8px}}</style>
+</head><body>
 <div id="top-ticker">
   <div class="tt-label"><i class="fa-solid fa-satellite-dish"></i>Latest News</div>
   <div class="tt-track-wrap"><div class="tt-track">
@@ -77,78 +83,26 @@ html{scroll-behavior:smooth}body{font-family:var(--ff-b);color:var(--text);backg
 </div>
 <section class="section">
   <div class="container">
-    <div class="gallery-filter reveal">
-      <button class="gf-btn active" onclick="filterGallery('all',this)">All</button>
-      <button class="gf-btn" onclick="filterGallery('secretariat',this)">Secretariat</button>
-      <button class="gf-btn" onclick="filterGallery('housing',this)">Housing Estates</button>
-      <button class="gf-btn" onclick="filterGallery('aerial',this)">Aerial Views</button>
-    </div>
-    <div class="gallery-grid" id="gallery-grid">
-      <div class="gallery-item reveal " data-cat="secretariat" onclick="openLb(this)">
-        <img src="https://reoworld.smebooks.com.ng/wp-content/uploads/2025/03/Delta-State-visit-visit-to-Asagba-of-Asaba-Commissioning-of-Independent-Power-Project-and-Prof-Chike-Edozien-Secretariat-Complex-on-29112021-6-1024x683.jpeg" data-title="Prof Chike Edozien Secretariat Complex" data-loc="Delta State" alt="Prof Chike Edozien Secretariat Complex">
-        <div class="gi-overlay"><div><div class="gi-label">Prof Chike Edozien Secretariat Complex</div><div class="gi-loc"><i class="fa-solid fa-location-dot"></i> Delta State</div></div></div>
-      </div>
-      <div class="gallery-item reveal rd1" data-cat="government" onclick="openLb(this)">
-        <img src="https://reoworld.smebooks.com.ng/wp-content/uploads/2025/03/ICPC-1024x681.webp" data-title="ICPC Building" data-loc="Abuja, FCT" alt="ICPC Building">
-        <div class="gi-overlay"><div><div class="gi-label">ICPC Building</div><div class="gi-loc"><i class="fa-solid fa-location-dot"></i> Abuja, FCT</div></div></div>
-      </div>
-      <div class="gallery-item reveal rd2" data-cat="government" onclick="openLb(this)">
-        <img src="https://reoworld.smebooks.com.ng/wp-content/uploads/2025/03/unnamed-1-1024x768.jpg" data-title="Federal Government Building" data-loc="Nigeria" alt="Federal Government Building">
-        <div class="gi-overlay"><div><div class="gi-label">Federal Government Building</div><div class="gi-loc"><i class="fa-solid fa-location-dot"></i> Nigeria</div></div></div>
-      </div>
-      <div class="gallery-item reveal " data-cat="housing" onclick="openLb(this)">
-        <img src="https://reoworld.smebooks.com.ng/wp-content/uploads/2025/03/unnamed-3-1024x768.jpg" data-title="FPAMD Facility" data-loc="Nigeria" alt="FPAMD Facility">
-        <div class="gi-overlay"><div><div class="gi-label">FPAMD Facility</div><div class="gi-loc"><i class="fa-solid fa-location-dot"></i> Nigeria</div></div></div>
-      </div>
-      <div class="gallery-item reveal rd1" data-cat="housing" onclick="openLb(this)">
-        <img src="https://reoworld.smebooks.com.ng/wp-content/uploads/2025/03/IMG-20250318-WA0011-1024x768.jpg" data-title="FPAMD Site Visit" data-loc="Nigeria" alt="FPAMD Site Visit">
-        <div class="gi-overlay"><div><div class="gi-label">FPAMD Site Visit</div><div class="gi-loc"><i class="fa-solid fa-location-dot"></i> Nigeria</div></div></div>
-      </div>
-      <div class="gallery-item reveal rd2" data-cat="government" onclick="openLb(this)">
-        <img src="https://reoworld.smebooks.com.ng/wp-content/uploads/2025/03/IMG-20250318-WA0015-1024x768.jpg" data-title="Federal Infrastructure" data-loc="Nigeria" alt="Federal Infrastructure">
-        <div class="gi-overlay"><div><div class="gi-label">Federal Infrastructure</div><div class="gi-loc"><i class="fa-solid fa-location-dot"></i> Nigeria</div></div></div>
-      </div>
-      <div class="gallery-item reveal " data-cat="secretariat" onclick="openLb(this)">
-        <img src="https://reoworld.smebooks.com.ng/wp-content/uploads/2025/03/bce16021-c48f-401f-b62e-670f76b36a35-1024x683.jpg" data-title="Public Asset" data-loc="Nigeria" alt="Public Asset">
-        <div class="gi-overlay"><div><div class="gi-label">Public Asset</div><div class="gi-loc"><i class="fa-solid fa-location-dot"></i> Nigeria</div></div></div>
-      </div>
-      <div class="gallery-item reveal rd1" data-cat="housing" onclick="openLb(this)">
-        <img src="https://reoworld.smebooks.com.ng/wp-content/uploads/2025/03/pic4.jpg" data-title="FPAMD Building" data-loc="Nigeria" alt="FPAMD Building">
-        <div class="gi-overlay"><div><div class="gi-label">FPAMD Building</div><div class="gi-loc"><i class="fa-solid fa-location-dot"></i> Nigeria</div></div></div>
-      </div>
-      <div class="gallery-item reveal rd2" data-cat="secretariat" onclick="openLb(this)">
-        <img src="https://reoworld.smebooks.com.ng/wp-content/uploads/2025/03/2430353_sec3_jpegcc12030756865594e19dedaaf284abcb.jpg" data-title="Secretariat Complex" data-loc="Abuja, FCT" alt="Secretariat Complex">
-        <div class="gi-overlay"><div><div class="gi-label">Secretariat Complex</div><div class="gi-loc"><i class="fa-solid fa-location-dot"></i> Abuja, FCT</div></div></div>
-      </div>
-      <div class="gallery-item reveal " data-cat="government" onclick="openLb(this)">
-        <img src="https://reoworld.smebooks.com.ng/wp-content/uploads/2025/03/9a389f42167d6eda152b63aac683562e.jpg" data-title="Federal Government Facility" data-loc="Nigeria" alt="Federal Government Facility">
-        <div class="gi-overlay"><div><div class="gi-label">Federal Government Facility</div><div class="gi-loc"><i class="fa-solid fa-location-dot"></i> Nigeria</div></div></div>
-      </div>
-    </div>
+    <div class="gallery-filter" id="gallery-filter"></div>
+    <!-- Filled from the FPAMAS database by js/public-content.js: projects staff
+         chose to show, with name, type, location and photos only. -->
+    <div class="gallery-grid" id="gallery-grid"><p class="gallery-empty">Loading projects&#8230;</p></div>
   </div>
 </section>
 <div class="lightbox" id="lightbox" onclick="closeLb(event)">
   <button class="lb-close" onclick="closeLb()"><i class="fa-solid fa-xmark"></i></button>
+  <button class="lb-nav lb-prev" id="lb-prev" onclick="galleryStep(event,-1)" aria-label="Previous photo"><i class="fa-solid fa-chevron-left"></i></button>
   <img class="lb-img" id="lb-img" src="" alt="">
+  <button class="lb-nav lb-next" id="lb-next" onclick="galleryStep(event,1)" aria-label="Next photo"><i class="fa-solid fa-chevron-right"></i></button>
   <div class="lb-caption"><div class="lb-cap-title" id="lb-title"></div><div class="lb-cap-loc" id="lb-loc"></div></div>
 </div>
 <style>footer{background:#04080f;padding:56px 0 24px;color:rgba(255,255,255,.5)}.fg-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;margin-bottom:44px}.fb-logo{display:flex;align-items:center;gap:10px;margin-bottom:14px}.fb-logo img{height:44px;width:auto;filter:drop-shadow(0 2px 8px rgba(0,0,0,.4))}.fb-logo-div{width:1px;height:32px;background:rgba(255,255,255,.12)}footer p{font-family:var(--ff-b);font-size:12.5px;font-weight:300;line-height:1.8;max-width:270px}.fc-t{font-family:var(--ff-b);font-size:11px;font-weight:600;color:#fff;margin-bottom:13px;letter-spacing:1px;text-transform:uppercase}footer ul{list-style:none;display:flex;flex-direction:column;gap:8px}footer ul a{font-family:var(--ff-b);font-size:12.5px;font-weight:300;color:rgba(255,255,255,.4);transition:.15s}footer ul a:hover{color:var(--blue-lt)}.f-bottom{border-top:1px solid rgba(255,255,255,.06);padding-top:20px;display:flex;justify-content:space-between;align-items:center}.f-bottom p{font-family:var(--ff-m);font-size:9.5px;letter-spacing:1px;color:rgba(255,255,255,.22)}.f-soc{display:flex;gap:8px}.f-soc a{width:32px;height:32px;border-radius:6px;background:rgba(255,255,255,.04);display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.38);font-size:13px;transition:.2s}.f-soc a:hover{background:var(--blue);color:#fff}@media(max-width:960px){.fg-grid{grid-template-columns:1fr 1fr}}@media(max-width:560px){.fg-grid{grid-template-columns:1fr}}</style><footer><div class="container"><div class="fg-grid"><div><div class="fb-logo"><img src="images/logo_ministry.png" alt="Ministry"><div class="fb-logo-div"></div><img src="images/logo_fpam.png" alt="FPAM"></div><p>Federal Public Assets Maintenance Department &#8212; agency of the Federal Ministry of Housing &amp; Urban Development.</p><div style="margin-top:14px;font-family:var(--ff-m);font-size:9px;color:rgba(255,255,255,.18);letter-spacing:1.5px">&#169; 2025 FPAM &#183; FEDERAL GOVERNMENT OF NIGERIA</div></div><div><div class="fc-t">Navigate</div><ul><li><a href="index.html">Home</a></li><li><a href="about.html">About</a></li><li><a href="news.html">News</a></li><li><a href="gallery.html">Gallery</a></li><li><a href="assets.html">Asset</a></li><li><a href="contact.html">Contact</a></li></ul></div><div><div class="fc-t">Resources</div><ul><li><a href="#">Asset Directory</a></li><li><a href="#">Compliance Forms</a></li><li><a href="#">Maintenance Reports</a></li><li><a href="#">Housing Policy</a></li><li><a href="complaint.html">Log a Complaint</a></li></ul></div><div><div class="fc-t">Contact</div><ul><li><a href="#">Federal Secretariat Complex, Phase III</a></li><li><a href="#">Shehu Shagari Way, Abuja</a></li><li><a href="mailto:info@fpam.housing.gov.ng">info@fpam.housing.gov.ng</a></li><li><a href="#">+234 800 000 0000</a></li></ul><div style="margin-top:16px;padding:12px 14px;background:rgba(181,74,47,.1);border:1px solid rgba(181,74,47,.22);border-radius:4px"><div style="font-family:var(--ff-m);font-size:8px;color:rgba(255,255,255,.35);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px">Emergency Line</div><div style="font-family:var(--ff-d);font-size:18px;font-weight:600;color:var(--terra)">0800-FPAM-911</div></div></div></div><div class="f-bottom"><p>FEDERAL MINISTRY OF HOUSING &amp; URBAN DEVELOPMENT &#183; ALL RIGHTS RESERVED</p><div class="f-soc"><a href="#"><i class="fa-brands fa-twitter"></i></a><a href="#"><i class="fa-brands fa-facebook-f"></i></a><a href="#"><i class="fa-brands fa-instagram"></i></a><a href="#"><i class="fa-brands fa-youtube"></i></a><a href="#"><i class="fa-brands fa-linkedin-in"></i></a></div></div></div></footer><script>document.querySelectorAll(".reveal").forEach(el=>{new IntersectionObserver(([e])=>{if(e.isIntersecting)el.classList.add("visible");},{threshold:.1}).observe(el);});</script>
 <script>
-function filterGallery(cat,btn){
-  document.querySelectorAll('.gf-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');
-  document.querySelectorAll('.gallery-item').forEach(i=>{i.style.display=(cat==='all'||i.dataset.cat===cat)?'block':'none'});
-}
-function openLb(item){
-  const img=item.querySelector('img');
-  document.getElementById('lb-img').src=img.src;
-  document.getElementById('lb-title').textContent=img.dataset.title||'';
-  document.getElementById('lb-loc').textContent=img.dataset.loc||'';
-  document.getElementById('lightbox').classList.add('open');document.body.style.overflow='hidden';
-}
 function closeLb(e){
   if(!e||e.target===document.getElementById('lightbox')||e.currentTarget.classList.contains('lb-close')){
     document.getElementById('lightbox').classList.remove('open');document.body.style.overflow='';
   }
 }
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeLb({target:document.getElementById('lightbox')})});
-</script></body></html>
+</script><script src="js/public-content.js"></script>
+</body></html>

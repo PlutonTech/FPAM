@@ -36,6 +36,7 @@ const ScanPage = lazy(() => import('./pages/ScanPage'));
 const ReportsPage = lazy(() => import('./pages/reports/ReportsPage'));
 const BtmPage = lazy(() => import('./pages/btm/BtmPage'));
 const PdfToolsPage = lazy(() => import('./pages/PdfToolsPage'));
+const NewsAdminPage = lazy(() => import('./pages/NewsAdminPage'));
 
 // MDA Agents only ever see the compliance portal; staff never see it.
 const MDA_AGENT = 'MDA Agent';
@@ -101,6 +102,7 @@ export default function App() {
               <Route path="reports" element={<ReportsPage />} />
               <Route path="btm" element={<BtmPage />} />
               <Route path="pdf-tools" element={<PdfToolsPage />} />
+              <Route path="news" element={<NewsAdminPage />} />
               {rmsStaffRoutes()}
               <Route path="*" element={<Navigate to="/dashboard" replace />} />
             </Route>

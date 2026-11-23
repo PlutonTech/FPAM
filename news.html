@@ -142,6 +142,28 @@
     @media (max-width: 960px) { .fg-grid { grid-template-columns: 1fr 1fr } }
     @media (max-width: 560px) { .fg-grid { grid-template-columns: 1fr } }
   </style>
+<style>
+#news-static[hidden]{display:none}
+.news-msg{font-family:var(--ff-b);color:var(--text3);padding:24px 0}
+.news-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(300px,100%),1fr));gap:24px}
+.news-card{display:flex;flex-direction:column;background:#fff;border:1px solid var(--border);border-radius:6px;overflow:hidden;color:inherit;text-decoration:none;transition:box-shadow .2s,transform .2s}
+.news-card:hover{box-shadow:0 10px 30px rgba(11,37,69,.12);transform:translateY(-2px)}
+.news-card-media{aspect-ratio:16/9;background:#eef2f6;overflow:hidden}
+.news-card-media img{width:100%;height:100%;object-fit:cover;display:block}
+.news-card-media.empty{display:grid;place-items:center;color:#9aa8b6;font-size:30px}
+.news-card-body{padding:18px 20px 20px;display:flex;flex-direction:column;gap:10px;flex:1}
+.news-card-top{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.news-card-date{font-family:var(--ff-m);font-size:10px;letter-spacing:.5px;color:var(--text3)}
+.news-card-title{font-family:var(--ff-d);font-size:21px;font-weight:600;color:var(--navy);line-height:1.25;margin:0}
+.news-card-sum{font-family:var(--ff-b);font-size:13.5px;color:var(--text2,#4a5868);line-height:1.6;margin:0}
+.news-card-more{margin-top:auto;font-family:var(--ff-b);font-size:12.5px;font-weight:600;color:var(--blue)}
+.news-back{display:inline-flex;gap:6px;align-items:center;font-family:var(--ff-b);font-size:13px;color:var(--blue);margin-bottom:18px}
+.news-article{max-width:820px}
+.news-article .article-tag{display:inline-block}
+.news-title{font-family:var(--ff-d);font-size:clamp(26px,3.2vw,42px);font-weight:600;color:var(--navy);line-height:1.15;margin:14px 0 20px}
+.news-cover{margin:0 0 26px}.news-cover img{width:100%;border-radius:6px;display:block}
+.news-cover figcaption{font-family:var(--ff-b);font-size:12px;color:var(--text3);margin-top:8px}
+</style>
 </head>
 
 <body>
@@ -215,7 +237,10 @@
 
   <section class="section">
     <div class="container">
-      <div class="article-layout">
+      <!-- Live news from the FPAMAS database (js/public-content.js). The press
+           release below is the fallback, shown only if none can be loaded. -->
+      <div id="news-root"></div>
+      <div class="article-layout" id="news-static" hidden>
 
         <!-- ARTICLE -->
         <article class="reveal">
@@ -337,5 +362,6 @@
     });
   </script>
 
+<script src="js/public-content.js"></script>
 </body>
 </html>

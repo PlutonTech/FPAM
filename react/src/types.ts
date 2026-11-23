@@ -92,6 +92,9 @@ export interface Asset {
   createdAt?: string;
   updatedAt?: string;
   photos?: FileRef[];
+  /** Shown on the public website gallery (name, type, location and photos only). */
+  publicGallery?: { enabled?: boolean; caption?: string };
+  meReports?: { _id: string }[];
   documents?: FileRef[];
   maintenanceLogs?: MaintenanceLog[];
   conditionHistory?: ConditionChange[];
