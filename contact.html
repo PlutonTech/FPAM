@@ -151,7 +151,7 @@ footer ul a:hover{color:var(--blue-lt)}
         <h2 class="s-title">We&#8217;re Here<br>to Help</h2>
         <div class="ci-list" style="margin-top:24px">
           <div class="ci-item"><div class="ci-ico"><i class="fa-solid fa-location-dot"></i></div><div><div class="ci-l">Headquarters</div><div class="ci-v">Mabushi, Abuja,<br>F.C.T 900108, Nigeria</div></div></div>
-          <div class="ci-item"><div class="ci-ico"><i class="fa-solid fa-envelope"></i></div><div><div class="ci-l">Email</div><div class="ci-v">info@fpam.housing.gov.ng</div></div></div>
+          <div class="ci-item"><div class="ci-ico"><i class="fa-solid fa-envelope"></i></div><div><div class="ci-l">Email</div><div class="ci-v">fpam@fmhud.gov.ng</div></div></div>
           <div class="ci-item"><div class="ci-ico"><i class="fa-solid fa-clock"></i></div><div><div class="ci-l">Office Hours</div><div class="ci-v">Monday &#8211; Friday: 8:00am &#8211; 5:00pm WAT</div></div></div>
         </div>
         <div style="margin-top:20px;padding:16px 20px;background:var(--bg);border-radius:6px;border-left:3px solid var(--blue)">
@@ -197,7 +197,7 @@ footer ul a:hover{color:var(--blue-lt)}
     <div><div class="fc-t">Contact</div><ul>
       <li><span>Mabushi, Abuja</span></li>
       <li><span>F.C.T 900108, Nigeria</span></li>
-      <li><a href="mailto:info@fpam.housing.gov.ng">info@fpam.housing.gov.ng</a></li>
+      <li><a href="mailto:fpam@fmhud.gov.ng">fpam@fmhud.gov.ng</a></li>
     </ul></div>
   </div>
   <div class="f-bottom">
@@ -223,7 +223,7 @@ function sendEnquiry(){
   const fb=document.getElementById('c-feedback');
   if(!name||!email||!subject||!msg){fb.style.display='block';fb.style.color='var(--terra)';fb.textContent='Please fill in all required fields.';return;}
   const body=encodeURIComponent('Name: '+name+'\nEmail: '+email+'\n\nMessage:\n'+msg);
-  window.location.href='mailto:info@fpam.housing.gov.ng?subject='+encodeURIComponent('[FPAMD Enquiry] '+subject)+'&body='+body;
+  window.location.href='mailto:fpam@fmhud.gov.ng?subject='+encodeURIComponent('[FPAMD Enquiry] '+subject)+'&body='+body;
   fb.style.display='block';fb.style.color='#1a6b3c';fb.textContent='Thank you! Your email client should open.';
 }
 </script>
